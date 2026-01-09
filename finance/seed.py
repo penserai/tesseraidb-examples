@@ -157,7 +157,7 @@ def seed_finance():
                 "ordersPerSecond": 15000,
                 "currentLoad": 45,
                 "maxCapacity": 50000,
-                "lastHealthCheck": "2024-12-21T10:30:00Z",
+                "lastHealthCheck": "2026-12-21T10:30:00Z",
                 "dataCenter": "NY4"
             }
         }))
@@ -184,7 +184,7 @@ def seed_finance():
                 "status": "connected",
                 "messagesPerSecond": 250000,
                 "latencyUs": 50,
-                "lastUpdate": "2024-12-21T14:30:45.123Z",
+                "lastUpdate": "2026-12-21T14:30:45.123Z",
                 "gapCount": 0,
                 "staleThresholdMs": 100
             }
@@ -224,7 +224,7 @@ def seed_finance():
                 "marketCap": eq["price"] * 1000000000,
                 "currency": "USD",
                 "sector": "Technology" if eq["ticker"] not in ["JPM", "GS"] else "Financials",
-                "lastUpdate": "2024-12-21T14:30:45Z"
+                "lastUpdate": "2026-12-21T14:30:45Z"
             }
         }))
         all_relationships.append((eq["id"], "tradedOn", "exchange-nyse" if eq["ticker"] in ["AAPL", "JPM", "GS"] else "exchange-nasdaq", None))
@@ -260,7 +260,7 @@ def seed_finance():
     derivatives = [
         {"id": "option-aapl-c-200-dec", "name": "AAPL Dec $200 Call", "underlying": "equity-aapl", "strike": 200, "type": "call"},
         {"id": "option-aapl-p-190-dec", "name": "AAPL Dec $190 Put", "underlying": "equity-aapl", "strike": 190, "type": "put"},
-        {"id": "future-es-dec", "name": "E-mini S&P 500 Dec", "underlying": "SPX", "expiry": "2024-12-20"},
+        {"id": "future-es-dec", "name": "E-mini S&P 500 Dec", "underlying": "SPX", "expiry": "2026-12-20"},
         {"id": "future-gc-feb", "name": "Gold Feb", "underlying": "GC", "expiry": "2026-02-26"},
     ]
 
@@ -274,7 +274,7 @@ def seed_finance():
                 "underlyingAsset": deriv.get("underlying", ""),
                 "strikePrice": deriv.get("strike", 0),
                 "optionType": deriv.get("type", ""),
-                "expiryDate": deriv.get("expiry", "2024-12-20"),
+                "expiryDate": deriv.get("expiry", "2026-12-20"),
                 "price": 5.50,
                 "impliedVolatility": 0.28,
                 "delta": 0.55 if deriv.get("type") == "call" else -0.45,
@@ -382,7 +382,7 @@ def seed_finance():
                 "weight": 0.08,
                 "currency": "USD",
                 "costBasis": pos["qty"] * pos["avgCost"],
-                "lastUpdate": "2024-12-21T14:30:00Z"
+                "lastUpdate": "2026-12-21T14:30:00Z"
             }
         }))
         all_relationships.append((pos["portfolio"], "hasPosition", pos["id"], None))
@@ -411,7 +411,7 @@ def seed_finance():
                 "currentExposure": 125000000 if cp["rating"] == "low" else 45000000,
                 "utilizationPct": 25 if cp["rating"] == "low" else 45,
                 "kycStatus": "approved",
-                "kycLastReview": "2024-06-15",
+                "kycLastReview": "2026-06-15",
                 "jurisdictions": ["US", "UK", "EU"],
                 "nettingAgreement": True,
                 "isda": True,
@@ -445,7 +445,7 @@ def seed_finance():
                 "criticalThreshold": 90,
                 "status": "critical" if limit["utilization"] > 90 else "warning" if limit["utilization"] > 75 else "normal",
                 "currency": "USD" if limit["type"] != "Leverage" else None,
-                "lastUpdate": "2024-12-21T14:30:00Z"
+                "lastUpdate": "2026-12-21T14:30:00Z"
             }
         }))
 
@@ -472,8 +472,8 @@ def seed_finance():
                 "timeHorizon": 1,
                 "methodology": "Historical Simulation",
                 "scenarioCount": 500,
-                "lastCalculation": "2024-12-21T14:00:00Z",
-                "nextCalculation": "2024-12-21T15:00:00Z"
+                "lastCalculation": "2026-12-21T14:00:00Z",
+                "nextCalculation": "2026-12-21T15:00:00Z"
             }
         }))
         all_relationships.append((metric["id"], "monitorsRisk", metric["entity"], None))
@@ -494,7 +494,7 @@ def seed_finance():
             "properties": {
                 "severity": alert["severity"],
                 "status": "active",
-                "triggeredAt": "2024-12-21T13:45:00Z",
+                "triggeredAt": "2026-12-21T13:45:00Z",
                 "acknowledgedBy": None,
                 "message": f"Risk limit approaching critical threshold",
                 "recommendedAction": "Review positions and consider reducing exposure"
@@ -522,7 +522,7 @@ def seed_finance():
                 "regulation": rule["regulation"],
                 "jurisdiction": "US" if "Dodd" in rule["regulation"] or "Bank" in rule["regulation"] else "EU",
                 "status": "compliant",
-                "lastAudit": "2024-09-15",
+                "lastAudit": "2026-09-15",
                 "nextAudit": "2026-03-15",
                 "riskLevel": "medium",
                 "automatedChecks": True,

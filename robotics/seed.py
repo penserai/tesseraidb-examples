@@ -162,7 +162,7 @@ def seed_robotics():
                     "tasksCompletedToday": robot_id * 5,
                     "totalRuntime": 12500 + (robot_id * 100),
                     "runtimeUnit": "hours",
-                    "lastMaintenance": "2024-11-15",
+                    "lastMaintenance": "2026-11-15",
                     "firmwareVersion": "3.4.2"
                 }
             ))
@@ -214,7 +214,7 @@ def seed_robotics():
                 "currentTask": "picking" if "pick" in arm["id"] else ("packing" if "pack" in arm["id"] else "palletizing"),
                 "itemsProcessedToday": 4500,
                 "errorRate": 0.02,
-                "lastCalibration": "2024-12-01"
+                "lastCalibration": "2026-12-01"
             }
         }))
         all_relationships.append((arm["id"], "installedIn", arm["zone"], None))
@@ -295,7 +295,7 @@ def seed_robotics():
                 "payloadUnit": "kg",
                 "status": "running" if i % 5 != 0 else "idle",
                 "cyclesCompleted": 25000 + (i * 500),
-                "lastMaintenance": "2024-11-20"
+                "lastMaintenance": "2026-11-20"
             }
         }))
         all_relationships.append((shuttle_id, "partOf", "asrs-main", None))
@@ -427,7 +427,7 @@ def seed_robotics():
         "name": "Warehouse Management System",
         "properties": {
             "vendor": "Manhattan Associates",
-            "version": "2024.1",
+            "version": "2026.1",
             "ordersInQueue": 8500,
             "ordersInProgress": 2000,
             "ordersCompletedToday": 35000,
@@ -466,7 +466,7 @@ def seed_robotics():
                 "responseTime": 10,
                 "responseTimeUnit": "ms",
                 "status": "active",
-                "lastTriggered": "2024-12-14T15:30:00Z",
+                "lastTriggered": "2026-12-14T15:30:00Z",
                 "triggersToday": 5
             }
         }))
@@ -485,8 +485,8 @@ def seed_robotics():
             "properties": {
                 "location": {"x": i * 10, "y": i * 8},
                 "status": "armed",
-                "lastTest": "2024-12-01",
-                "lastActivation": "2024-10-15"
+                "lastTest": "2026-12-01",
+                "lastActivation": "2026-10-15"
             }
         }))
         all_relationships.append((estop_id, "locatedIn", zones[i % len(zones)]["id"], None))

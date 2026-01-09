@@ -410,14 +410,14 @@ def seed_taxation():
     logger.info("Creating intercompany transactions...")
     transactions = [
         {
-            "id": "txn-goods-us-ie-2024",
+            "id": "txn-goods-us-ie-2026",
             "type": tax_type("GoodsTransaction"),
-            "name": "FY2024 Goods Sales: US to Ireland",
+            "name": "FY2026 Goods Sales: US to Ireland",
             "domain": "taxation",
             "properties": {
-                "transactionId": "TXN-GOODS-2024-001",
-                "transactionDate": "2024-12-31",
-                "fiscalYear": 2024,
+                "transactionId": "TXN-GOODS-2026-001",
+                "transactionDate": "2026-12-31",
+                "fiscalYear": 2026,
                 "transactionValue": 850000000,
                 "currency": "USD",
                 "productDescription": "Enterprise software appliances and hardware",
@@ -432,14 +432,14 @@ def seed_taxation():
             }
         },
         {
-            "id": "txn-goods-de-ie-2024",
+            "id": "txn-goods-de-ie-2026",
             "type": tax_type("GoodsTransaction"),
-            "name": "FY2024 Goods Sales: Germany to Ireland",
+            "name": "FY2026 Goods Sales: Germany to Ireland",
             "domain": "taxation",
             "properties": {
-                "transactionId": "TXN-GOODS-2024-002",
-                "transactionDate": "2024-12-31",
-                "fiscalYear": 2024,
+                "transactionId": "TXN-GOODS-2026-002",
+                "transactionDate": "2026-12-31",
+                "fiscalYear": 2026,
                 "transactionValue": 180000000,
                 "currency": "EUR",
                 "productDescription": "Manufactured hardware components",
@@ -454,14 +454,14 @@ def seed_taxation():
             }
         },
         {
-            "id": "txn-royalty-ky-us-2024",
+            "id": "txn-royalty-ky-us-2026",
             "type": tax_type("IPLicenseTransaction"),
-            "name": "FY2024 IP Royalty: Cayman to US",
+            "name": "FY2026 IP Royalty: Cayman to US",
             "domain": "taxation",
             "properties": {
-                "transactionId": "TXN-IP-2024-001",
-                "transactionDate": "2024-12-31",
-                "fiscalYear": 2024,
+                "transactionId": "TXN-IP-2026-001",
+                "transactionDate": "2026-12-31",
+                "fiscalYear": 2026,
                 "transactionValue": 96000000,
                 "currency": "USD",
                 "royaltyRate": 0.03,
@@ -473,14 +473,14 @@ def seed_taxation():
             }
         },
         {
-            "id": "txn-royalty-ky-ie-2024",
+            "id": "txn-royalty-ky-ie-2026",
             "type": tax_type("IPLicenseTransaction"),
-            "name": "FY2024 IP Royalty: Cayman to Ireland",
+            "name": "FY2026 IP Royalty: Cayman to Ireland",
             "domain": "taxation",
             "properties": {
-                "transactionId": "TXN-IP-2024-002",
-                "transactionDate": "2024-12-31",
-                "fiscalYear": 2024,
+                "transactionId": "TXN-IP-2026-002",
+                "transactionDate": "2026-12-31",
+                "fiscalYear": 2026,
                 "transactionValue": 48000000,
                 "currency": "USD",
                 "royaltyRate": 0.04,
@@ -492,14 +492,14 @@ def seed_taxation():
             }
         },
         {
-            "id": "txn-services-sg-jp-2024",
+            "id": "txn-services-sg-jp-2026",
             "type": tax_type("ManagementFee"),
-            "name": "FY2024 Management Services: Singapore to Japan",
+            "name": "FY2026 Management Services: Singapore to Japan",
             "domain": "taxation",
             "properties": {
-                "transactionId": "TXN-SVC-2024-001",
-                "transactionDate": "2024-12-31",
-                "fiscalYear": 2024,
+                "transactionId": "TXN-SVC-2026-001",
+                "transactionDate": "2026-12-31",
+                "fiscalYear": 2026,
                 "transactionValue": 12500000,
                 "currency": "USD",
                 "serviceDescription": "Regional management, HR, IT support, and financial services",
@@ -511,14 +511,14 @@ def seed_taxation():
             }
         },
         {
-            "id": "txn-services-us-all-2024",
+            "id": "txn-services-us-all-2026",
             "type": tax_type("TechnicalServiceFee"),
-            "name": "FY2024 Technical Services: US to Subsidiaries",
+            "name": "FY2026 Technical Services: US to Subsidiaries",
             "domain": "taxation",
             "properties": {
-                "transactionId": "TXN-SVC-2024-002",
-                "transactionDate": "2024-12-31",
-                "fiscalYear": 2024,
+                "transactionId": "TXN-SVC-2026-002",
+                "transactionDate": "2026-12-31",
+                "fiscalYear": 2026,
                 "transactionValue": 45000000,
                 "currency": "USD",
                 "serviceDescription": "R&D support, product development, and technical training",
@@ -530,14 +530,14 @@ def seed_taxation():
             }
         },
         {
-            "id": "txn-loan-us-de-2024",
+            "id": "txn-loan-us-de-2026",
             "type": tax_type("FinancingTransaction"),
-            "name": "FY2024 Intercompany Loan: US to Germany",
+            "name": "FY2026 Intercompany Loan: US to Germany",
             "domain": "taxation",
             "properties": {
-                "transactionId": "TXN-FIN-2024-001",
-                "transactionDate": "2024-12-31",
-                "fiscalYear": 2024,
+                "transactionId": "TXN-FIN-2026-001",
+                "transactionDate": "2026-12-31",
+                "fiscalYear": 2026,
                 "transactionValue": 4500000,
                 "currency": "USD",
                 "principalAmount": 75000000,
@@ -550,14 +550,14 @@ def seed_taxation():
             }
         },
         {
-            "id": "txn-csa-us-ky-2024",
+            "id": "txn-csa-us-ky-2026",
             "type": tax_type("CostSharingArrangement"),
-            "name": "FY2024 Cost Sharing: US and Cayman",
+            "name": "FY2026 Cost Sharing: US and Cayman",
             "domain": "taxation",
             "properties": {
-                "transactionId": "TXN-CSA-2024-001",
-                "transactionDate": "2024-12-31",
-                "fiscalYear": 2024,
+                "transactionId": "TXN-CSA-2026-001",
+                "transactionDate": "2026-12-31",
+                "fiscalYear": 2026,
                 "transactionValue": 125000000,
                 "currency": "USD",
                 "participants": ["TechGlobal Inc. (US)", "TechGlobal IP Holdings (Cayman)"],
@@ -575,18 +575,18 @@ def seed_taxation():
 
     # Transaction relationships
     txn_relationships = [
-        ("txn-goods-us-ie-2024", "payer", "entity-techglobal-ie"),
-        ("txn-goods-us-ie-2024", "payee", "entity-techglobal-us"),
-        ("txn-goods-de-ie-2024", "payer", "entity-techglobal-ie"),
-        ("txn-goods-de-ie-2024", "payee", "entity-techglobal-de"),
-        ("txn-royalty-ky-us-2024", "payer", "entity-techglobal-us"),
-        ("txn-royalty-ky-us-2024", "payee", "entity-techglobal-ky"),
-        ("txn-royalty-ky-ie-2024", "payer", "entity-techglobal-ie"),
-        ("txn-royalty-ky-ie-2024", "payee", "entity-techglobal-ky"),
-        ("txn-services-sg-jp-2024", "payer", "entity-techglobal-jp"),
-        ("txn-services-sg-jp-2024", "payee", "entity-techglobal-sg"),
-        ("txn-loan-us-de-2024", "payer", "entity-techglobal-de"),
-        ("txn-loan-us-de-2024", "payee", "entity-techglobal-us"),
+        ("txn-goods-us-ie-2026", "payer", "entity-techglobal-ie"),
+        ("txn-goods-us-ie-2026", "payee", "entity-techglobal-us"),
+        ("txn-goods-de-ie-2026", "payer", "entity-techglobal-ie"),
+        ("txn-goods-de-ie-2026", "payee", "entity-techglobal-de"),
+        ("txn-royalty-ky-us-2026", "payer", "entity-techglobal-us"),
+        ("txn-royalty-ky-us-2026", "payee", "entity-techglobal-ky"),
+        ("txn-royalty-ky-ie-2026", "payer", "entity-techglobal-ie"),
+        ("txn-royalty-ky-ie-2026", "payee", "entity-techglobal-ky"),
+        ("txn-services-sg-jp-2026", "payer", "entity-techglobal-jp"),
+        ("txn-services-sg-jp-2026", "payee", "entity-techglobal-sg"),
+        ("txn-loan-us-de-2026", "payer", "entity-techglobal-de"),
+        ("txn-loan-us-de-2026", "payee", "entity-techglobal-us"),
     ]
 
     for txn_id, rel_type, entity_id in txn_relationships:
@@ -594,14 +594,14 @@ def seed_taxation():
 
     # Link transactions to methods
     method_links = [
-        ("txn-goods-us-ie-2024", "method-tnmm"),
-        ("txn-goods-de-ie-2024", "method-cost-plus"),
-        ("txn-royalty-ky-us-2024", "method-cup"),
-        ("txn-royalty-ky-ie-2024", "method-cup"),
-        ("txn-services-sg-jp-2024", "method-cost-plus"),
-        ("txn-services-us-all-2024", "method-cost-plus"),
-        ("txn-loan-us-de-2024", "method-cup"),
-        ("txn-csa-us-ky-2024", "method-profit-split"),
+        ("txn-goods-us-ie-2026", "method-tnmm"),
+        ("txn-goods-de-ie-2026", "method-cost-plus"),
+        ("txn-royalty-ky-us-2026", "method-cup"),
+        ("txn-royalty-ky-ie-2026", "method-cup"),
+        ("txn-services-sg-jp-2026", "method-cost-plus"),
+        ("txn-services-us-all-2026", "method-cost-plus"),
+        ("txn-loan-us-de-2026", "method-cup"),
+        ("txn-csa-us-ky-2026", "method-profit-split"),
     ]
 
     for txn_id, method_id in method_links:
@@ -614,14 +614,14 @@ def seed_taxation():
 
     # LRD Comparables
     lrd_comparables = [
-        {"id": "comp-lrd-001", "name": "TechDist Solutions Inc.", "operatingMargin": 0.032, "grossMargin": 0.18, "revenue": 450000000, "sicCode": "5045", "dataYear": 2024},
-        {"id": "comp-lrd-002", "name": "GlobalTech Distributors Ltd.", "operatingMargin": 0.038, "grossMargin": 0.20, "revenue": 680000000, "sicCode": "5045", "dataYear": 2024},
-        {"id": "comp-lrd-003", "name": "ElectroWholesale Corp.", "operatingMargin": 0.041, "grossMargin": 0.19, "revenue": 320000000, "sicCode": "5045", "dataYear": 2024},
-        {"id": "comp-lrd-004", "name": "DigiSupply Partners", "operatingMargin": 0.035, "grossMargin": 0.17, "revenue": 520000000, "sicCode": "5045", "dataYear": 2024},
-        {"id": "comp-lrd-005", "name": "IT Distribution Group", "operatingMargin": 0.045, "grossMargin": 0.21, "revenue": 890000000, "sicCode": "5045", "dataYear": 2024},
-        {"id": "comp-lrd-006", "name": "CompuChannel Inc.", "operatingMargin": 0.029, "grossMargin": 0.16, "revenue": 280000000, "sicCode": "5045", "dataYear": 2024},
-        {"id": "comp-lrd-007", "name": "NetWare Distributors", "operatingMargin": 0.043, "grossMargin": 0.22, "revenue": 410000000, "sicCode": "5045", "dataYear": 2024},
-        {"id": "comp-lrd-008", "name": "SysTech Supply Co.", "operatingMargin": 0.037, "grossMargin": 0.19, "revenue": 560000000, "sicCode": "5045", "dataYear": 2024},
+        {"id": "comp-lrd-001", "name": "TechDist Solutions Inc.", "operatingMargin": 0.032, "grossMargin": 0.18, "revenue": 450000000, "sicCode": "5045", "dataYear": 2026},
+        {"id": "comp-lrd-002", "name": "GlobalTech Distributors Ltd.", "operatingMargin": 0.038, "grossMargin": 0.20, "revenue": 680000000, "sicCode": "5045", "dataYear": 2026},
+        {"id": "comp-lrd-003", "name": "ElectroWholesale Corp.", "operatingMargin": 0.041, "grossMargin": 0.19, "revenue": 320000000, "sicCode": "5045", "dataYear": 2026},
+        {"id": "comp-lrd-004", "name": "DigiSupply Partners", "operatingMargin": 0.035, "grossMargin": 0.17, "revenue": 520000000, "sicCode": "5045", "dataYear": 2026},
+        {"id": "comp-lrd-005", "name": "IT Distribution Group", "operatingMargin": 0.045, "grossMargin": 0.21, "revenue": 890000000, "sicCode": "5045", "dataYear": 2026},
+        {"id": "comp-lrd-006", "name": "CompuChannel Inc.", "operatingMargin": 0.029, "grossMargin": 0.16, "revenue": 280000000, "sicCode": "5045", "dataYear": 2026},
+        {"id": "comp-lrd-007", "name": "NetWare Distributors", "operatingMargin": 0.043, "grossMargin": 0.22, "revenue": 410000000, "sicCode": "5045", "dataYear": 2026},
+        {"id": "comp-lrd-008", "name": "SysTech Supply Co.", "operatingMargin": 0.037, "grossMargin": 0.19, "revenue": 560000000, "sicCode": "5045", "dataYear": 2026},
     ]
 
     for comp in lrd_comparables:
@@ -644,12 +644,12 @@ def seed_taxation():
 
     # CM Comparables
     cm_comparables = [
-        {"id": "comp-cm-001", "name": "PrecisionMfg Services GmbH", "operatingMargin": 0.055, "netCostPlusMarkup": 0.058, "revenue": 380000000, "sicCode": "3672", "dataYear": 2024},
-        {"id": "comp-cm-002", "name": "EuroTech Manufacturing", "operatingMargin": 0.062, "netCostPlusMarkup": 0.066, "revenue": 290000000, "sicCode": "3672", "dataYear": 2024},
-        {"id": "comp-cm-003", "name": "ContractBuild Industries", "operatingMargin": 0.048, "netCostPlusMarkup": 0.051, "revenue": 420000000, "sicCode": "3672", "dataYear": 2024},
-        {"id": "comp-cm-004", "name": "TechAssembly Solutions", "operatingMargin": 0.058, "netCostPlusMarkup": 0.062, "revenue": 510000000, "sicCode": "3672", "dataYear": 2024},
-        {"id": "comp-cm-005", "name": "MfgPartners Europe", "operatingMargin": 0.065, "netCostPlusMarkup": 0.069, "revenue": 340000000, "sicCode": "3672", "dataYear": 2024},
-        {"id": "comp-cm-006", "name": "IndustrialCraft GmbH", "operatingMargin": 0.052, "netCostPlusMarkup": 0.055, "revenue": 275000000, "sicCode": "3672", "dataYear": 2024},
+        {"id": "comp-cm-001", "name": "PrecisionMfg Services GmbH", "operatingMargin": 0.055, "netCostPlusMarkup": 0.058, "revenue": 380000000, "sicCode": "3672", "dataYear": 2026},
+        {"id": "comp-cm-002", "name": "EuroTech Manufacturing", "operatingMargin": 0.062, "netCostPlusMarkup": 0.066, "revenue": 290000000, "sicCode": "3672", "dataYear": 2026},
+        {"id": "comp-cm-003", "name": "ContractBuild Industries", "operatingMargin": 0.048, "netCostPlusMarkup": 0.051, "revenue": 420000000, "sicCode": "3672", "dataYear": 2026},
+        {"id": "comp-cm-004", "name": "TechAssembly Solutions", "operatingMargin": 0.058, "netCostPlusMarkup": 0.062, "revenue": 510000000, "sicCode": "3672", "dataYear": 2026},
+        {"id": "comp-cm-005", "name": "MfgPartners Europe", "operatingMargin": 0.065, "netCostPlusMarkup": 0.069, "revenue": 340000000, "sicCode": "3672", "dataYear": 2026},
+        {"id": "comp-cm-006", "name": "IndustrialCraft GmbH", "operatingMargin": 0.052, "netCostPlusMarkup": 0.055, "revenue": 275000000, "sicCode": "3672", "dataYear": 2026},
     ]
 
     for comp in cm_comparables:
@@ -672,11 +672,11 @@ def seed_taxation():
 
     # SP Comparables
     sp_comparables = [
-        {"id": "comp-sp-001", "name": "Asia Regional Services Pte Ltd", "operatingMargin": 0.085, "netCostPlusMarkup": 0.093, "revenue": 65000000, "sicCode": "7389", "dataYear": 2024},
-        {"id": "comp-sp-002", "name": "ManagedOps Asia", "operatingMargin": 0.095, "netCostPlusMarkup": 0.105, "revenue": 88000000, "sicCode": "7389", "dataYear": 2024},
-        {"id": "comp-sp-003", "name": "TechSupport International", "operatingMargin": 0.102, "netCostPlusMarkup": 0.114, "revenue": 72000000, "sicCode": "7389", "dataYear": 2024},
-        {"id": "comp-sp-004", "name": "SharedServices Hub Pte", "operatingMargin": 0.078, "netCostPlusMarkup": 0.085, "revenue": 54000000, "sicCode": "7389", "dataYear": 2024},
-        {"id": "comp-sp-005", "name": "RegionalAdmin Solutions", "operatingMargin": 0.112, "netCostPlusMarkup": 0.126, "revenue": 95000000, "sicCode": "7389", "dataYear": 2024},
+        {"id": "comp-sp-001", "name": "Asia Regional Services Pte Ltd", "operatingMargin": 0.085, "netCostPlusMarkup": 0.093, "revenue": 65000000, "sicCode": "7389", "dataYear": 2026},
+        {"id": "comp-sp-002", "name": "ManagedOps Asia", "operatingMargin": 0.095, "netCostPlusMarkup": 0.105, "revenue": 88000000, "sicCode": "7389", "dataYear": 2026},
+        {"id": "comp-sp-003", "name": "TechSupport International", "operatingMargin": 0.102, "netCostPlusMarkup": 0.114, "revenue": 72000000, "sicCode": "7389", "dataYear": 2026},
+        {"id": "comp-sp-004", "name": "SharedServices Hub Pte", "operatingMargin": 0.078, "netCostPlusMarkup": 0.085, "revenue": 54000000, "sicCode": "7389", "dataYear": 2026},
+        {"id": "comp-sp-005", "name": "RegionalAdmin Solutions", "operatingMargin": 0.112, "netCostPlusMarkup": 0.126, "revenue": 95000000, "sicCode": "7389", "dataYear": 2026},
     ]
 
     for comp in sp_comparables:
@@ -703,14 +703,14 @@ def seed_taxation():
     logger.info("Creating arm's length ranges...")
     ranges = [
         {
-            "id": "alr-lrd-om-2024",
+            "id": "alr-lrd-om-2026",
             "type": tax_type("ArmLengthRange"),
-            "name": "LRD Operating Margin Range FY2024",
+            "name": "LRD Operating Margin Range FY2026",
             "domain": "taxation",
             "properties": {
                 "profitLevelIndicator": "Operating Margin",
                 "functionalProfile": "Limited Risk Distributor",
-                "dataYear": 2024,
+                "dataYear": 2026,
                 "minimumValue": 0.029,
                 "lowerQuartile": 0.034,
                 "median": 0.038,
@@ -721,14 +721,14 @@ def seed_taxation():
             }
         },
         {
-            "id": "alr-cm-ncpm-2024",
+            "id": "alr-cm-ncpm-2026",
             "type": tax_type("ArmLengthRange"),
-            "name": "Contract Mfg Net Cost Plus Range FY2024",
+            "name": "Contract Mfg Net Cost Plus Range FY2026",
             "domain": "taxation",
             "properties": {
                 "profitLevelIndicator": "Net Cost Plus Markup",
                 "functionalProfile": "Contract Manufacturer",
-                "dataYear": 2024,
+                "dataYear": 2026,
                 "minimumValue": 0.051,
                 "lowerQuartile": 0.055,
                 "median": 0.060,
@@ -739,14 +739,14 @@ def seed_taxation():
             }
         },
         {
-            "id": "alr-sp-ncpm-2024",
+            "id": "alr-sp-ncpm-2026",
             "type": tax_type("ArmLengthRange"),
-            "name": "Service Provider Net Cost Plus Range FY2024",
+            "name": "Service Provider Net Cost Plus Range FY2026",
             "domain": "taxation",
             "properties": {
                 "profitLevelIndicator": "Net Cost Plus Markup",
                 "functionalProfile": "Service Provider",
-                "dataYear": 2024,
+                "dataYear": 2026,
                 "minimumValue": 0.085,
                 "lowerQuartile": 0.089,
                 "median": 0.100,
@@ -767,19 +767,19 @@ def seed_taxation():
     logger.info("Creating background documents...")
     documents = [
         {
-            "id": "bgdoc-price-list-2024",
+            "id": "bgdoc-price-list-2026",
             "type": tax_type("BackgroundDocument"),
-            "name": "FY2024 Intercompany Price List",
+            "name": "FY2026 Intercompany Price List",
             "domain": "taxation",
             "properties": {
-                "documentId": "BGDOC-2024-001",
-                "documentTitle": "TechGlobal Intercompany Price List FY2024",
-                "preparedDate": "2024-01-15",
+                "documentId": "BGDOC-2026-001",
+                "documentTitle": "TechGlobal Intercompany Price List FY2026",
+                "preparedDate": "2026-01-15",
                 "preparedBy": "Transfer Pricing Department",
                 "documentStatus": "final",
-                "taxYear": 2024,
+                "taxYear": 2026,
                 "documentContent": """
-TECHGLOBAL INC. - INTERCOMPANY PRICE LIST FY2024
+TECHGLOBAL INC. - INTERCOMPANY PRICE LIST FY2026
 =================================================
 
 PRODUCT TRANSFERS (US to Ireland/Japan)
@@ -808,37 +808,37 @@ Management Services: Cost + 10%
 Technical Services: Cost + 10%
 R&D Support: Cost + 12%
 """,
-                "effectiveDate": "2024-01-01",
-                "expirationDate": "2024-12-31"
+                "effectiveDate": "2026-01-01",
+                "expirationDate": "2026-12-31"
             }
         },
         {
-            "id": "bgdoc-invoices-sample-2024",
+            "id": "bgdoc-invoices-sample-2026",
             "type": tax_type("BackgroundDocument"),
-            "name": "Sample Intercompany Invoices Q4 2024",
+            "name": "Sample Intercompany Invoices Q4 2026",
             "domain": "taxation",
             "properties": {
-                "documentId": "BGDOC-2024-002",
-                "documentTitle": "Sample Intercompany Invoices Q4 2024",
-                "preparedDate": "2024-12-31",
+                "documentId": "BGDOC-2026-002",
+                "documentTitle": "Sample Intercompany Invoices Q4 2026",
+                "preparedDate": "2026-12-31",
                 "preparedBy": "Accounts Payable",
                 "documentStatus": "final",
-                "taxYear": 2024,
+                "taxYear": 2026,
                 "invoiceCount": 4,
                 "totalValue": 70125000
             }
         },
         {
-            "id": "bgdoc-financials-ie-2024",
+            "id": "bgdoc-financials-ie-2026",
             "type": tax_type("BackgroundDocument"),
-            "name": "TechGlobal Ireland Financial Statements FY2024",
+            "name": "TechGlobal Ireland Financial Statements FY2026",
             "domain": "taxation",
             "properties": {
-                "documentId": "BGDOC-2024-003",
+                "documentId": "BGDOC-2026-003",
                 "preparedDate": "2026-02-15",
                 "preparedBy": "External Auditors - Big4 LLP",
                 "documentStatus": "final",
-                "taxYear": 2024,
+                "taxYear": 2026,
                 "revenue": 1080000000,
                 "operatingIncome": 75600000,
                 "operatingMargin": 0.07,
@@ -846,17 +846,17 @@ R&D Support: Cost + 12%
             }
         },
         {
-            "id": "bgdoc-financials-de-2024",
+            "id": "bgdoc-financials-de-2026",
             "type": tax_type("BackgroundDocument"),
-            "name": "TechGlobal Germany Financial Statements FY2024",
+            "name": "TechGlobal Germany Financial Statements FY2026",
             "domain": "taxation",
             "properties": {
-                "documentId": "BGDOC-2024-004",
-                "documentTitle": "TechGlobal Germany GmbH - Financial Statements FY2024",
+                "documentId": "BGDOC-2026-004",
+                "documentTitle": "TechGlobal Germany GmbH - Financial Statements FY2026",
                 "preparedDate": "2026-02-15",
                 "preparedBy": "External Auditors - Big4 LLP",
                 "documentStatus": "final",
-                "taxYear": 2024,
+                "taxYear": 2026,
                 "revenue": 405000000,
                 "operatingIncome": 28350000,
                 "operatingMargin": 0.07,
@@ -865,34 +865,34 @@ R&D Support: Cost + 12%
             }
         },
         {
-            "id": "bgdoc-loan-agreement-2024",
+            "id": "bgdoc-loan-agreement-2026",
             "type": tax_type("BackgroundDocument"),
             "name": "US-Germany Intercompany Loan Agreement",
             "domain": "taxation",
             "properties": {
-                "documentId": "BGDOC-2024-005",
+                "documentId": "BGDOC-2026-005",
                 "documentTitle": "Intercompany Loan Agreement - TechGlobal Inc. to TechGlobal Germany GmbH",
                 "preparedDate": "2022-01-01",
                 "preparedBy": "Legal Department",
                 "documentStatus": "final",
-                "taxYear": 2024,
+                "taxYear": 2026,
                 "principalAmount": 75000000,
                 "interestRate": 0.06,
                 "annualInterest": 4500000
             }
         },
         {
-            "id": "bgdoc-royalty-agreements-2024",
+            "id": "bgdoc-royalty-agreements-2026",
             "type": tax_type("BackgroundDocument"),
             "name": "IP License Agreements Summary",
             "domain": "taxation",
             "properties": {
-                "documentId": "BGDOC-2024-006",
+                "documentId": "BGDOC-2026-006",
                 "documentTitle": "Summary of IP License Agreements",
-                "preparedDate": "2024-03-15",
+                "preparedDate": "2026-03-15",
                 "preparedBy": "Legal Department",
                 "documentStatus": "final",
-                "taxYear": 2024,
+                "taxYear": 2026,
                 "totalRoyalties": 148250000
             }
         }
@@ -907,48 +907,48 @@ R&D Support: Cost + 12%
     logger.info("Creating comparability analyses...")
     analyses = [
         {
-            "id": "companalysis-lrd-2024",
+            "id": "companalysis-lrd-2026",
             "type": tax_type("ComparabilityAnalysis"),
-            "name": "LRD Benchmarking Study FY2024",
+            "name": "LRD Benchmarking Study FY2026",
             "domain": "taxation",
             "properties": {
-                "analysisId": "CA-LRD-2024",
+                "analysisId": "CA-LRD-2026",
                 "testedParty": "TechGlobal Ireland Ltd.",
                 "functionalProfile": "Limited Risk Distributor",
                 "databaseUsed": "S&P Capital IQ",
-                "searchDate": "2024-09-15",
+                "searchDate": "2026-09-15",
                 "companiesIdentified": 156,
                 "companiesAccepted": 8,
                 "rejectionCriteria": ["Non-comparable functions", "Insufficient data", "Loss-making entities", "Significant intangible ownership"]
             }
         },
         {
-            "id": "companalysis-cm-2024",
+            "id": "companalysis-cm-2026",
             "type": tax_type("ComparabilityAnalysis"),
-            "name": "Contract Mfg Benchmarking Study FY2024",
+            "name": "Contract Mfg Benchmarking Study FY2026",
             "domain": "taxation",
             "properties": {
-                "analysisId": "CA-CM-2024",
+                "analysisId": "CA-CM-2026",
                 "testedParty": "TechGlobal Germany GmbH",
                 "functionalProfile": "Contract Manufacturer",
                 "databaseUsed": "S&P Capital IQ",
-                "searchDate": "2024-09-15",
+                "searchDate": "2026-09-15",
                 "companiesIdentified": 89,
                 "companiesAccepted": 6,
                 "rejectionCriteria": ["IP ownership", "Brand ownership", "Insufficient data", "Non-comparable products"]
             }
         },
         {
-            "id": "companalysis-sp-2024",
+            "id": "companalysis-sp-2026",
             "type": tax_type("ComparabilityAnalysis"),
-            "name": "Service Provider Benchmarking Study FY2024",
+            "name": "Service Provider Benchmarking Study FY2026",
             "domain": "taxation",
             "properties": {
-                "analysisId": "CA-SP-2024",
+                "analysisId": "CA-SP-2026",
                 "testedParty": "TechGlobal Asia Pacific Pte. Ltd.",
                 "functionalProfile": "Service Provider",
                 "databaseUsed": "S&P Capital IQ",
-                "searchDate": "2024-09-15",
+                "searchDate": "2026-09-15",
                 "companiesIdentified": 67,
                 "companiesAccepted": 5,
                 "rejectionCriteria": ["Software development", "R&D activities", "Insufficient data", "Non-comparable services"]
@@ -960,17 +960,17 @@ R&D Support: Cost + 12%
         all_twins.append(prepare_tax_twin(analysis))
 
     # Link analyses to arm's length ranges
-    all_relationships.append(("companalysis-lrd-2024", tax_type("hasArmLengthRange"), "alr-lrd-om-2024", None))
-    all_relationships.append(("companalysis-cm-2024", tax_type("hasArmLengthRange"), "alr-cm-ncpm-2024", None))
-    all_relationships.append(("companalysis-sp-2024", tax_type("hasArmLengthRange"), "alr-sp-ncpm-2024", None))
+    all_relationships.append(("companalysis-lrd-2026", tax_type("hasArmLengthRange"), "alr-lrd-om-2026", None))
+    all_relationships.append(("companalysis-cm-2026", tax_type("hasArmLengthRange"), "alr-cm-ncpm-2026", None))
+    all_relationships.append(("companalysis-sp-2026", tax_type("hasArmLengthRange"), "alr-sp-ncpm-2026", None))
 
     # Link analyses to comparable companies
     for i in range(1, 9):
-        all_relationships.append(("companalysis-lrd-2024", tax_type("hasComparable"), f"comp-lrd-00{i}", None))
+        all_relationships.append(("companalysis-lrd-2026", tax_type("hasComparable"), f"comp-lrd-00{i}", None))
     for i in range(1, 7):
-        all_relationships.append(("companalysis-cm-2024", tax_type("hasComparable"), f"comp-cm-00{i}", None))
+        all_relationships.append(("companalysis-cm-2026", tax_type("hasComparable"), f"comp-cm-00{i}", None))
     for i in range(1, 6):
-        all_relationships.append(("companalysis-sp-2024", tax_type("hasComparable"), f"comp-sp-00{i}", None))
+        all_relationships.append(("companalysis-sp-2026", tax_type("hasComparable"), f"comp-sp-00{i}", None))
 
     # =========================================================================
     # BULK CREATE ALL TWINS AND RELATIONSHIPS

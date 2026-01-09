@@ -243,7 +243,7 @@ def seed_energy_grid():
                 "transformers": 4,
                 "breakers": 12,
                 "status": "operational",
-                "lastInspection": "2024-10-15"
+                "lastInspection": "2026-10-15"
             }
         }))
         all_relationships.append(("grid-regional-001", "hasSubstation", sub["id"], None))
@@ -342,7 +342,7 @@ def seed_energy_grid():
                 "voltage": 240 if meter_type == "residential" else 480,
                 "voltageUnit": "V",
                 "powerFactor": 0.95,
-                "lastReading": "2024-12-15T10:00:00Z",
+                "lastReading": "2026-12-15T10:00:00Z",
                 "communicationStatus": "online"
             }
         }))
@@ -379,10 +379,10 @@ def seed_energy_grid():
                 "manufacturer": "SEL",
                 "model": "SEL-421",
                 "protectionType": ["distance", "overcurrent", "differential"],
-                "settingsVersion": "2024.3",
+                "settingsVersion": "2026.3",
                 "status": "armed",
-                "lastTrip": "2024-08-15T14:30:00Z",
-                "lastTest": "2024-11-01"
+                "lastTrip": "2026-08-15T14:30:00Z",
+                "lastTest": "2026-11-01"
             }
         }))
         all_relationships.append((relay_id, "protects", sub["id"], None))
@@ -412,7 +412,7 @@ def seed_energy_grid():
                 "humidity": 45,
                 "pressure": 1015,
                 "pressureUnit": "hPa",
-                "lastReading": "2024-12-15T10:00:00Z",
+                "lastReading": "2026-12-15T10:00:00Z",
                 "status": "online"
             }
         }))

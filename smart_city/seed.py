@@ -129,7 +129,7 @@ def seed_smart_city():
                 "speedLimit": 65 if road["type"] == "highway" else (45 if road["type"] == "arterial" else 35),
                 "speedUnit": "mph",
                 "surfaceCondition": "good",
-                "lastMaintenance": "2024-06-15"
+                "lastMaintenance": "2026-06-15"
             }
         }))
         all_relationships.append(("city-metropolis", "hasRoad", road["id"], None))
@@ -173,7 +173,7 @@ def seed_smart_city():
                 "cycleTime": 120,
                 "cycleTimeUnit": "seconds",
                 "mode": "adaptive",
-                "lastMaintenance": "2024-10-01",
+                "lastMaintenance": "2026-10-01",
                 "status": "operational"
             }
         }))
@@ -194,7 +194,7 @@ def seed_smart_city():
                 "averageSpeed": 42,
                 "speedUnit": "mph",
                 "occupancy": 35,
-                "lastReading": "2024-12-15T10:30:00Z",
+                "lastReading": "2026-12-15T10:30:00Z",
                 "status": "online"
             }
         }))
@@ -362,7 +362,7 @@ def seed_smart_city():
                 "readingUnit": "kWh",
                 "currentPower": 2.5,
                 "powerUnit": "kW",
-                "lastReading": "2024-12-15T10:00:00Z",
+                "lastReading": "2026-12-15T10:00:00Z",
                 "status": "online"
             }
         }))
@@ -453,7 +453,7 @@ def seed_smart_city():
                     "pm": "ug/m3",
                     "gases": "ppm"
                 },
-                "lastReading": "2024-12-15T10:00:00Z",
+                "lastReading": "2026-12-15T10:00:00Z",
                 "status": "online"
             }
         }))
@@ -476,7 +476,7 @@ def seed_smart_city():
                 "unit": "dB",
                 "averageLevel": 52,
                 "peakLevel": 78,
-                "lastReading": "2024-12-15T10:00:00Z",
+                "lastReading": "2026-12-15T10:00:00Z",
                 "status": "online"
             }
         }))
@@ -499,7 +499,7 @@ def seed_smart_city():
             "precipitation": 0,
             "visibility": 10,
             "visibilityUnit": "km",
-            "lastReading": "2024-12-15T10:00:00Z",
+            "lastReading": "2026-12-15T10:00:00Z",
             "status": "online"
         }
     }))

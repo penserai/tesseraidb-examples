@@ -164,8 +164,8 @@ def seed_healthcare():
                 "hasIntraopMRI": or_room["type"] == "neuro",
                 "temperature": 18,
                 "humidity": 50,
-                "lastCleaned": "2024-12-15T06:00:00Z",
-                "nextScheduled": "2024-12-15T14:00:00Z"
+                "lastCleaned": "2026-12-15T06:00:00Z",
+                "nextScheduled": "2026-12-15T14:00:00Z"
             }
         }))
         all_relationships.append(("dept-surgery", "hasOperatingRoom", or_room["id"], None))
@@ -186,7 +186,7 @@ def seed_healthcare():
                 "hasNegativePressure": i <= 5,
                 "hasIsolationCapability": True,
                 "monitoringLevel": "continuous",
-                "lastSanitized": "2024-12-15T06:00:00Z"
+                "lastSanitized": "2026-12-15T06:00:00Z"
             }
         }))
         all_relationships.append(("dept-icu", "hasRoom", room_id, None))
@@ -219,11 +219,11 @@ def seed_healthcare():
             "properties": {
                 "manufacturer": equip["manufacturer"],
                 "model": equip["model"],
-                "serialNumber": f"SN-{equip['id'].upper()}-2024",
+                "serialNumber": f"SN-{equip['id'].upper()}-2026",
                 "status": "available",
                 "installDate": "2022-06-15",
-                "lastMaintenance": "2024-11-01",
-                "nextMaintenance": "2025-05-01",
+                "lastMaintenance": "2026-11-01",
+                "nextMaintenance": "2026-05-01",
                 "scansToday": 12,
                 "scansThisMonth": 320,
                 "calibrationStatus": "current",
@@ -249,7 +249,7 @@ def seed_healthcare():
                 "capabilities": ["ECG", "SpO2", "NIBP", "IBP", "Temperature", "Capnography", "Cardiac Output"],
                 "status": "active" if i <= 15 else "standby",
                 "alarmStatus": "normal",
-                "lastCalibration": "2024-10-15",
+                "lastCalibration": "2026-10-15",
                 "firmwareVersion": "L.01.23"
             }
         }))
@@ -284,7 +284,7 @@ def seed_healthcare():
                 "peep": 8,
                 "fio2": 40,
                 "hoursInUse": 72,
-                "lastMaintenance": "2024-11-15"
+                "lastMaintenance": "2026-11-15"
             }
         }))
         all_relationships.append((vent["id"], "locatedIn", vent["room"], None))
@@ -302,9 +302,9 @@ def seed_healthcare():
                 "serialNumber": f"SN-PUMP-{i:05d}",
                 "status": "in_use" if i <= 20 else "available",
                 "channels": 4,
-                "drugLibraryVersion": "2024.3",
+                "drugLibraryVersion": "2026.3",
                 "batteryLevel": 85,
-                "lastMaintenance": "2024-09-01"
+                "lastMaintenance": "2026-09-01"
             }
         }))
         if i <= 15:
@@ -330,9 +330,9 @@ def seed_healthcare():
                 "status": "available",
                 "proceduresCompleted": 450,
                 "hoursOfOperation": 2200,
-                "lastCalibration": "2024-12-01",
+                "lastCalibration": "2026-12-01",
                 "softwareVersion": "4.5.1",
-                "lastMaintenance": "2024-11-15"
+                "lastMaintenance": "2026-11-15"
             }
         }))
         all_relationships.append(("dept-surgery", "hasEquipment", robot["id"], None))
@@ -366,7 +366,7 @@ def seed_healthcare():
                 "status": "operational",
                 "testsToday": 250,
                 "testsThisMonth": 6500,
-                "lastCalibration": "2024-12-01",
+                "lastCalibration": "2026-12-01",
                 "qcStatus": "passed"
             }
         }))
@@ -391,7 +391,7 @@ def seed_healthcare():
                 "manufacturer": "BD Pyxis",
                 "status": "operational",
                 "inventoryLevel": 92,
-                "lastRestock": "2024-12-14T22:00:00Z",
+                "lastRestock": "2026-12-14T22:00:00Z",
                 "dispensesToday": 145 if "robot" in sys_item["id"] else 85,
                 "controlledSubstanceTracking": True
             }
@@ -467,7 +467,7 @@ def seed_healthcare():
                 "pressureUnit": "PSI",
                 "tankLevel": 78,
                 "status": "normal",
-                "lastInspection": "2024-11-01",
+                "lastInspection": "2026-11-01",
                 "alarmThreshold": 20
             }
         }))
@@ -494,7 +494,7 @@ def seed_healthcare():
                 "manufacturer": "STERIS",
                 "cyclesToday": 8,
                 "status": "idle",
-                "lastValidation": "2024-11-15",
+                "lastValidation": "2026-11-15",
                 "biologicalIndicatorStatus": "passed"
             }
         }))

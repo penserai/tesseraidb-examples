@@ -100,7 +100,7 @@ issues = client.sparql.query("""
 client.twins.update("sensor-temp-room-2-101", properties={
     "currentValue": 25.7,
     "unit": "Celsius",
-    "lastReading": "2024-12-15T10:00:00Z",
+    "lastReading": "2026-12-15T10:00:00Z",
     "status": "online"
 })
 

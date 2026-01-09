@@ -252,7 +252,7 @@ def seed_supply_chain():
                 "speed": 18,
                 "speedUnit": "knots",
                 "status": "at_sea",
-                "eta": "2024-12-20T08:00:00Z",
+                "eta": "2026-12-20T08:00:00Z",
                 "departurePort": "Shanghai",
                 "destinationPort": "Los Angeles"
             }
@@ -284,7 +284,7 @@ def seed_supply_chain():
                 "currentWeight": 25000 if cont["size"] == "40ft" else 18000,
                 "isRefrigerated": cont["type"] == "ReeferContainer",
                 "temperature": -18 if cont["type"] == "ReeferContainer" else None,
-                "sealNumber": f"SEAL{cont['id'][-3:]}2024",
+                "sealNumber": f"SEAL{cont['id'][-3:]}2026",
                 "status": "in_transit" if "ship" in cont else "at_warehouse"
             }
         }))
@@ -318,9 +318,9 @@ def seed_supply_chain():
                 "weight": 15000,
                 "weightUnit": "kg",
                 "pieces": 450,
-                "createdAt": "2024-12-10T08:00:00Z",
-                "estimatedDelivery": "2024-12-18T18:00:00Z",
-                "trackingNumber": f"TRK{ship_item['id'][-3:]}2024DEC",
+                "createdAt": "2026-12-10T08:00:00Z",
+                "estimatedDelivery": "2026-12-18T18:00:00Z",
+                "trackingNumber": f"TRK{ship_item['id'][-3:]}2026DEC",
                 "incoterms": "DDP",
                 "customsStatus": "cleared" if ship_item["status"] != "pending" else "pending"
             }
@@ -386,7 +386,7 @@ def seed_supply_chain():
                 "quantity": inv["quantity"],
                 "reorderPoint": inv["quantity"] // 5,
                 "maxQuantity": inv["quantity"] * 2,
-                "lastUpdated": "2024-12-15T10:00:00Z",
+                "lastUpdated": "2026-12-15T10:00:00Z",
                 "status": "adequate"
             }
         }))
@@ -410,7 +410,7 @@ def seed_supply_chain():
                 "speed": 65,
                 "speedUnit": "mph",
                 "heading": 270,
-                "lastUpdate": "2024-12-15T10:30:00Z",
+                "lastUpdate": "2026-12-15T10:30:00Z",
                 "status": "online"
             }
         }))
@@ -429,7 +429,7 @@ def seed_supply_chain():
                 "minThreshold": -22,
                 "maxThreshold": -15,
                 "status": "normal",
-                "lastReading": "2024-12-15T10:30:00Z"
+                "lastReading": "2026-12-15T10:30:00Z"
             }
         }))
         all_relationships.append((temp_sensor_id, "monitors", cont["id"], None))

@@ -1151,7 +1151,7 @@ def main():
     report_gen = ReportGenerator(onto_service, data_service)
 
     # Tax year selection
-    tax_year = st.sidebar.selectbox("Tax Year", [2024, 2023, 2022], index=0)
+    tax_year = st.sidebar.selectbox("Tax Year", [2026, 2023, 2022], index=0)
 
     # Main tabs
     tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([

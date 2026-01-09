@@ -100,7 +100,7 @@ client.twins.update("soil-sensor-field-001-01", properties={
     "moisture": 35.5,
     "temperature": 22.0,
     "electricalConductivity": 1.4,
-    "lastReading": "2024-12-15T10:30:00Z"
+    "lastReading": "2026-12-15T10:30:00Z"
 })
 
 # Get drone status

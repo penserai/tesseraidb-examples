@@ -166,7 +166,7 @@ def seed_manufacturing():
                 "partsTarget": 160,
                 "cycleTime": 180,
                 "cycleTimeUnit": "seconds",
-                "lastMaintenance": "2024-11-15",
+                "lastMaintenance": "2026-11-15",
                 "nextMaintenance": "2026-01-15",
                 "totalRuntime": 15420,
                 "runtimeUnit": "hours"
@@ -187,7 +187,7 @@ def seed_manufacturing():
                 "unit": "mm/s",
                 "threshold": 4.5,
                 "status": "normal",
-                "lastReading": "2024-12-15T10:30:00Z"
+                "lastReading": "2026-12-15T10:30:00Z"
             }
         }))
         all_relationships.append((spindle_sensor_id, "monitors", cnc["id"], None))
@@ -225,7 +225,7 @@ def seed_manufacturing():
                 "jointPositions": [0, -45, 90, 0, 45, 0],
                 "tcpSpeed": 1500,
                 "tcpSpeedUnit": "mm/s",
-                "lastMaintenance": "2024-10-20"
+                "lastMaintenance": "2026-10-20"
             }
         }))
         all_relationships.append((robot["line"], "hasRobot", robot["id"], None))
@@ -284,7 +284,7 @@ def seed_manufacturing():
                 "status": "available",
                 "accuracy": 0.001 if "CMM" in qc["type"] else 0.01,
                 "accuracyUnit": "mm",
-                "calibrationDate": "2024-11-01",
+                "calibrationDate": "2026-11-01",
                 "nextCalibration": "2026-05-01",
                 "partsInspectedToday": 45,
                 "defectsFoundToday": 2
@@ -327,11 +327,11 @@ def seed_manufacturing():
     # WORKPIECES / WORK IN PROGRESS
     # =========================================================================
     workpieces = [
-        {"id": "wip-001", "name": "Engine Block #EB-2024-1215-001", "type": "EngineBlock", "stage": "machining"},
-        {"id": "wip-002", "name": "Engine Block #EB-2024-1215-002", "type": "EngineBlock", "stage": "machining"},
-        {"id": "wip-003", "name": "Crankshaft #CS-2024-1215-001", "type": "Crankshaft", "stage": "grinding"},
-        {"id": "wip-004", "name": "Cylinder Head #CH-2024-1215-001", "type": "CylinderHead", "stage": "assembly"},
-        {"id": "wip-005", "name": "Transmission Housing #TH-2024-1215-001", "type": "TransmissionHousing", "stage": "quality"},
+        {"id": "wip-001", "name": "Engine Block #EB-2026-1215-001", "type": "EngineBlock", "stage": "machining"},
+        {"id": "wip-002", "name": "Engine Block #EB-2026-1215-002", "type": "EngineBlock", "stage": "machining"},
+        {"id": "wip-003", "name": "Crankshaft #CS-2026-1215-001", "type": "Crankshaft", "stage": "grinding"},
+        {"id": "wip-004", "name": "Cylinder Head #CH-2026-1215-001", "type": "CylinderHead", "stage": "assembly"},
+        {"id": "wip-005", "name": "Transmission Housing #TH-2026-1215-001", "type": "TransmissionHousing", "stage": "quality"},
     ]
 
     for wp in workpieces:
@@ -342,13 +342,13 @@ def seed_manufacturing():
             "properties": {
                 "productType": wp["type"],
                 "stage": wp["stage"],
-                "batchNumber": "BATCH-2024-1215",
-                "orderNumber": "PO-2024-5678",
+                "batchNumber": "BATCH-2026-1215",
+                "orderNumber": "PO-2026-5678",
                 "material": "Aluminum Alloy 356" if wp["type"] in ["EngineBlock", "CylinderHead", "TransmissionHousing"] else "Steel 42CrMo4",
                 "weight": 35 if wp["type"] == "EngineBlock" else 15,
                 "weightUnit": "kg",
-                "startTime": "2024-12-15T06:00:00Z",
-                "dueDate": "2024-12-16T18:00:00Z",
+                "startTime": "2026-12-15T06:00:00Z",
+                "dueDate": "2026-12-16T18:00:00Z",
                 "qualityStatus": "pending"
             }
         }))
@@ -422,8 +422,8 @@ def seed_manufacturing():
     # =========================================================================
     maintenance_tasks = [
         {"id": "maint-001", "machine": "cnc-001", "type": "Preventive", "description": "Spindle bearing replacement", "status": "scheduled", "date": "2026-01-15"},
-        {"id": "maint-002", "machine": "cnc-004", "type": "Preventive", "description": "Coolant system flush", "status": "scheduled", "date": "2024-12-20"},
-        {"id": "maint-003", "machine": "robot-001", "type": "Corrective", "description": "Gripper calibration", "status": "in_progress", "date": "2024-12-15"},
+        {"id": "maint-002", "machine": "cnc-004", "type": "Preventive", "description": "Coolant system flush", "status": "scheduled", "date": "2026-12-20"},
+        {"id": "maint-003", "machine": "robot-001", "type": "Corrective", "description": "Gripper calibration", "status": "in_progress", "date": "2026-12-15"},
     ]
 
     for maint in maintenance_tasks:

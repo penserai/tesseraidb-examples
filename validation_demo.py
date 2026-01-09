@@ -64,7 +64,7 @@ VALID_ROBOT_TURTLE = """
 <http://example.org/robot/amr-001>
     rdf:type robo:AMR ;
     dtaas:name "AMR Unit 001" ;
-    robo:serialNumber "SN-AMR-2024-001"^^xsd:string ;
+    robo:serialNumber "SN-AMR-2026-001"^^xsd:string ;
     robo:manufacturer "Boston Dynamics"^^xsd:string ;
     robo:payload "50.0"^^xsd:decimal ;
     robo:operationalStatus "idle"^^xsd:string ;

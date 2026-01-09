@@ -92,7 +92,7 @@ client.twins.update("sensor-vibration-pump-001", properties={
     "currentValue": 4.2,
     "unit": "mm/s",
     "status": "warning",
-    "lastReading": "2024-12-15T10:30:00Z"
+    "lastReading": "2026-12-15T10:30:00Z"
 })
 ```
 

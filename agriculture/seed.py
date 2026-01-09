@@ -108,9 +108,9 @@ def seed_agriculture():
                 "soilMoistureUnit": "percent",
                 "organicMatter": 3.5,
                 "organicMatterUnit": "percent",
-                "lastTilled": "2024-03-15",
-                "plantingDate": "2024-04-01",
-                "expectedHarvest": "2024-10-15",
+                "lastTilled": "2026-03-15",
+                "plantingDate": "2026-04-01",
+                "expectedHarvest": "2026-10-15",
                 "yieldEstimate": field["area"] * 2.5,
                 "yieldUnit": "tons",
                 "status": "growing"
@@ -202,8 +202,8 @@ def seed_agriculture():
                 "flowRate": 200 if field["irrigation"] == "drip" else 800,
                 "flowRateUnit": "gallons/minute",
                 "currentStatus": "idle",
-                "lastIrrigation": "2024-12-14T22:00:00Z",
-                "nextScheduled": "2024-12-15T22:00:00Z",
+                "lastIrrigation": "2026-12-14T22:00:00Z",
+                "nextScheduled": "2026-12-15T22:00:00Z",
                 "waterAppliedToday": 0,
                 "waterAppliedUnit": "acre-feet"
             }
@@ -234,7 +234,7 @@ def seed_agriculture():
                     "electricalConductivity": 1.2 + (i * 0.2),
                     "ecUnit": "dS/m",
                     "batteryLevel": 85,
-                    "lastReading": "2024-12-15T10:00:00Z",
+                    "lastReading": "2026-12-15T10:00:00Z",
                     "status": "online"
                 }
             }))
@@ -271,7 +271,7 @@ def seed_agriculture():
                 "rainfallUnit": "mm",
                 "evapotranspiration": 5.2,
                 "etUnit": "mm/day",
-                "lastReading": "2024-12-15T10:00:00Z",
+                "lastReading": "2026-12-15T10:00:00Z",
                 "status": "online"
             }
         }))
@@ -304,8 +304,8 @@ def seed_agriculture():
                 "batteryLevel": 80,
                 "status": "idle",
                 "totalFlightHours": 250,
-                "lastMission": "2024-12-14T14:00:00Z",
-                "firmwareVersion": "2024.3"
+                "lastMission": "2026-12-14T14:00:00Z",
+                "firmwareVersion": "2026.3"
             }
         }))
         all_relationships.append(("farm-sunrise-001", "hasDrone", drone["id"], None))
@@ -338,8 +338,8 @@ def seed_agriculture():
                 "speedUnit": "km/h",
                 "attachedImplement": None,
                 "status": "idle",
-                "lastService": "2024-11-01",
-                "nextService": "2025-02-01"
+                "lastService": "2026-11-01",
+                "nextService": "2026-02-01"
             }
         }))
         all_relationships.append(("farm-sunrise-001", "hasEquipment", tractor["id"], None))
@@ -368,7 +368,7 @@ def seed_agriculture():
                 "compatibleTractors": ["tractor-001", "tractor-002", "tractor-003", "tractor-004"],
                 "status": "available",
                 "hoursOfUse": 1200,
-                "lastCalibration": "2024-09-15"
+                "lastCalibration": "2026-09-15"
             }
         }))
         all_relationships.append(("farm-sunrise-001", "hasEquipment", impl["id"], None))
@@ -416,7 +416,7 @@ def seed_agriculture():
             "sourceType": source["type"],
             "status": "operational",
             "waterQualityIndex": 92,
-            "lastTest": "2024-12-01"
+            "lastTest": "2026-12-01"
         }
 
         if source["type"] == "well":
@@ -464,7 +464,7 @@ def seed_agriculture():
                 "catchCount": hash(trap["id"]) % 50,
                 "thresholdLevel": 25,
                 "alertLevel": "low",
-                "lastChecked": "2024-12-14T08:00:00Z",
+                "lastChecked": "2026-12-14T08:00:00Z",
                 "batteryLevel": 90,
                 "status": "active"
             }
@@ -487,7 +487,7 @@ def seed_agriculture():
                 "resolution": "12MP",
                 "coverageArea": 50,
                 "coverageUnit": "acres",
-                "lastImage": "2024-12-15T06:00:00Z",
+                "lastImage": "2026-12-15T06:00:00Z",
                 "ndviValue": 0.75 + (i * 0.02),
                 "cropStressIndex": 15 + (i * 2),
                 "status": "online"
@@ -504,7 +504,7 @@ def seed_agriculture():
         "name": "Integrated Farm Management Platform",
         "properties": {
             "vendor": "Climate Corporation",
-            "version": "2024.4",
+            "version": "2026.4",
             "connectedSensors": 150,
             "connectedEquipment": 15,
             "activeAlerts": 3,

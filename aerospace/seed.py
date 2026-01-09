@@ -335,7 +335,7 @@ def seed_aerospace():
                     "temperatureUnit": "Celsius",
                     "powerConsumption": 50 + (sat_num * 5),
                     "powerUnit": "W",
-                    "lastTelemetry": "2024-12-15T10:00:00Z",
+                    "lastTelemetry": "2026-12-15T10:00:00Z",
                     "anomalyCount": sat_num % 3
                 }
             }))
@@ -385,7 +385,7 @@ def seed_aerospace():
             "electronFlux": "nominal",
             "radiationStormLevel": "S0",
             "geomagneticStormLevel": "G0",
-            "lastUpdate": "2024-12-15T10:00:00Z",
+            "lastUpdate": "2026-12-15T10:00:00Z",
             "alerts": []
         }
     }))
@@ -423,7 +423,7 @@ def seed_aerospace():
                     "latency": 25 + (terminal_id % 10),
                     "latencyUnit": "ms",
                     "status": "connected",
-                    "activeSince": "2024-06-15"
+                    "activeSince": "2026-06-15"
                 }
             }))
             all_relationships.append((tid, "connectedTo", f"sat-{(terminal_id % 142) + 1:04d}", None))

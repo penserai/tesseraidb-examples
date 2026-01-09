@@ -168,7 +168,7 @@ def seed_smart_building():
             "heatingCapacity": 2000,
             "heatingCapacityUnit": "kW",
             "installDate": "2019-03-15",
-            "lastMaintenance": "2024-11-01",
+            "lastMaintenance": "2026-11-01",
             "status": "operational"
         }
     }))
@@ -231,7 +231,7 @@ def seed_smart_building():
                 "currentValue": 22.5,
                 "minValue": -10,
                 "maxValue": 50,
-                "lastReading": "2024-12-15T10:30:00Z",
+                "lastReading": "2026-12-15T10:30:00Z",
                 "status": "online"
             }
         }))
@@ -251,7 +251,7 @@ def seed_smart_building():
                 "accuracy": 50,
                 "currentValue": 450,
                 "threshold": 1000,
-                "lastReading": "2024-12-15T10:30:00Z",
+                "lastReading": "2026-12-15T10:30:00Z",
                 "status": "online"
             }
         }))
@@ -270,7 +270,7 @@ def seed_smart_building():
                 "sensorType": "PIR",
                 "currentOccupancy": 0,
                 "isOccupied": False,
-                "lastMotionDetected": "2024-12-15T09:45:00Z",
+                "lastMotionDetected": "2026-12-15T09:45:00Z",
                 "status": "online"
             }
         }))
@@ -291,7 +291,7 @@ def seed_smart_building():
                 "currentValue": 45,
                 "minValue": 0,
                 "maxValue": 100,
-                "lastReading": "2024-12-15T10:30:00Z",
+                "lastReading": "2026-12-15T10:30:00Z",
                 "status": "online"
             }
         }))
@@ -388,7 +388,7 @@ def seed_smart_building():
             "monthConsumption": 162000,
             "consumptionUnit": "kWh",
             "powerFactor": 0.95,
-            "lastReading": "2024-12-15T10:30:00Z",
+            "lastReading": "2026-12-15T10:30:00Z",
             "status": "online"
         }
     }))
@@ -412,7 +412,7 @@ def seed_smart_building():
                 "currentFloor": i,
                 "direction": "idle",
                 "status": "operational",
-                "lastMaintenance": "2024-10-15"
+                "lastMaintenance": "2026-10-15"
             }
         }))
         all_relationships.append(("building-hq-001", "hasElevator", elevator_id, None))
@@ -430,7 +430,7 @@ def seed_smart_building():
             "totalZones": 100,
             "activeAlarms": 0,
             "status": "armed",
-            "lastTest": "2024-12-01"
+            "lastTest": "2026-12-01"
         }
     }))
     all_relationships.append(("building-hq-001", "hasSystem", "fire-panel-main", None))
@@ -446,7 +446,7 @@ def seed_smart_building():
                 "count": floor["area"] // 50,  # 1 detector per 50 sqm
                 "type": "photoelectric",
                 "status": "normal",
-                "lastTest": "2024-12-01"
+                "lastTest": "2026-12-01"
             }
         }))
         all_relationships.append(("fire-panel-main", "monitors", detector_id, None))
@@ -481,7 +481,7 @@ def seed_smart_building():
                 "model": "iCLASS SE",
                 "technology": "RFID",
                 "status": "online",
-                "lastAccess": "2024-12-15T09:30:00Z"
+                "lastAccess": "2026-12-15T09:30:00Z"
             }
         }))
         all_relationships.append(("access-control-main", "controls", reader_id, None))
@@ -502,7 +502,7 @@ def seed_smart_building():
             "consumptionUnit": "liters",
             "flowRate": 50,
             "flowRateUnit": "liters/min",
-            "lastReading": "2024-12-15T10:30:00Z",
+            "lastReading": "2026-12-15T10:30:00Z",
             "status": "online"
         }
     }))

@@ -89,7 +89,7 @@ maintenance_due = client.sparql.query("""
     SELECT ?vehicle ?nextService WHERE {
         ?vehicle a ?type .
         ?vehicle auto:nextServiceDue ?nextService .
-        FILTER (?nextService < "2025-01-01")
+        FILTER (?nextService < "2026-01-01")
     }
 """)
 

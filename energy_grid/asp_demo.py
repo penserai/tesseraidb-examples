@@ -974,7 +974,7 @@ NOTE: This demo invokes an LLM on the server for each message.
         print("\nTo configure LLM, set in config.toml:")
         print("  [llm]")
         print("  primary_provider = \"anthropic\"  # or \"openai\", \"ollama\"")
-        print("  primary_model = \"claude-sonnet-4-20250514\"")
+        print("  primary_model = \"claude-sonnet-4-20260514\"")
         print("  # For Anthropic: set ANTHROPIC_API_KEY env var")
         print("  # For OpenAI: set openai_api_key in config or OPENAI_API_KEY env var")
         print("  # For Ollama: set primary_base_url = \"http://localhost:11434\"")

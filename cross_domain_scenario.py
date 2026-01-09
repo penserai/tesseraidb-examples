@@ -179,11 +179,11 @@ def seed_cross_domain_scenario():
 
     # Vaccines
     create_domain_twin(client, "healthcare",
-        twin_id="vaccine-batch-flu-2024",
+        twin_id="vaccine-batch-flu-2026",
         twin_type="Vaccine",
-        name="Influenza Vaccine Batch 2024",
+        name="Influenza Vaccine Batch 2026",
         properties={
-            "batchNumber": "FLU-2024-12345",
+            "batchNumber": "FLU-2026-12345",
             "doses": 5000,
             "requiredTemp": -20,
             "tempUnit": "celsius",
@@ -348,7 +348,7 @@ def seed_cross_domain_scenario():
     add_relationship_safe(client, "medical-supply-warehouse", "contains", "cold-storage-vaccines")
     rels_created += 1
     # Cross-domain: Cold storage stores healthcare vaccines
-    add_relationship_safe(client, "cold-storage-vaccines", "stores", "vaccine-batch-flu-2024")
+    add_relationship_safe(client, "cold-storage-vaccines", "stores", "vaccine-batch-flu-2026")
     rels_created += 1
 
     # Pharmaceutical Shipment
@@ -362,7 +362,7 @@ def seed_cross_domain_scenario():
             "contents": ["antibiotics", "analgesics", "anesthetics"],
             "priority": "high",
             "status": "in_transit",
-            "eta": "2024-12-16T14:00:00Z"
+            "eta": "2026-12-16T14:00:00Z"
         }
     )
     twins_created += 1

@@ -140,7 +140,7 @@ def seed_automotive():
                 },
                 "speed": 35 if i % 10 != 0 else 0,
                 "speedUnit": "mph",
-                "lastService": "2024-10-15",
+                "lastService": "2026-10-15",
                 "nextServiceDue": "2026-01-15",
                 "licensePlate": f"EV{i:04d}CA"
             }
@@ -182,7 +182,7 @@ def seed_automotive():
                 "speed": 45,
                 "speedUnit": "mph",
                 "mpgCombined": 82,
-                "lastService": "2024-09-20",
+                "lastService": "2026-09-20",
                 "nextServiceDue": "2026-03-20",
                 "licensePlate": f"HY{i:04d}CA"
             }
@@ -222,8 +222,8 @@ def seed_automotive():
                 "speed": 55 if i % 8 != 0 else 0,
                 "speedUnit": "mph",
                 "mpg": 12 if is_heavy else 18,
-                "lastService": "2024-08-10",
-                "nextServiceDue": "2024-12-10",
+                "lastService": "2026-08-10",
+                "nextServiceDue": "2026-12-10",
                 "licensePlate": f"DL{i:04d}CA"
             }
         }))
@@ -245,7 +245,7 @@ def seed_automotive():
             "properties": {
                 "manufacturer": "Geotab",
                 "model": "GO9",
-                "firmwareVersion": "2024.3.1",
+                "firmwareVersion": "2026.3.1",
                 "updateRate": 10,
                 "updateRateUnit": "seconds",
                 "gpsPrecision": 2.5,
@@ -256,7 +256,7 @@ def seed_automotive():
                 "cellularNetwork": "LTE",
                 "signalStrength": 85,
                 "status": "online",
-                "lastCommunication": "2024-12-15T10:30:00Z"
+                "lastCommunication": "2026-12-15T10:30:00Z"
             }
         }))
         all_relationships.append((telematics_id, "installedIn", vid, None))
@@ -340,8 +340,8 @@ def seed_automotive():
             "properties": {
                 "maintenanceType": maint_type,
                 "status": "completed" if i <= 20 else ("scheduled" if i <= 25 else "in_progress"),
-                "scheduledDate": "2024-12-10" if i <= 25 else "2024-12-15",
-                "completedDate": "2024-12-10" if i <= 20 else None,
+                "scheduledDate": "2026-12-10" if i <= 25 else "2026-12-15",
+                "completedDate": "2026-12-10" if i <= 20 else None,
                 "odometerAtService": 50000 + (i * 1000),
                 "cost": 150 + (i * 25),
                 "costCurrency": "USD",
@@ -396,8 +396,8 @@ def seed_automotive():
             "name": f"Delivery {i:05d}",
             "properties": {
                 "status": "completed" if i <= 30 else ("in_progress" if i <= 40 else "scheduled"),
-                "startTime": "2024-12-15T06:00:00Z",
-                "endTime": "2024-12-15T14:00:00Z" if i <= 30 else None,
+                "startTime": "2026-12-15T06:00:00Z",
+                "endTime": "2026-12-15T14:00:00Z" if i <= 30 else None,
                 "stopsCompleted": route["stops"] if i <= 30 else (route["stops"] // 2 if i <= 40 else 0),
                 "totalStops": route["stops"],
                 "distanceTraveled": route["distance"] if i <= 30 else (route["distance"] / 2 if i <= 40 else 0),
@@ -431,7 +431,7 @@ def seed_automotive():
                     "unit": sensor["unit"],
                     "normalRange": {"min": sensor["normal"] - 10, "max": sensor["normal"] + 10},
                     "status": "normal",
-                    "lastReading": "2024-12-15T10:30:00Z"
+                    "lastReading": "2026-12-15T10:30:00Z"
                 }
             }))
             all_relationships.append((sensor_id, "monitors", vid, None))
@@ -470,7 +470,7 @@ def seed_automotive():
         "name": "Fleet Management Platform",
         "properties": {
             "vendor": "Samsara",
-            "version": "2024.4",
+            "version": "2026.4",
             "connectedVehicles": 150,
             "activeDrivers": 120,
             "dailyTrips": 450,

@@ -133,7 +133,7 @@ class TaxationDataCollector:
                     "transaction_type": twin_type,
                     "value": props.get("transactionValue", 0),
                     "currency": props.get("currency", "USD"),
-                    "fiscal_year": props.get("fiscalYear", 2024),
+                    "fiscal_year": props.get("fiscalYear", 2026),
                     "method": props.get("selectedMethod", "Unknown"),
                     "description": props.get("productDescription", props.get("serviceDescription", "")),
                     "royalty_rate": props.get("royaltyRate"),
@@ -186,7 +186,7 @@ class TaxationDataCollector:
                     "title": props.get("documentTitle", twin.name),
                     "prepared_by": props.get("preparedBy", ""),
                     "status": props.get("documentStatus", "draft"),
-                    "tax_year": props.get("taxYear", 2024)
+                    "tax_year": props.get("taxYear", 2026)
                 })
 
             elif twin_type == "ComparabilityAnalysis":
@@ -886,7 +886,7 @@ HTML_CONTENT = """
         <div class="panel transaction-panel">
             <div class="panel-title">
                 <span class="panel-icon">&#128257;</span>
-                Intercompany Transactions FY2024
+                Intercompany Transactions FY2026
             </div>
             <div id="transaction-list" class="transaction-list">
                 <!-- Transactions populated by JS -->
@@ -932,7 +932,7 @@ HTML_CONTENT = """
                     </div>
                     <div class="compliance-item">
                         <span class="compliance-icon" style="color: #4caf50">&#10004;</span>
-                        <span class="compliance-text">Documentation complete for FY2024</span>
+                        <span class="compliance-text">Documentation complete for FY2026</span>
                     </div>
                     <div class="compliance-item">
                         <span class="compliance-icon" style="color: #4caf50">&#10004;</span>
@@ -1130,7 +1130,7 @@ HTML_CONTENT = """
                     <div class="transaction-item">
                         <div class="transaction-info">
                             <div>
-                                ${txn.name.replace('FY2024 ', '')}
+                                ${txn.name.replace('FY2026 ', '')}
                                 <span class="transaction-type ${typeInfo.class}">${typeInfo.label}</span>
                             </div>
                             <div class="transaction-method">Method: ${txn.method} ${details ? '| ' + details : ''}</div>

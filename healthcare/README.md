@@ -88,7 +88,7 @@ maintenance = client.sparql.query("""
     SELECT ?equip ?name ?nextMaint WHERE {
         ?equip health:name ?name .
         ?equip health:nextMaintenance ?nextMaint .
-        FILTER (?nextMaint < "2025-06-01")
+        FILTER (?nextMaint < "2026-06-01")
     }
 """)
 
