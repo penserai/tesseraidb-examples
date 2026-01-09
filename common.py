@@ -1,5 +1,19 @@
+# Copyright 2024-2025 Penserai Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """
-Common utilities for DTaaS examples.
+Common utilities for TesseraiDB examples.
 
 This module provides shared functionality for all example scripts,
 including client initialization, logging setup, and helper functions.
@@ -7,6 +21,14 @@ including client initialization, logging setup, and helper functions.
 Cross-Domain Interoperability:
     This module supports domain-aware twin creation and querying,
     enabling interoperability across different industry domains.
+
+Configuration:
+    Set the following environment variables to configure the examples:
+
+    TESSERAI_API_URL: The TesseraiDB API URL (default: https://api.tesserai.io)
+    TESSERAI_API_KEY: Your API key (required for authentication)
+
+    You can get your API key from the TesseraiDB console at https://tesserai.io
 """
 
 import sys
@@ -16,17 +38,17 @@ from typing import Optional
 
 import httpx
 
-# Add the SDK to the path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'sdks', 'python'))
+# Add the SDK to the path if running from source
+_sdk_path = os.path.join(os.path.dirname(__file__), '..', 'sdks', 'python')
+if os.path.exists(_sdk_path):
+    sys.path.insert(0, _sdk_path)
 
 from dtaas import DTaaSClient
 from dtaas.exceptions import ConflictError, NotFoundError
 from dtaas.models import BatchOperation, BatchOperationType, BatchConfig, BatchRequest, BatchResponse
 
-# Default configuration
-DEFAULT_BASE_URL = "http://localhost:8080"
-DEFAULT_USERNAME = "admin"
-DEFAULT_PASSWORD = "admin"
+# Default configuration - uses TesseraiDB Cloud API
+DEFAULT_BASE_URL = "https://api.tesserai.io"
 
 
 # =============================================================================
@@ -80,120 +102,62 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
-logger = logging.getLogger("dtaas-examples")
+logger = logging.getLogger("tesserai-examples")
 
 
-def login(
-    base_url: str,
-    username: str,
-    password: str
-) -> str:
+def get_api_key() -> Optional[str]:
     """
-    Login to DTaaS and return a JWT token.
+    Get the TesseraiDB API key from environment variables.
 
-    Args:
-        base_url: The base URL of the DTaaS server
-        username: The username
-        password: The password
+    Checks TESSERAI_API_KEY first, then falls back to DTAAS_TOKEN for
+    backwards compatibility.
 
     Returns:
-        str: JWT token
-
-    Raises:
-        Exception: If login fails
+        str: The API key, or None if not set
     """
-    url = f"{base_url}/api/v1/auth/login"
-    response = httpx.post(
-        url,
-        json={"username": username, "password": password},
-        timeout=30.0
-    )
-
-    if response.status_code == 200:
-        data = response.json()
-        return data["token"]
-    else:
-        raise Exception(f"Login failed: {response.status_code} - {response.text}")
-
-
-def is_auth_enabled(base_url: str) -> bool:
-    """
-    Check if authentication is actually required on the server.
-
-    Tests by making an unauthenticated request to a protected endpoint.
-
-    Args:
-        base_url: The base URL of the DTaaS server
-
-    Returns:
-        bool: True if auth is required, False if requests work without auth
-    """
-    try:
-        # Try an unauthenticated request to /api/v1/auth/me
-        # If auth is disabled, this returns 200 with authenticated=true
-        # If auth is enabled without token, this returns 200 with authenticated=false
-        response = httpx.get(f"{base_url}/api/v1/auth/me", timeout=10.0)
-        if response.status_code == 200:
-            data = response.json()
-            # If auth_enabled is false, auth is disabled server-wide
-            if not data.get("auth_enabled", True):
-                return False
-            # If we got authenticated=true without sending a token, auth is disabled
-            if data.get("authenticated", False):
-                return False
-    except Exception:
-        pass
-    # Default to assuming auth is enabled if we can't check
-    return True
+    return os.environ.get("TESSERAI_API_KEY") or os.environ.get("DTAAS_TOKEN")
 
 
 def get_client(
     base_url: Optional[str] = None,
-    username: Optional[str] = None,
-    password: Optional[str] = None,
-    token: Optional[str] = None
+    api_key: Optional[str] = None
 ) -> DTaaSClient:
     """
-    Create and return a DTaaS client.
-
-    If a token is provided, it will be used directly. Otherwise, the client
-    will login with username/password to obtain a JWT token. If auth is
-    disabled on the server, no token is needed.
+    Create and return a TesseraiDB client.
 
     Args:
-        base_url: The base URL of the DTaaS server (default: http://localhost:8080)
-        username: Username for login (default: admin)
-        password: Password for login (default: admin)
-        token: Pre-existing JWT token (if provided, skips login)
+        base_url: The TesseraiDB API URL (default: https://api.tesserai.io)
+        api_key: Your API key. If not provided, reads from TESSERAI_API_KEY
+                 environment variable.
 
     Returns:
         DTaaSClient: An initialized client instance
+
+    Raises:
+        ValueError: If no API key is provided or found in environment
+
+    Example:
+        # Using environment variable (recommended)
+        export TESSERAI_API_KEY="your-api-key"
+        client = get_client()
+
+        # Or pass directly
+        client = get_client(api_key="your-api-key")
     """
-    url = base_url or os.environ.get("DTAAS_URL", DEFAULT_BASE_URL)
+    url = base_url or os.environ.get("TESSERAI_API_URL", DEFAULT_BASE_URL)
 
-    logger.info(f"Connecting to DTaaS at {url}")
+    logger.info(f"Connecting to TesseraiDB at {url}")
 
-    # Check if auth is enabled on the server
-    if not is_auth_enabled(url):
-        logger.info("Authentication is disabled on server, skipping login")
-        return DTaaSClient(url, token=None)
+    # Get API key from parameter or environment
+    token = api_key or get_api_key()
 
-    # Use provided token or login to get one
-    env_token = os.environ.get("DTAAS_TOKEN", "")
+    if not token:
+        raise ValueError(
+            "No API key provided. Set TESSERAI_API_KEY environment variable "
+            "or pass api_key parameter. Get your API key from https://tesserai.io"
+        )
 
-    # Only use env token if it looks like a real JWT (starts with eyJ)
-    if token:
-        api_token = token
-    elif env_token.startswith("eyJ"):
-        api_token = env_token
-    else:
-        # Login with username/password
-        user = username or os.environ.get("DTAAS_USERNAME", DEFAULT_USERNAME)
-        pwd = password or os.environ.get("DTAAS_PASSWORD", DEFAULT_PASSWORD)
-        logger.info(f"Logging in as {user}")
-        api_token = login(url, user, pwd)
-
-    return DTaaSClient(url, token=api_token)
+    return DTaaSClient(url, token=token)
 
 
 def create_twin_safe(client: DTaaSClient, twin_data: dict, upsert: bool = True) -> Optional[dict]:

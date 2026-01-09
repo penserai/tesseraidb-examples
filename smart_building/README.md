@@ -1,269 +1,144 @@
-# Smart Building Digital Twin Examples
+# Smart Building Example
 
-This directory contains examples for creating and managing a smart building digital twin, including real-time sensor monitoring using RDF Stream Processing (RSP).
+A comprehensive smart building digital twin demonstrating TesseraiDB's capabilities for building management, sensor monitoring, and real-time stream processing (RSP).
 
-## Files
+## Overview
 
-| File | Description |
-|------|-------------|
-| `seed.py` | Creates the smart building digital twin with floors, rooms, HVAC systems, sensors, and lighting |
-| `rsp_demo.py` | Demonstrates real-time sensor monitoring using continuous SPARQL queries |
+- What this domain models: Multi-floor commercial building with HVAC, lighting, electrical systems, and environmental sensors
+- Key entities and relationships: Building, floors, rooms, HVAC equipment (AHUs, VAV boxes), sensors (temperature, CO2, occupancy, humidity), lighting zones
+- Real-world use cases: Energy optimization, occupant comfort, predictive maintenance, space utilization, air quality monitoring
 
 ## Prerequisites
 
-1. Start the TesseraiDB server:
-   ```bash
-   cargo run
-   ```
+- TesseraiDB account at [tesserai.io](https://tesserai.io)
+- Set your API key: `export TESSERAI_API_KEY="your-api-key"`
+- Python 3.10+ with the TesseraiDB SDK: `pip install tesserai`
 
-2. Seed the smart building data:
-   ```bash
-   python examples/smart_building/seed.py
-   ```
+## Quick Start
 
-## RSP Demo
+```bash
+# Seed the example data
+python seed.py
 
-The `rsp_demo.py` script demonstrates RDF Stream Processing for real-time building monitoring:
+# Run the RSP demo with sensor simulation
+python rsp_demo.py --simulate
 
-### Features
+# Custom simulation duration
+python rsp_demo.py --simulate --duration 120
+```
+
+## Digital Twins
+
+List of main twin types created:
+
+- **Building**: Main building entity with metadata
+- **Floor**: Building floors (lobby through rooftop)
+- **Room**: Offices, meeting rooms, break rooms, restrooms
+- **HVACPlant**: Central HVAC plant equipment
+- **AirHandlingUnit**: Air handling units per zone
+- **VAVBox**: Variable air volume boxes per room
+- **TemperatureSensor**: Room temperature monitoring
+- **CO2Sensor**: Air quality monitoring in large rooms
+- **OccupancySensor**: Space utilization tracking
+- **HumiditySensor**: Humidity monitoring
+- **LightingController**: Building lighting system
+- **LightingZone**: Lighting fixtures per zone
+- **ElectricalPanel**: Main and floor sub-panels
+
+## Ontology
+
+The smart building ontology defines:
+
+- **Spatial hierarchy**: Building -> Floor -> Room
+- **HVAC topology**: Plant -> AHU -> VAV -> Room
+- **Sensor relationships**: Sensor -> monitors -> Room/Equipment
+- **Control relationships**: Controller -> controls -> Zone/Equipment
+
+## RSP Demo Features
+
+The `rsp_demo.py` demonstrates RDF Stream Processing for real-time monitoring:
 
 - **Stream Sources**: Captures sensor updates from the EventBus
-- **Continuous Queries**: Four pre-configured monitoring queries:
-  - High Temperature Alert (> 26°C)
+- **Continuous Queries**: Pre-configured monitoring queries
+  - High Temperature Alert (> 26C)
   - CO2 Threshold Violation (> 800 ppm)
   - Occupancy Pattern Detection
   - Low Humidity Alert (< 30%)
 - **Sliding Windows**: Time-based and tumbling window configurations
-- **Sensor Simulation**: Optional mode to generate realistic sensor events
 
-### Usage
-
-```bash
-# Basic run - shows current RSP status and query results
-python examples/smart_building/rsp_demo.py
-
-# Run with sensor simulation (60 seconds of updates)
-python examples/smart_building/rsp_demo.py --simulate
-
-# Custom simulation duration
-python examples/smart_building/rsp_demo.py --simulate --duration 120
-
-# Clean up after demo
-python examples/smart_building/rsp_demo.py --simulate --cleanup
-```
-
-### Example Output
-
-```
-============================================================
- Smart Building RSP Demo
- Real-time Sensor Monitoring with Continuous Queries
-============================================================
-
-  RSP Service Available ✓
-
-============================================================
- Setting Up Stream Sources
-============================================================
-  ✓ Created stream source: smart-building-sensors (ID: example-token_019b...)
-    Status: Running
-
-============================================================
- Setting Up Continuous Queries
-============================================================
-
-  ✓ Created query: High Temperature Alert
-    ID: example-token_019b...
-    Window: time_based, 300s
-    Active: True
-
-  ✓ Created query: CO2 Threshold Violation
-    ID: example-token_019b...
-    Window: time_based, 180s
-    Active: True
-
-  ✓ Created query: Occupancy Pattern Detection
-    ID: example-token_019b...
-    Window: tumbling, 60s
-    Active: True
-
-  ✓ Created query: Low Humidity Alert
-    ID: example-token_019b...
-    Window: time_based, 600s
-    Active: True
-
-============================================================
- RSP Service Statistics
-============================================================
-  Total Queries:           4
-  Active Queries:          4
-  Total Sources:           1
-  Events in Windows:       0
-  Results Generated:       0
-
-============================================================
- Simulating Sensor Updates (70s)
-============================================================
-  ✓ sensor-temp-room-2-101: 25.7°C
-  ✓ sensor-co2-room-2-101: 518 ppm
-  ✓ sensor-temp-room-2-106: 20.8°C
-  🔥 HIGH sensor-temp-room-2-108: 26.5°C
-  ✓ sensor-co2-room-2-108: 514 ppm
-  🔥 HIGH sensor-temp-room-2-102: 28.7°C
-  ⚠️  HIGH sensor-co2-room-2-103: 860 ppm
-  ✓ sensor-temp-room-2-105: 25.0°C
-  ...
-
-  Total updates: 82
-
-  Waiting for query evaluation...
-
-============================================================
- Query Results
-============================================================
-
-  📊 High Temperature Alert
-     ID: example-token_019b...
-     Active: True
-     Total Results: 1
-     Recent Results:
-  - Window: 2026-12-23T18:25:17Z to 2026-12-23T18:26:18Z
-  - Window: 2026-12-23T18:25:17Z to 2026-12-23T18:26:18Z
-  - Window: 2026-12-23T18:25:17Z to 2026-12-23T18:26:18Z
-         Events: 71, Bindings: 50
-         Sample: {'sensor': {'type': 'uri', 'value': '<urn:tesserai:twin:sensor-temp-room-2-102>'},
-                  'temperature': {'type': 'literal', 'value': '"27.9"^^<xsd:double>'}}
-
-  📊 CO2 Threshold Violation
-     ID: example-token_019b...
-     Active: True
-     Total Results: 2
-     Recent Results:
-  - Window: 2026-12-23T18:25:17Z to 2026-12-23T18:26:18Z
-  - Window: 2026-12-23T18:25:17Z to 2026-12-23T18:26:18Z
-  - Window: 2026-12-23T18:25:17Z to 2026-12-23T18:26:18Z
-         Events: 71, Bindings: 2
-         Sample: {'co2Level': {'type': 'literal', 'value': '"958"^^<xsd:integer>'},
-                  'sensor': {'type': 'uri', 'value': '<urn:tesserai:twin:sensor-co2-room-2-108>'}}
-
-  📊 Occupancy Pattern Detection
-     ID: example-token_019b...
-     Active: True
-     Total Results: 1
-     Recent Results:
-  - Window: 2026-12-23T18:25:17Z to 2026-12-23T18:26:18Z
-  - Window: 2026-12-23T18:25:17Z to 2026-12-23T18:26:18Z
-  - Window: 2026-12-23T18:25:17Z to 2026-12-23T18:26:18Z
-         Events: 71, Bindings: 25
-         Sample: {'isOccupied': {'type': 'literal', 'value': '"true"^^<xsd:boolean>'},
-                  'occupancy': {'type': 'literal', 'value': '"8"^^<xsd:integer>'},
-                  'sensor': {'type': 'uri', 'value': '<urn:tesserai:twin:sensor-occupancy-room-2-103>'}}
-
-  📊 Low Humidity Alert
-     ID: example-token_019b...
-     Active: True
-     Total Results: 0
-     No results yet (waiting for matching events)
-
-============================================================
- RSP Service Statistics
-============================================================
-  Total Queries:           4
-  Active Queries:          4
-  Total Sources:           1
-  Events in Windows:       257
-  Results Generated:       8
-
-============================================================
- Cleanup
-============================================================
-  ✓ Deleted query: example-token_019b...
-  ✓ Deleted query: example-token_019b...
-  ✓ Deleted query: example-token_019b...
-  ✓ Deleted query: example-token_019b...
-  ✓ Deleted source: example-token_019b...
-
-============================================================
- Demo Complete
-============================================================
-```
-
-### Python SDK Usage
-
-The demo uses the DTaaS Python SDK's RSP module:
+## API Usage Examples
 
 ```python
-from dtaas import DTaaSClient
-from dtaas.models import WindowConfig, WindowType, OutputConfig, ContinuousQueryCreate
+from common import get_client
 
-client = DTaaSClient("http://localhost:8080")
+client = get_client()
 
-# Create a stream source for sensor events
-source = client.rsp.create_source(
-    name="sensor-stream",
-    config={
-        "type": "event_bus",
-        "twin_id_patterns": ["sensor-*"],
-        "event_types": ["twin.updated", "twin.property_changed"],
+# Get all rooms with current conditions
+rooms = client.sparql.query("""
+    PREFIX bldg: <http://tesserai.io/ontology/smart_building#>
+    SELECT ?room ?name ?temp ?co2 ?occupancy WHERE {
+        ?room a bldg:Room ;
+              bldg:name ?name .
+        OPTIONAL { ?room bldg:currentTemperature ?temp }
+        OPTIONAL { ?room bldg:currentCO2 ?co2 }
+        OPTIONAL { ?room bldg:currentOccupancy ?occupancy }
     }
-)
+""")
 
-# Start the source
-client.rsp.start_source(source.id)
+# Find rooms with environmental issues
+issues = client.sparql.query("""
+    PREFIX bldg: <http://tesserai.io/ontology/smart_building#>
+    SELECT ?room ?temp ?co2 WHERE {
+        ?room a bldg:Room .
+        OPTIONAL { ?room bldg:currentTemperature ?temp }
+        OPTIONAL { ?room bldg:currentCO2 ?co2 }
+        FILTER (?temp > 26 || ?co2 > 800)
+    }
+""")
 
-# Create a continuous query for high temperature alerts
-query = client.rsp.create_query(
-    ContinuousQueryCreate(
-        name="High Temperature Alert",
-        sparql="""
-            PREFIX dto: <http://tesserai.io/ontology/>
-            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+# Update sensor reading
+client.twins.update("sensor-temp-room-2-101", properties={
+    "currentValue": 25.7,
+    "unit": "Celsius",
+    "lastReading": "2024-12-15T10:00:00Z",
+    "status": "online"
+})
 
-            SELECT ?sensor ?temperature ?timestamp
-            WHERE {
-                ?sensor dto:currentValue ?temperature .
-                OPTIONAL { ?sensor dto:lastReading ?timestamp }
-                FILTER(CONTAINS(STR(?sensor), "sensor-temp-"))
-                FILTER(xsd:double(?temperature) > 26.0)
-            }
-        """,
-        window=WindowConfig(
-            type=WindowType.TIME_BASED,
-            duration_seconds=300,  # 5-minute window
-            slide_seconds=60,      # Evaluate every minute
-        ),
-        stream_sources=[source.id],
-        output=OutputConfig(push_to_event_bus=True, persist_results=True),
-    )
-)
-
-# Activate and get results
-client.rsp.activate_query(query.id)
-results = client.rsp.get_query_results(query.id, limit=10)
-
-for result in results.results:
-    print(f"Window: {result.window_start} to {result.window_end}")
-    print(f"  Events: {result.event_count}, Bindings: {len(result.bindings)}")
-
-# Get RSP statistics
-stats = client.rsp.get_stats()
-print(f"Active queries: {stats.active_queries}")
-print(f"Events in windows: {stats.total_window_events}")
-print(f"Results generated: {stats.total_results_generated}")
+# Create RSP continuous query
+query = client.rsp.create_query({
+    "name": "High Temperature Alert",
+    "sparql": """
+        PREFIX bldg: <http://tesserai.io/ontology/smart_building#>
+        SELECT ?sensor ?temperature WHERE {
+            ?sensor bldg:currentValue ?temperature .
+            FILTER(CONTAINS(STR(?sensor), "sensor-temp-"))
+            FILTER(?temperature > 26.0)
+        }
+    """,
+    "window": {"type": "time_based", "duration_seconds": 300}
+})
 ```
 
-## Data Model
+## Additional Features
 
-The smart building twin includes:
+### Building Data Model
 
-- **Building**: Main building entity with metadata
-- **Floors**: 10 floors (lobby through rooftop)
-- **Rooms**: Offices, meeting rooms, break rooms, etc.
-- **Sensors**:
-  - Temperature sensors (all rooms)
-  - CO2 sensors (large rooms)
-  - Occupancy sensors (all rooms)
-  - Humidity sensors (offices, technical areas)
-- **HVAC**: Plant, air handling units, VAV boxes
-- **Lighting**: Controller and zone fixtures
-- **Electrical**: Main panel and floor sub-panels
+- **Building**: Main entity with metadata
+- **10 Floors**: Lobby through rooftop
+- **Multiple Room Types**: Offices, meeting rooms, break rooms
+- **Sensor Coverage**:
+  - Temperature sensors in all rooms
+  - CO2 sensors in large rooms
+  - Occupancy sensors throughout
+  - Humidity sensors in offices and technical areas
+
+### HVAC System
+
+- Central plant with chillers and boilers
+- Air handling units per zone
+- VAV boxes per room for individual control
+- Energy monitoring and optimization
+
+## License
+
+Apache License 2.0 - See [LICENSE](../LICENSE)

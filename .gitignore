@@ -44,3 +44,12 @@ Thumbs.db
 
 # Screenshots (generated)
 screenshots/
+
+# Node.js
+node_modules/
+.npm
+*.tsbuildinfo
+.vite/
+
+# Build artifacts
+*.zip
