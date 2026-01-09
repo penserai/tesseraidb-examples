@@ -6,36 +6,26 @@ Each example demonstrates how to model complex real-world systems using Tesserai
 
 ## Demo Environment
 
-> **Note:** The `default` tenant on [tesserai.io](https://tesserai.io) includes pre-seeded data for all examples below. This is provided for demonstration purposes, allowing you to explore the digital twins, run SPARQL queries, and interact with the data immediately without running any seed scripts.
-
-To populate your own tenant with example data, use the seed scripts described below.
+> **Note:** The `default` tenant on [tesserai.io](https://tesserai.io) includes pre-seeded data for all examples below. You can explore the digital twins, run SPARQL queries, and interact with the data immediately.
 
 ## Quick Start
 
-### 1. Get Your API Key
+### 1. Sign Up
 
-Sign up at [tesserai.io](https://tesserai.io) to get your API key.
+Create an account at [tesserai.io](https://tesserai.io) to access the platform.
 
-### 2. Set Environment Variables
+### 2. Explore the Data
+
+Navigate to the `default` tenant to explore pre-seeded example data:
+- Use the **Twin Explorer** to browse digital twins
+- Use the **SPARQL Editor** to run queries
+- View the **Graph Visualization** to see relationships
+
+### 3. Use the Python SDK (Optional)
 
 ```bash
 export TESSERAI_API_KEY="your-api-key"
-```
-
-### 3. Install the Python SDK
-
-```bash
 pip install tesserai
-```
-
-### 4. Run an Example
-
-```bash
-# Seed the smart building example
-python smart_building/seed.py
-
-# Run the web dashboard
-python smart_building/web_ui.py
 ```
 
 ## Available Examples
@@ -70,13 +60,11 @@ These examples demonstrate production-grade features with realistic simulations 
 ```
 examples/
 ├── common.py              # Shared utilities and client initialization
-├── seed_all.py           # Seed all examples at once
 ├── ontologies/           # OWL/Turtle ontology definitions
 │   ├── core.ttl
 │   ├── smart_building.ttl
 │   └── ...
 ├── smart_building/
-│   ├── seed.py           # Create digital twins
 │   ├── web_ui.py         # Real-time dashboard
 │   └── README.md         # Domain-specific guide
 └── ... (other domains)
@@ -97,21 +85,6 @@ examples/
 - Install dependencies: `pip install tesserai httpx`
 
 ## Using the Examples
-
-### Seeding Data
-
-Each domain has a `seed.py` script that creates digital twins:
-
-```bash
-# Seed a single domain
-python smart_building/seed.py
-
-# Seed all domains
-python seed_all.py
-
-# Seed specific domains
-python seed_all.py --domains smart_building,manufacturing,healthcare
-```
 
 ### Web Dashboards
 
@@ -227,10 +200,9 @@ For complete API documentation, visit:
 We welcome contributions! To add a new domain example:
 
 1. Create a new folder under `examples/`
-2. Add a `seed.py` following existing patterns
-3. Create an ontology in `ontologies/`
-4. Add a `README.md` with domain-specific documentation
-5. Update `seed_all.py` to include the new domain
+2. Create an ontology in `ontologies/`
+3. Add a `README.md` with domain-specific documentation
+4. Include example SPARQL queries demonstrating the domain
 
 ## License
 
