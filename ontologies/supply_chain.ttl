@@ -1,0 +1,276 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix tesserai: <http://tesserai.io/ontology/core#> .
+@prefix supply: <http://tesserai.io/ontology/supply_chain#> .
+
+# =============================================================================
+# TesserAI Supply Chain Domain Ontology
+# =============================================================================
+
+<http://tesserai.io/ontology/supply_chain> a owl:Ontology ;
+    rdfs:label "TesserAI Supply Chain Ontology" ;
+    rdfs:comment "Ontology for supply chain digital twins including warehouses, inventory, and logistics." ;
+    owl:imports <http://tesserai.io/ontology/core> ;
+    owl:versionInfo "1.0.0" .
+
+# =============================================================================
+# Classes
+# =============================================================================
+
+supply:Warehouse a owl:Class ;
+    rdfs:subClassOf tesserai:System ;
+    rdfs:label "Warehouse" ;
+    rdfs:comment "A facility for storing goods." .
+
+supply:StorageArea a owl:Class ;
+    rdfs:subClassOf tesserai:Component ;
+    rdfs:label "Storage Area" ;
+    rdfs:comment "A designated area within a warehouse for storing items." .
+
+supply:InventoryItem a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Inventory Item" ;
+    rdfs:comment "An item in inventory." .
+
+supply:Shipment a owl:Class ;
+    rdfs:subClassOf tesserai:Process ;
+    rdfs:label "Shipment" ;
+    rdfs:comment "A batch of goods being transported." .
+
+supply:Supplier a owl:Class ;
+    rdfs:subClassOf tesserai:System ;
+    rdfs:label "Supplier" ;
+    rdfs:comment "An entity that provides goods or materials." .
+
+supply:TransportVehicle a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Transport Vehicle" ;
+    rdfs:comment "A vehicle used for transporting goods." .
+
+supply:Truck a owl:Class ;
+    rdfs:subClassOf supply:TransportVehicle ;
+    rdfs:label "Truck" ;
+    rdfs:comment "A truck for road transport." .
+
+supply:Container a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Container" ;
+    rdfs:comment "A shipping container for goods." .
+
+supply:Pallet a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Pallet" ;
+    rdfs:comment "A platform for storing and moving goods." .
+
+supply:RFIDTag a owl:Class ;
+    rdfs:subClassOf tesserai:Sensor ;
+    rdfs:label "RFID Tag" ;
+    rdfs:comment "A radio-frequency identification tag for tracking items." .
+
+# =============================================================================
+# Properties
+# =============================================================================
+
+supply:sku a owl:DatatypeProperty ;
+    rdfs:label "SKU" ;
+    rdfs:comment "Stock Keeping Unit identifier." ;
+    rdfs:domain supply:InventoryItem ;
+    rdfs:range xsd:string .
+
+supply:quantity a owl:DatatypeProperty ;
+    rdfs:label "quantity" ;
+    rdfs:comment "Number of items." ;
+    rdfs:domain supply:InventoryItem ;
+    rdfs:range xsd:integer .
+
+supply:unitPrice a owl:DatatypeProperty ;
+    rdfs:label "unit price" ;
+    rdfs:comment "Price per unit." ;
+    rdfs:domain supply:InventoryItem ;
+    rdfs:range xsd:decimal .
+
+supply:reorderLevel a owl:DatatypeProperty ;
+    rdfs:label "reorder level" ;
+    rdfs:comment "Quantity level at which to reorder." ;
+    rdfs:domain supply:InventoryItem ;
+    rdfs:range xsd:integer .
+
+supply:storageCapacity a owl:DatatypeProperty ;
+    rdfs:label "storage capacity" ;
+    rdfs:comment "Total storage capacity in cubic meters." ;
+    rdfs:domain supply:Warehouse ;
+    rdfs:range xsd:decimal .
+
+supply:currentUtilization a owl:DatatypeProperty ;
+    rdfs:label "current utilization" ;
+    rdfs:comment "Current utilization percentage (0-100)." ;
+    rdfs:domain supply:Warehouse ;
+    rdfs:range xsd:decimal .
+
+supply:trackingNumber a owl:DatatypeProperty ;
+    rdfs:label "tracking number" ;
+    rdfs:comment "Unique tracking identifier for a shipment." ;
+    rdfs:domain supply:Shipment ;
+    rdfs:range xsd:string .
+
+supply:shipmentStatus a owl:DatatypeProperty ;
+    rdfs:label "shipment status" ;
+    rdfs:comment "Current status of the shipment." ;
+    rdfs:domain supply:Shipment ;
+    rdfs:range xsd:string .
+
+supply:weight a owl:DatatypeProperty ;
+    rdfs:label "weight" ;
+    rdfs:comment "Weight in kilograms." ;
+    rdfs:domain supply:Shipment ;
+    rdfs:range xsd:decimal .
+
+supply:estimatedArrival a owl:DatatypeProperty ;
+    rdfs:label "estimated arrival" ;
+    rdfs:comment "Estimated arrival date and time." ;
+    rdfs:domain supply:Shipment ;
+    rdfs:range xsd:dateTime .
+
+supply:storedIn a owl:ObjectProperty ;
+    rdfs:label "stored in" ;
+    rdfs:comment "The warehouse where this item is stored." ;
+    rdfs:domain supply:InventoryItem ;
+    rdfs:range supply:Warehouse .
+
+supply:hasItem a owl:ObjectProperty ;
+    owl:inverseOf supply:storedIn ;
+    rdfs:label "has item" ;
+    rdfs:domain supply:Warehouse ;
+    rdfs:range supply:InventoryItem .
+
+supply:suppliedBy a owl:ObjectProperty ;
+    rdfs:label "supplied by" ;
+    rdfs:comment "The supplier of this item." ;
+    rdfs:domain supply:InventoryItem ;
+    rdfs:range supply:Supplier .
+
+supply:transports a owl:ObjectProperty ;
+    rdfs:label "transports" ;
+    rdfs:comment "The shipment being transported." ;
+    rdfs:domain supply:TransportVehicle ;
+    rdfs:range supply:Shipment .
+
+supply:originWarehouse a owl:ObjectProperty ;
+    rdfs:label "origin warehouse" ;
+    rdfs:comment "The warehouse where shipment originated." ;
+    rdfs:domain supply:Shipment ;
+    rdfs:range supply:Warehouse .
+
+supply:destinationWarehouse a owl:ObjectProperty ;
+    rdfs:label "destination warehouse" ;
+    rdfs:comment "The warehouse where shipment is going." ;
+    rdfs:domain supply:Shipment ;
+    rdfs:range supply:Warehouse .
+
+# =============================================================================
+# SHACL Shapes
+# =============================================================================
+
+supply:WarehouseShape a sh:NodeShape ;
+    sh:targetClass supply:Warehouse ;
+    rdfs:label "Warehouse Shape" ;
+    sh:property [
+        sh:path tesserai:name ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "A warehouse must have a name." ;
+    ] ;
+    sh:property [
+        sh:path supply:storageCapacity ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minExclusive 0 ;
+        sh:message "Storage capacity must be a positive value in cubic meters." ;
+    ] ;
+    sh:property [
+        sh:path supply:currentUtilization ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 100 ;
+        sh:message "Utilization must be between 0 and 100 percent." ;
+    ] .
+
+supply:InventoryItemShape a sh:NodeShape ;
+    sh:targetClass supply:InventoryItem ;
+    rdfs:label "Inventory Item Shape" ;
+    sh:property [
+        sh:path supply:sku ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "An inventory item must have exactly one SKU." ;
+    ] ;
+    sh:property [
+        sh:path supply:quantity ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 0 ;
+        sh:message "Quantity must be a non-negative integer." ;
+    ] ;
+    sh:property [
+        sh:path supply:unitPrice ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:message "Unit price must be a non-negative decimal." ;
+    ] ;
+    sh:property [
+        sh:path supply:reorderLevel ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 0 ;
+        sh:message "Reorder level must be a non-negative integer." ;
+    ] .
+
+supply:ShipmentShape a sh:NodeShape ;
+    sh:targetClass supply:Shipment ;
+    rdfs:label "Shipment Shape" ;
+    sh:property [
+        sh:path supply:trackingNumber ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "A shipment must have exactly one tracking number." ;
+    ] ;
+    sh:property [
+        sh:path supply:shipmentStatus ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:in ("pending" "in_transit" "delivered" "cancelled" "returned") ;
+        sh:message "Shipment status must be one of: pending, in_transit, delivered, cancelled, returned." ;
+    ] ;
+    sh:property [
+        sh:path supply:weight ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minExclusive 0 ;
+        sh:message "Weight must be a positive decimal in kilograms." ;
+    ] ;
+    sh:property [
+        sh:path supply:originWarehouse ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:class supply:Warehouse ;
+        sh:message "A shipment must have exactly one origin warehouse." ;
+    ] .
+
+supply:SupplierShape a sh:NodeShape ;
+    sh:targetClass supply:Supplier ;
+    rdfs:label "Supplier Shape" ;
+    sh:property [
+        sh:path tesserai:name ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "A supplier must have a name." ;
+    ] .

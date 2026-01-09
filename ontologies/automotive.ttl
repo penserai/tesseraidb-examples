@@ -1,0 +1,228 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix tesserai: <http://tesserai.io/ontology/core#> .
+@prefix auto: <http://tesserai.io/ontology/automotive#> .
+
+# =============================================================================
+# TesserAI Automotive Domain Ontology
+# =============================================================================
+
+<http://tesserai.io/ontology/automotive> a owl:Ontology ;
+    rdfs:label "TesserAI Automotive Ontology" ;
+    rdfs:comment "Ontology for automotive digital twins including vehicles, fleets, and components." ;
+    owl:imports <http://tesserai.io/ontology/core> ;
+    owl:versionInfo "1.0.0" .
+
+# =============================================================================
+# Classes
+# =============================================================================
+
+auto:Vehicle a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Vehicle" ;
+    rdfs:comment "A motorized transportation device." .
+
+auto:FleetVehicle a owl:Class ;
+    rdfs:subClassOf auto:Vehicle ;
+    rdfs:label "Fleet Vehicle" ;
+    rdfs:comment "A vehicle that is part of a managed fleet." .
+
+auto:ElectricVehicle a owl:Class ;
+    rdfs:subClassOf auto:Vehicle ;
+    rdfs:label "Electric Vehicle" ;
+    rdfs:comment "A vehicle powered by electric motors." .
+
+auto:Fleet a owl:Class ;
+    rdfs:subClassOf tesserai:System ;
+    rdfs:label "Fleet" ;
+    rdfs:comment "A collection of vehicles managed as a unit." .
+
+auto:Engine a owl:Class ;
+    rdfs:subClassOf tesserai:Component ;
+    rdfs:label "Engine" ;
+    rdfs:comment "The power source of a vehicle." .
+
+auto:Battery a owl:Class ;
+    rdfs:subClassOf tesserai:Component ;
+    rdfs:label "Battery" ;
+    rdfs:comment "An energy storage component, typically for electric vehicles." .
+
+auto:Tire a owl:Class ;
+    rdfs:subClassOf tesserai:Component ;
+    rdfs:label "Tire" ;
+    rdfs:comment "A rubber component that provides traction for the vehicle." .
+
+auto:BrakingSystem a owl:Class ;
+    rdfs:subClassOf tesserai:Component ;
+    rdfs:label "Braking System" ;
+    rdfs:comment "The system responsible for slowing and stopping the vehicle." .
+
+# =============================================================================
+# Properties
+# =============================================================================
+
+auto:vin a owl:DatatypeProperty ;
+    rdfs:label "VIN" ;
+    rdfs:comment "Vehicle Identification Number - a unique 17-character identifier." ;
+    rdfs:domain auto:Vehicle ;
+    rdfs:range xsd:string .
+
+auto:make a owl:DatatypeProperty ;
+    rdfs:label "make" ;
+    rdfs:comment "The manufacturer of the vehicle." ;
+    rdfs:domain auto:Vehicle ;
+    rdfs:range xsd:string .
+
+auto:model a owl:DatatypeProperty ;
+    rdfs:label "model" ;
+    rdfs:comment "The model name of the vehicle." ;
+    rdfs:domain auto:Vehicle ;
+    rdfs:range xsd:string .
+
+auto:year a owl:DatatypeProperty ;
+    rdfs:label "year" ;
+    rdfs:comment "The manufacturing year of the vehicle." ;
+    rdfs:domain auto:Vehicle ;
+    rdfs:range xsd:integer .
+
+auto:mileage a owl:DatatypeProperty ;
+    rdfs:label "mileage" ;
+    rdfs:comment "Total distance traveled by the vehicle in kilometers." ;
+    rdfs:domain auto:Vehicle ;
+    rdfs:range xsd:decimal .
+
+auto:fuelLevel a owl:DatatypeProperty ;
+    rdfs:label "fuel level" ;
+    rdfs:comment "Current fuel level as a percentage (0-100)." ;
+    rdfs:domain auto:Vehicle ;
+    rdfs:range xsd:decimal .
+
+auto:batteryLevel a owl:DatatypeProperty ;
+    rdfs:label "battery level" ;
+    rdfs:comment "Current battery charge level as a percentage (0-100)." ;
+    rdfs:domain auto:ElectricVehicle ;
+    rdfs:range xsd:decimal .
+
+auto:batteryCapacity a owl:DatatypeProperty ;
+    rdfs:label "battery capacity" ;
+    rdfs:comment "Total battery capacity in kWh." ;
+    rdfs:domain auto:Battery ;
+    rdfs:range xsd:decimal .
+
+auto:belongsToFleet a owl:ObjectProperty ;
+    rdfs:label "belongs to fleet" ;
+    rdfs:comment "Indicates which fleet a vehicle belongs to." ;
+    rdfs:domain auto:FleetVehicle ;
+    rdfs:range auto:Fleet .
+
+auto:hasVehicle a owl:ObjectProperty ;
+    rdfs:label "has vehicle" ;
+    rdfs:comment "Indicates that a fleet contains this vehicle." ;
+    owl:inverseOf auto:belongsToFleet ;
+    rdfs:domain auto:Fleet ;
+    rdfs:range auto:FleetVehicle .
+
+auto:hasEngine a owl:ObjectProperty ;
+    rdfs:subPropertyOf tesserai:hasComponent ;
+    rdfs:label "has engine" ;
+    rdfs:domain auto:Vehicle ;
+    rdfs:range auto:Engine .
+
+auto:hasBattery a owl:ObjectProperty ;
+    rdfs:subPropertyOf tesserai:hasComponent ;
+    rdfs:label "has battery" ;
+    rdfs:domain auto:ElectricVehicle ;
+    rdfs:range auto:Battery .
+
+# =============================================================================
+# SHACL Shapes
+# =============================================================================
+
+auto:VehicleShape a sh:NodeShape ;
+    sh:targetClass auto:Vehicle, auto:FleetVehicle, auto:ElectricVehicle ;
+    rdfs:label "Vehicle Shape" ;
+    rdfs:comment "SHACL shape for validating Vehicle instances and subclasses." ;
+    sh:property [
+        sh:path auto:vin ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:pattern "^[A-HJ-NPR-Z0-9]{17}$" ;
+        sh:message "VIN must be exactly 17 alphanumeric characters (excluding I, O, Q)." ;
+    ] ;
+    sh:property [
+        sh:path auto:make ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "Make must be a string." ;
+    ] ;
+    sh:property [
+        sh:path auto:model ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "Model must be a string." ;
+    ] ;
+    sh:property [
+        sh:path auto:year ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 1900 ;
+        sh:maxInclusive 2100 ;
+        sh:message "Year must be an integer between 1900 and 2100." ;
+    ] ;
+    sh:property [
+        sh:path auto:mileage ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:message "Mileage must be a non-negative decimal." ;
+    ] ;
+    sh:property [
+        sh:path auto:fuelLevel ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 100 ;
+        sh:message "Fuel level must be between 0 and 100 percent." ;
+    ] .
+
+auto:ElectricVehicleShape a sh:NodeShape ;
+    sh:targetClass auto:ElectricVehicle ;
+    rdfs:label "Electric Vehicle Shape" ;
+    sh:property [
+        sh:path auto:batteryLevel ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 100 ;
+        sh:message "Battery level must be between 0 and 100 percent." ;
+    ] ;
+    sh:property [
+        sh:path auto:hasBattery ;
+        sh:minCount 1 ;
+        sh:class auto:Battery ;
+        sh:message "Electric vehicles must have at least one battery." ;
+    ] .
+
+auto:FleetShape a sh:NodeShape ;
+    sh:targetClass auto:Fleet ;
+    rdfs:label "Fleet Shape" ;
+    sh:property [
+        sh:path tesserai:name ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "A fleet must have a name." ;
+    ] .
+
+auto:BatteryShape a sh:NodeShape ;
+    sh:targetClass auto:Battery ;
+    rdfs:label "Battery Shape" ;
+    sh:property [
+        sh:path auto:batteryCapacity ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minExclusive 0 ;
+        sh:message "Battery capacity must be a positive decimal value in kWh." ;
+    ] .

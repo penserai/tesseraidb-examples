@@ -1,0 +1,556 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix tesserai: <http://tesserai.io/ontology/core#> .
+@prefix cascade: <http://tesserai.io/ontology/cascading_failure#> .
+
+# =============================================================================
+# TesserAI Cascading Failure Analysis Domain Ontology
+# =============================================================================
+# Models complex infrastructure with dependency relationships to analyze
+# how failures propagate through interconnected systems. Supports SPOF
+# detection, blast radius calculation, and critical path analysis.
+# =============================================================================
+
+<http://tesserai.io/ontology/cascading_failure> a owl:Ontology ;
+    rdfs:label "TesserAI Cascading Failure Analysis Ontology" ;
+    rdfs:comment "Ontology for modeling infrastructure dependencies and analyzing failure propagation patterns." ;
+    owl:imports <http://tesserai.io/ontology/core> ;
+    owl:versionInfo "1.0.0" .
+
+# =============================================================================
+# Abstract Base Classes
+# =============================================================================
+
+cascade:InfrastructureComponent a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Infrastructure Component" ;
+    rdfs:comment "Abstract base class for all infrastructure components subject to failure analysis." .
+
+cascade:CriticalInfrastructure a owl:Class ;
+    rdfs:subClassOf cascade:InfrastructureComponent ;
+    rdfs:label "Critical Infrastructure" ;
+    rdfs:comment "Infrastructure essential for operations, whose failure has severe consequences." .
+
+cascade:SupportingInfrastructure a owl:Class ;
+    rdfs:subClassOf cascade:InfrastructureComponent ;
+    rdfs:label "Supporting Infrastructure" ;
+    rdfs:comment "Infrastructure that supports other systems but is not directly critical." .
+
+# =============================================================================
+# Power Grid Classes
+# =============================================================================
+
+cascade:PowerGrid a owl:Class ;
+    rdfs:subClassOf cascade:CriticalInfrastructure ;
+    rdfs:label "Power Grid" ;
+    rdfs:comment "Main electrical power distribution grid." .
+
+cascade:Substation a owl:Class ;
+    rdfs:subClassOf cascade:CriticalInfrastructure ;
+    rdfs:label "Substation" ;
+    rdfs:comment "Electrical substation for voltage transformation and distribution." .
+
+cascade:Transformer a owl:Class ;
+    rdfs:subClassOf cascade:InfrastructureComponent ;
+    rdfs:label "Transformer" ;
+    rdfs:comment "Electrical transformer for voltage conversion." .
+
+cascade:BackupGenerator a owl:Class ;
+    rdfs:subClassOf cascade:SupportingInfrastructure ;
+    rdfs:label "Backup Generator" ;
+    rdfs:comment "Emergency power generation system." .
+
+cascade:UPS a owl:Class ;
+    rdfs:subClassOf cascade:SupportingInfrastructure ;
+    rdfs:label "UPS" ;
+    rdfs:comment "Uninterruptible Power Supply for short-term backup." .
+
+cascade:PowerDistributionUnit a owl:Class ;
+    rdfs:subClassOf cascade:InfrastructureComponent ;
+    rdfs:label "Power Distribution Unit" ;
+    rdfs:comment "PDU for distributing power to equipment." .
+
+# =============================================================================
+# Data Center Classes
+# =============================================================================
+
+cascade:DataCenter a owl:Class ;
+    rdfs:subClassOf cascade:CriticalInfrastructure ;
+    rdfs:label "Data Center" ;
+    rdfs:comment "Facility housing computing infrastructure." .
+
+cascade:CoolingUnit a owl:Class ;
+    rdfs:subClassOf cascade:CriticalInfrastructure ;
+    rdfs:label "Cooling Unit" ;
+    rdfs:comment "HVAC or CRAC unit for data center cooling." .
+
+cascade:Chiller a owl:Class ;
+    rdfs:subClassOf cascade:CoolingUnit ;
+    rdfs:label "Chiller" ;
+    rdfs:comment "Chilled water system for cooling." .
+
+cascade:CoolingTower a owl:Class ;
+    rdfs:subClassOf cascade:CoolingUnit ;
+    rdfs:label "Cooling Tower" ;
+    rdfs:comment "Heat rejection system for cooling infrastructure." .
+
+cascade:ServerRack a owl:Class ;
+    rdfs:subClassOf cascade:InfrastructureComponent ;
+    rdfs:label "Server Rack" ;
+    rdfs:comment "Physical rack containing servers and network equipment." .
+
+cascade:Server a owl:Class ;
+    rdfs:subClassOf cascade:InfrastructureComponent ;
+    rdfs:label "Server" ;
+    rdfs:comment "Computing server for running applications." .
+
+cascade:StorageArray a owl:Class ;
+    rdfs:subClassOf cascade:InfrastructureComponent ;
+    rdfs:label "Storage Array" ;
+    rdfs:comment "Enterprise storage system for data persistence." .
+
+# =============================================================================
+# Network Classes
+# =============================================================================
+
+cascade:NetworkSwitch a owl:Class ;
+    rdfs:subClassOf cascade:CriticalInfrastructure ;
+    rdfs:label "Network Switch" ;
+    rdfs:comment "Network switching equipment for connectivity." .
+
+cascade:CoreSwitch a owl:Class ;
+    rdfs:subClassOf cascade:NetworkSwitch ;
+    rdfs:label "Core Switch" ;
+    rdfs:comment "Core network switch connecting distribution layers." .
+
+cascade:DistributionSwitch a owl:Class ;
+    rdfs:subClassOf cascade:NetworkSwitch ;
+    rdfs:label "Distribution Switch" ;
+    rdfs:comment "Distribution layer network switch." .
+
+cascade:AccessSwitch a owl:Class ;
+    rdfs:subClassOf cascade:NetworkSwitch ;
+    rdfs:label "Access Switch" ;
+    rdfs:comment "Access layer switch connecting end devices." .
+
+cascade:Router a owl:Class ;
+    rdfs:subClassOf cascade:CriticalInfrastructure ;
+    rdfs:label "Router" ;
+    rdfs:comment "Network router for traffic routing." .
+
+cascade:Firewall a owl:Class ;
+    rdfs:subClassOf cascade:CriticalInfrastructure ;
+    rdfs:label "Firewall" ;
+    rdfs:comment "Network security appliance." .
+
+cascade:LoadBalancer a owl:Class ;
+    rdfs:subClassOf cascade:InfrastructureComponent ;
+    rdfs:label "Load Balancer" ;
+    rdfs:comment "Traffic distribution appliance." .
+
+# =============================================================================
+# Application and Service Classes
+# =============================================================================
+
+cascade:ApplicationService a owl:Class ;
+    rdfs:subClassOf cascade:InfrastructureComponent ;
+    rdfs:label "Application Service" ;
+    rdfs:comment "Software application or service." .
+
+cascade:Database a owl:Class ;
+    rdfs:subClassOf cascade:CriticalInfrastructure ;
+    rdfs:label "Database" ;
+    rdfs:comment "Database system for data storage." .
+
+cascade:MessageQueue a owl:Class ;
+    rdfs:subClassOf cascade:InfrastructureComponent ;
+    rdfs:label "Message Queue" ;
+    rdfs:comment "Message queuing system for async communication." .
+
+cascade:APIGateway a owl:Class ;
+    rdfs:subClassOf cascade:InfrastructureComponent ;
+    rdfs:label "API Gateway" ;
+    rdfs:comment "API management and routing gateway." .
+
+cascade:CacheCluster a owl:Class ;
+    rdfs:subClassOf cascade:InfrastructureComponent ;
+    rdfs:label "Cache Cluster" ;
+    rdfs:comment "Distributed caching system." .
+
+# =============================================================================
+# Manufacturing Classes
+# =============================================================================
+
+cascade:ManufacturingPlant a owl:Class ;
+    rdfs:subClassOf cascade:CriticalInfrastructure ;
+    rdfs:label "Manufacturing Plant" ;
+    rdfs:comment "Industrial manufacturing facility." .
+
+cascade:AssemblyLine a owl:Class ;
+    rdfs:subClassOf cascade:InfrastructureComponent ;
+    rdfs:label "Assembly Line" ;
+    rdfs:comment "Production assembly line." .
+
+cascade:RoboticArm a owl:Class ;
+    rdfs:subClassOf cascade:InfrastructureComponent ;
+    rdfs:label "Robotic Arm" ;
+    rdfs:comment "Industrial robotic manipulator." .
+
+cascade:ControlSystem a owl:Class ;
+    rdfs:subClassOf cascade:CriticalInfrastructure ;
+    rdfs:label "Control System" ;
+    rdfs:comment "Industrial control system (PLC/SCADA)." .
+
+# =============================================================================
+# Supply Chain Classes
+# =============================================================================
+
+cascade:Supplier a owl:Class ;
+    rdfs:subClassOf cascade:InfrastructureComponent ;
+    rdfs:label "Supplier" ;
+    rdfs:comment "External supplier of materials or components." .
+
+cascade:Warehouse a owl:Class ;
+    rdfs:subClassOf cascade:InfrastructureComponent ;
+    rdfs:label "Warehouse" ;
+    rdfs:comment "Storage and distribution facility." .
+
+cascade:LogisticsProvider a owl:Class ;
+    rdfs:subClassOf cascade:InfrastructureComponent ;
+    rdfs:label "Logistics Provider" ;
+    rdfs:comment "Transportation and logistics service provider." .
+
+cascade:DistributionCenter a owl:Class ;
+    rdfs:subClassOf cascade:InfrastructureComponent ;
+    rdfs:label "Distribution Center" ;
+    rdfs:comment "Regional distribution facility." .
+
+# =============================================================================
+# Dependency Classes
+# =============================================================================
+
+cascade:Dependency a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
+    rdfs:label "Dependency" ;
+    rdfs:comment "A dependency relationship between infrastructure components." .
+
+cascade:HardDependency a owl:Class ;
+    rdfs:subClassOf cascade:Dependency ;
+    rdfs:label "Hard Dependency" ;
+    rdfs:comment "Critical dependency where failure of source causes immediate failure of target." .
+
+cascade:SoftDependency a owl:Class ;
+    rdfs:subClassOf cascade:Dependency ;
+    rdfs:label "Soft Dependency" ;
+    rdfs:comment "Non-critical dependency where failure causes degradation but not complete failure." .
+
+cascade:FailureEvent a owl:Class ;
+    rdfs:subClassOf tesserai:Event ;
+    rdfs:label "Failure Event" ;
+    rdfs:comment "An event representing the failure of an infrastructure component." .
+
+cascade:CascadeEvent a owl:Class ;
+    rdfs:subClassOf tesserai:Event ;
+    rdfs:label "Cascade Event" ;
+    rdfs:comment "An event representing failure propagation through dependencies." .
+
+# =============================================================================
+# Component State Properties
+# =============================================================================
+
+cascade:operationalStatus a owl:DatatypeProperty ;
+    rdfs:label "operational status" ;
+    rdfs:comment "Current operational status: operational, degraded, failed, maintenance." ;
+    rdfs:domain cascade:InfrastructureComponent ;
+    rdfs:range xsd:string .
+
+cascade:healthPercentage a owl:DatatypeProperty ;
+    rdfs:label "health percentage" ;
+    rdfs:comment "Current health as a percentage (0-100)." ;
+    rdfs:domain cascade:InfrastructureComponent ;
+    rdfs:range xsd:decimal .
+
+cascade:criticality a owl:DatatypeProperty ;
+    rdfs:label "criticality" ;
+    rdfs:comment "Criticality level: critical, high, medium, low." ;
+    rdfs:domain cascade:InfrastructureComponent ;
+    rdfs:range xsd:string .
+
+cascade:redundancyLevel a owl:DatatypeProperty ;
+    rdfs:label "redundancy level" ;
+    rdfs:comment "Redundancy configuration: N, N+1, 2N, 2N+1." ;
+    rdfs:domain cascade:InfrastructureComponent ;
+    rdfs:range xsd:string .
+
+cascade:capacity a owl:DatatypeProperty ;
+    rdfs:label "capacity" ;
+    rdfs:comment "Maximum capacity in domain-specific units." ;
+    rdfs:domain cascade:InfrastructureComponent ;
+    rdfs:range xsd:decimal .
+
+cascade:currentLoad a owl:DatatypeProperty ;
+    rdfs:label "current load" ;
+    rdfs:comment "Current load as percentage of capacity." ;
+    rdfs:domain cascade:InfrastructureComponent ;
+    rdfs:range xsd:decimal .
+
+# =============================================================================
+# Dependency Properties
+# =============================================================================
+
+cascade:propagationDelay a owl:DatatypeProperty ;
+    rdfs:label "propagation delay" ;
+    rdfs:comment "Time delay in seconds before failure propagates to dependent." ;
+    rdfs:domain cascade:Dependency ;
+    rdfs:range xsd:decimal .
+
+cascade:failureProbability a owl:DatatypeProperty ;
+    rdfs:label "failure probability" ;
+    rdfs:comment "Probability (0-1) that source failure causes dependent failure." ;
+    rdfs:domain cascade:Dependency ;
+    rdfs:range xsd:decimal .
+
+cascade:severityMultiplier a owl:DatatypeProperty ;
+    rdfs:label "severity multiplier" ;
+    rdfs:comment "Multiplier for severity when failure propagates." ;
+    rdfs:domain cascade:Dependency ;
+    rdfs:range xsd:decimal .
+
+cascade:dependencyType a owl:DatatypeProperty ;
+    rdfs:label "dependency type" ;
+    rdfs:comment "Type of dependency: powerSupply, cooling, network, data, process." ;
+    rdfs:domain cascade:Dependency ;
+    rdfs:range xsd:string .
+
+cascade:isOptional a owl:DatatypeProperty ;
+    rdfs:label "is optional" ;
+    rdfs:comment "Whether the dependency can be bypassed or has alternatives." ;
+    rdfs:domain cascade:Dependency ;
+    rdfs:range xsd:boolean .
+
+# =============================================================================
+# Analysis Properties
+# =============================================================================
+
+cascade:blastRadius a owl:DatatypeProperty ;
+    rdfs:label "blast radius" ;
+    rdfs:comment "Number of components affected if this component fails." ;
+    rdfs:domain cascade:InfrastructureComponent ;
+    rdfs:range xsd:integer .
+
+cascade:isSinglePointOfFailure a owl:DatatypeProperty ;
+    rdfs:label "is single point of failure" ;
+    rdfs:comment "Whether this component is a SPOF with no redundancy." ;
+    rdfs:domain cascade:InfrastructureComponent ;
+    rdfs:range xsd:boolean .
+
+cascade:dependencyDepth a owl:DatatypeProperty ;
+    rdfs:label "dependency depth" ;
+    rdfs:comment "Maximum depth in dependency chain from this component." ;
+    rdfs:domain cascade:InfrastructureComponent ;
+    rdfs:range xsd:integer .
+
+cascade:inboundDependencyCount a owl:DatatypeProperty ;
+    rdfs:label "inbound dependency count" ;
+    rdfs:comment "Number of components that depend on this component." ;
+    rdfs:domain cascade:InfrastructureComponent ;
+    rdfs:range xsd:integer .
+
+cascade:outboundDependencyCount a owl:DatatypeProperty ;
+    rdfs:label "outbound dependency count" ;
+    rdfs:comment "Number of components this component depends on." ;
+    rdfs:domain cascade:InfrastructureComponent ;
+    rdfs:range xsd:integer .
+
+cascade:riskScore a owl:DatatypeProperty ;
+    rdfs:label "risk score" ;
+    rdfs:comment "Calculated risk score based on criticality and blast radius." ;
+    rdfs:domain cascade:InfrastructureComponent ;
+    rdfs:range xsd:decimal .
+
+# =============================================================================
+# Failure Event Properties
+# =============================================================================
+
+cascade:failureTime a owl:DatatypeProperty ;
+    rdfs:label "failure time" ;
+    rdfs:comment "Timestamp when the failure occurred." ;
+    rdfs:domain cascade:FailureEvent ;
+    rdfs:range xsd:dateTime .
+
+cascade:recoveryTime a owl:DatatypeProperty ;
+    rdfs:label "recovery time" ;
+    rdfs:comment "Timestamp when the component was recovered." ;
+    rdfs:domain cascade:FailureEvent ;
+    rdfs:range xsd:dateTime .
+
+cascade:failureCause a owl:DatatypeProperty ;
+    rdfs:label "failure cause" ;
+    rdfs:comment "Root cause of the failure." ;
+    rdfs:domain cascade:FailureEvent ;
+    rdfs:range xsd:string .
+
+cascade:cascadeDepth a owl:DatatypeProperty ;
+    rdfs:label "cascade depth" ;
+    rdfs:comment "Depth of this failure in the cascade chain (0 = root cause)." ;
+    rdfs:domain cascade:FailureEvent ;
+    rdfs:range xsd:integer .
+
+# =============================================================================
+# Object Properties (Relationships)
+# =============================================================================
+
+cascade:dependsOn a owl:ObjectProperty ;
+    rdfs:label "depends on" ;
+    rdfs:comment "Indicates that the subject depends on the object for operation." ;
+    rdfs:domain cascade:InfrastructureComponent ;
+    rdfs:range cascade:InfrastructureComponent .
+
+cascade:providesBackupFor a owl:ObjectProperty ;
+    rdfs:label "provides backup for" ;
+    rdfs:comment "Indicates a backup/redundancy relationship." ;
+    rdfs:domain cascade:InfrastructureComponent ;
+    rdfs:range cascade:InfrastructureComponent .
+
+cascade:hasDependency a owl:ObjectProperty ;
+    rdfs:label "has dependency" ;
+    rdfs:comment "Links a component to its dependency relationship details." ;
+    rdfs:domain cascade:InfrastructureComponent ;
+    rdfs:range cascade:Dependency .
+
+cascade:failureAffects a owl:ObjectProperty ;
+    rdfs:label "failure affects" ;
+    rdfs:comment "Indicates which components are affected when this component fails." ;
+    rdfs:domain cascade:InfrastructureComponent ;
+    rdfs:range cascade:InfrastructureComponent ;
+    owl:inverseOf cascade:dependsOn .
+
+cascade:triggeredBy a owl:ObjectProperty ;
+    rdfs:label "triggered by" ;
+    rdfs:comment "Links a cascade event to the failure that triggered it." ;
+    rdfs:domain cascade:CascadeEvent ;
+    rdfs:range cascade:FailureEvent .
+
+cascade:affectedComponent a owl:ObjectProperty ;
+    rdfs:label "affected component" ;
+    rdfs:comment "Links a failure event to the affected component." ;
+    rdfs:domain cascade:FailureEvent ;
+    rdfs:range cascade:InfrastructureComponent .
+
+cascade:containedIn a owl:ObjectProperty ;
+    rdfs:label "contained in" ;
+    rdfs:comment "Physical containment relationship (e.g., server in rack)." ;
+    rdfs:domain cascade:InfrastructureComponent ;
+    rdfs:range cascade:InfrastructureComponent .
+
+cascade:connectsTo a owl:ObjectProperty ;
+    rdfs:label "connects to" ;
+    rdfs:comment "Network or physical connectivity relationship." ;
+    rdfs:domain cascade:InfrastructureComponent ;
+    rdfs:range cascade:InfrastructureComponent .
+
+# =============================================================================
+# SHACL Shapes
+# =============================================================================
+
+cascade:InfrastructureComponentShape a sh:NodeShape ;
+    sh:targetClass cascade:InfrastructureComponent ;
+    rdfs:label "Infrastructure Component Shape" ;
+    sh:property [
+        sh:path tesserai:name ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "Infrastructure component must have a name." ;
+    ] ;
+    sh:property [
+        sh:path cascade:operationalStatus ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:in ( "operational" "degraded" "failed" "maintenance" "unknown" ) ;
+        sh:message "Operational status must be one of: operational, degraded, failed, maintenance, unknown." ;
+    ] ;
+    sh:property [
+        sh:path cascade:healthPercentage ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 100 ;
+        sh:message "Health percentage must be between 0 and 100." ;
+    ] ;
+    sh:property [
+        sh:path cascade:criticality ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:in ( "critical" "high" "medium" "low" ) ;
+        sh:message "Criticality must be one of: critical, high, medium, low." ;
+    ] .
+
+cascade:DependencyShape a sh:NodeShape ;
+    sh:targetClass cascade:Dependency ;
+    rdfs:label "Dependency Shape" ;
+    sh:property [
+        sh:path cascade:propagationDelay ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:message "Propagation delay must be non-negative." ;
+    ] ;
+    sh:property [
+        sh:path cascade:failureProbability ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 1 ;
+        sh:message "Failure probability must be between 0 and 1." ;
+    ] ;
+    sh:property [
+        sh:path cascade:dependencyType ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:in ( "powerSupply" "backupPower" "cooling" "networkLink" "dataFlow" "supplyChain" "processControl" "humanOperator" ) ;
+        sh:message "Dependency type must be one of the valid types." ;
+    ] .
+
+cascade:CriticalInfrastructureShape a sh:NodeShape ;
+    sh:targetClass cascade:CriticalInfrastructure ;
+    rdfs:label "Critical Infrastructure Shape" ;
+    sh:property [
+        sh:path cascade:redundancyLevel ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:in ( "N" "N+1" "2N" "2N+1" ) ;
+        sh:message "Redundancy level must be one of: N, N+1, 2N, 2N+1." ;
+    ] ;
+    sh:property [
+        sh:path cascade:blastRadius ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 0 ;
+        sh:message "Blast radius must be non-negative." ;
+    ] .
+
+cascade:FailureEventShape a sh:NodeShape ;
+    sh:targetClass cascade:FailureEvent ;
+    rdfs:label "Failure Event Shape" ;
+    sh:property [
+        sh:path cascade:failureTime ;
+        sh:minCount 1 ;
+        sh:datatype xsd:dateTime ;
+        sh:message "Failure event must have a failure time." ;
+    ] ;
+    sh:property [
+        sh:path cascade:affectedComponent ;
+        sh:minCount 1 ;
+        sh:class cascade:InfrastructureComponent ;
+        sh:message "Failure event must be linked to an affected component." ;
+    ] ;
+    sh:property [
+        sh:path cascade:cascadeDepth ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 0 ;
+        sh:message "Cascade depth must be non-negative." ;
+    ] .

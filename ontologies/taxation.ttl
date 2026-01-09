@@ -1,0 +1,821 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix tax: <http://tesserai.io/ontology/taxation#> .
+@prefix tesserai: <http://tesserai.io/ontology/core#> .
+
+# =============================================================================
+# Transfer Pricing Ontology for TesserAI
+# =============================================================================
+# This ontology models the transfer pricing domain for multinational enterprises,
+# supporting IRS documentation requirements under Treasury Regulations Section 1.6662-6.
+# =============================================================================
+
+tax: a owl:Ontology ;
+    rdfs:label "Transfer Pricing Ontology" ;
+    rdfs:comment "Ontology for transfer pricing documentation, analysis, and compliance" ;
+    owl:versionInfo "1.0.0" .
+
+# =============================================================================
+# PART 1: LEGAL ENTITY STRUCTURE
+# =============================================================================
+
+tax:MultinationalGroup a owl:Class ;
+    rdfs:label "Multinational Group" ;
+    rdfs:comment "A group of related legal entities operating across multiple jurisdictions" .
+
+tax:LegalEntity a owl:Class ;
+    rdfs:label "Legal Entity" ;
+    rdfs:comment "A legal entity within a multinational group" .
+
+tax:ParentCompany a owl:Class ;
+    rdfs:subClassOf tax:LegalEntity ;
+    rdfs:label "Parent Company" ;
+    rdfs:comment "The ultimate parent or controlling entity of the group" .
+
+tax:Subsidiary a owl:Class ;
+    rdfs:subClassOf tax:LegalEntity ;
+    rdfs:label "Subsidiary" ;
+    rdfs:comment "A company controlled by another entity in the group" .
+
+tax:Branch a owl:Class ;
+    rdfs:subClassOf tax:LegalEntity ;
+    rdfs:label "Branch" ;
+    rdfs:comment "A branch or permanent establishment of a legal entity" .
+
+tax:Jurisdiction a owl:Class ;
+    rdfs:label "Jurisdiction" ;
+    rdfs:comment "A tax jurisdiction (country/territory)" .
+
+tax:FunctionalProfile a owl:Class ;
+    rdfs:label "Functional Profile" ;
+    rdfs:comment "The functional characterization of an entity (manufacturer, distributor, etc.)" .
+
+# Functional Profile Types
+tax:FullFledgedManufacturer a owl:Class ;
+    rdfs:subClassOf tax:FunctionalProfile ;
+    rdfs:label "Full-Fledged Manufacturer" ;
+    rdfs:comment "Entity owns IP, bears significant risks, performs R&D" .
+
+tax:ContractManufacturer a owl:Class ;
+    rdfs:subClassOf tax:FunctionalProfile ;
+    rdfs:label "Contract Manufacturer" ;
+    rdfs:comment "Entity manufactures under contract, limited risk" .
+
+tax:LimitedRiskDistributor a owl:Class ;
+    rdfs:subClassOf tax:FunctionalProfile ;
+    rdfs:label "Limited Risk Distributor" ;
+    rdfs:comment "Distributor with limited market and inventory risk" .
+
+tax:FullFledgedDistributor a owl:Class ;
+    rdfs:subClassOf tax:FunctionalProfile ;
+    rdfs:label "Full-Fledged Distributor" ;
+    rdfs:comment "Distributor bearing significant market and credit risk" .
+
+tax:ServiceProvider a owl:Class ;
+    rdfs:subClassOf tax:FunctionalProfile ;
+    rdfs:label "Service Provider" ;
+    rdfs:comment "Entity providing intercompany services" .
+
+tax:IPHoldingCompany a owl:Class ;
+    rdfs:subClassOf tax:FunctionalProfile ;
+    rdfs:label "IP Holding Company" ;
+    rdfs:comment "Entity holding and licensing intellectual property" .
+
+tax:FinancingEntity a owl:Class ;
+    rdfs:subClassOf tax:FunctionalProfile ;
+    rdfs:label "Financing Entity" ;
+    rdfs:comment "Entity providing intercompany financing" .
+
+# Legal Entity Properties
+tax:entityName a owl:DatatypeProperty ;
+    rdfs:domain tax:LegalEntity ;
+    rdfs:range xsd:string ;
+    rdfs:label "Entity Name" .
+
+tax:taxId a owl:DatatypeProperty ;
+    rdfs:domain tax:LegalEntity ;
+    rdfs:range xsd:string ;
+    rdfs:label "Tax ID" ;
+    rdfs:comment "Tax identification number (EIN, VAT, etc.)" .
+
+tax:incorporationDate a owl:DatatypeProperty ;
+    rdfs:domain tax:LegalEntity ;
+    rdfs:range xsd:date ;
+    rdfs:label "Incorporation Date" .
+
+tax:fiscalYearEnd a owl:DatatypeProperty ;
+    rdfs:domain tax:LegalEntity ;
+    rdfs:range xsd:string ;
+    rdfs:label "Fiscal Year End" ;
+    rdfs:comment "Month/day of fiscal year end (e.g., '12-31')" .
+
+tax:ownershipPercentage a owl:DatatypeProperty ;
+    rdfs:domain tax:LegalEntity ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "Ownership Percentage" ;
+    rdfs:comment "Percentage owned by parent entity" .
+
+# Legal Entity Relationships
+tax:belongsToGroup a owl:ObjectProperty ;
+    rdfs:domain tax:LegalEntity ;
+    rdfs:range tax:MultinationalGroup ;
+    rdfs:label "Belongs to Group" .
+
+tax:hasSubsidiary a owl:ObjectProperty ;
+    rdfs:domain tax:LegalEntity ;
+    rdfs:range tax:Subsidiary ;
+    rdfs:label "Has Subsidiary" .
+
+tax:locatedIn a owl:ObjectProperty ;
+    rdfs:domain tax:LegalEntity ;
+    rdfs:range tax:Jurisdiction ;
+    rdfs:label "Located In" .
+
+tax:hasFunctionalProfile a owl:ObjectProperty ;
+    rdfs:domain tax:LegalEntity ;
+    rdfs:range tax:FunctionalProfile ;
+    rdfs:label "Has Functional Profile" .
+
+# =============================================================================
+# PART 2: INTERCOMPANY TRANSACTIONS
+# =============================================================================
+
+tax:IntercompanyTransaction a owl:Class ;
+    rdfs:label "Intercompany Transaction" ;
+    rdfs:comment "A transaction between related parties" .
+
+tax:GoodsTransaction a owl:Class ;
+    rdfs:subClassOf tax:IntercompanyTransaction ;
+    rdfs:label "Goods Transaction" ;
+    rdfs:comment "Sale of tangible goods between related parties" .
+
+tax:ServicesTransaction a owl:Class ;
+    rdfs:subClassOf tax:IntercompanyTransaction ;
+    rdfs:label "Services Transaction" ;
+    rdfs:comment "Provision of services between related parties" .
+
+tax:IPLicenseTransaction a owl:Class ;
+    rdfs:subClassOf tax:IntercompanyTransaction ;
+    rdfs:label "IP License Transaction" ;
+    rdfs:comment "Licensing of intellectual property between related parties" .
+
+tax:FinancingTransaction a owl:Class ;
+    rdfs:subClassOf tax:IntercompanyTransaction ;
+    rdfs:label "Financing Transaction" ;
+    rdfs:comment "Intercompany loans or guarantees" .
+
+tax:CostSharingArrangement a owl:Class ;
+    rdfs:subClassOf tax:IntercompanyTransaction ;
+    rdfs:label "Cost Sharing Arrangement" ;
+    rdfs:comment "Arrangement to share costs of developing intangibles" .
+
+tax:ManagementFee a owl:Class ;
+    rdfs:subClassOf tax:ServicesTransaction ;
+    rdfs:label "Management Fee" ;
+    rdfs:comment "Fee for management or administrative services" .
+
+tax:TechnicalServiceFee a owl:Class ;
+    rdfs:subClassOf tax:ServicesTransaction ;
+    rdfs:label "Technical Service Fee" ;
+    rdfs:comment "Fee for technical or engineering services" .
+
+# Transaction Properties
+tax:transactionId a owl:DatatypeProperty ;
+    rdfs:domain tax:IntercompanyTransaction ;
+    rdfs:range xsd:string ;
+    rdfs:label "Transaction ID" .
+
+tax:transactionDate a owl:DatatypeProperty ;
+    rdfs:domain tax:IntercompanyTransaction ;
+    rdfs:range xsd:date ;
+    rdfs:label "Transaction Date" .
+
+tax:fiscalYear a owl:DatatypeProperty ;
+    rdfs:domain tax:IntercompanyTransaction ;
+    rdfs:range xsd:gYear ;
+    rdfs:label "Fiscal Year" .
+
+tax:transactionValue a owl:DatatypeProperty ;
+    rdfs:domain tax:IntercompanyTransaction ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "Transaction Value" ;
+    rdfs:comment "Value in USD or specified currency" .
+
+tax:currency a owl:DatatypeProperty ;
+    rdfs:domain tax:IntercompanyTransaction ;
+    rdfs:range xsd:string ;
+    rdfs:label "Currency" .
+
+tax:transferPrice a owl:DatatypeProperty ;
+    rdfs:domain tax:IntercompanyTransaction ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "Transfer Price" ;
+    rdfs:comment "Price charged between related parties" .
+
+tax:quantity a owl:DatatypeProperty ;
+    rdfs:domain tax:GoodsTransaction ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "Quantity" .
+
+tax:unitPrice a owl:DatatypeProperty ;
+    rdfs:domain tax:GoodsTransaction ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "Unit Price" .
+
+tax:productCode a owl:DatatypeProperty ;
+    rdfs:domain tax:GoodsTransaction ;
+    rdfs:range xsd:string ;
+    rdfs:label "Product Code" .
+
+tax:productDescription a owl:DatatypeProperty ;
+    rdfs:domain tax:GoodsTransaction ;
+    rdfs:range xsd:string ;
+    rdfs:label "Product Description" .
+
+tax:royaltyRate a owl:DatatypeProperty ;
+    rdfs:domain tax:IPLicenseTransaction ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "Royalty Rate" ;
+    rdfs:comment "Royalty rate as percentage of sales" .
+
+tax:interestRate a owl:DatatypeProperty ;
+    rdfs:domain tax:FinancingTransaction ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "Interest Rate" ;
+    rdfs:comment "Annual interest rate as decimal" .
+
+tax:principalAmount a owl:DatatypeProperty ;
+    rdfs:domain tax:FinancingTransaction ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "Principal Amount" .
+
+tax:serviceDescription a owl:DatatypeProperty ;
+    rdfs:domain tax:ServicesTransaction ;
+    rdfs:range xsd:string ;
+    rdfs:label "Service Description" .
+
+tax:costBase a owl:DatatypeProperty ;
+    rdfs:domain tax:ServicesTransaction ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "Cost Base" ;
+    rdfs:comment "Direct and indirect costs as basis for markup" .
+
+tax:markupPercentage a owl:DatatypeProperty ;
+    rdfs:domain tax:ServicesTransaction ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "Markup Percentage" .
+
+# Transaction Relationships
+tax:payer a owl:ObjectProperty ;
+    rdfs:domain tax:IntercompanyTransaction ;
+    rdfs:range tax:LegalEntity ;
+    rdfs:label "Payer" ;
+    rdfs:comment "Entity making the payment" .
+
+tax:payee a owl:ObjectProperty ;
+    rdfs:domain tax:IntercompanyTransaction ;
+    rdfs:range tax:LegalEntity ;
+    rdfs:label "Payee" ;
+    rdfs:comment "Entity receiving the payment" .
+
+tax:hasTestedParty a owl:ObjectProperty ;
+    rdfs:domain tax:IntercompanyTransaction ;
+    rdfs:range tax:LegalEntity ;
+    rdfs:label "Has Tested Party" ;
+    rdfs:comment "The entity selected as tested party for benchmarking" .
+
+# =============================================================================
+# PART 3: TRANSFER PRICING METHODS
+# =============================================================================
+
+tax:TransferPricingMethod a owl:Class ;
+    rdfs:label "Transfer Pricing Method" ;
+    rdfs:comment "Method for determining arm's length price" .
+
+tax:CUPMethod a owl:Class ;
+    rdfs:subClassOf tax:TransferPricingMethod ;
+    rdfs:label "Comparable Uncontrolled Price Method" ;
+    rdfs:comment "Compares price in controlled transaction to price in comparable uncontrolled transaction" .
+
+tax:ResalePriceMethod a owl:Class ;
+    rdfs:subClassOf tax:TransferPricingMethod ;
+    rdfs:label "Resale Price Method" ;
+    rdfs:comment "Starts with resale price and subtracts appropriate gross margin" .
+
+tax:CostPlusMethod a owl:Class ;
+    rdfs:subClassOf tax:TransferPricingMethod ;
+    rdfs:label "Cost Plus Method" ;
+    rdfs:comment "Adds appropriate gross margin to costs of goods/services" .
+
+tax:TNMMMethod a owl:Class ;
+    rdfs:subClassOf tax:TransferPricingMethod ;
+    rdfs:label "Transactional Net Margin Method" ;
+    rdfs:comment "Examines net profit margin relative to appropriate base (costs, sales, assets)" .
+
+tax:ProfitSplitMethod a owl:Class ;
+    rdfs:subClassOf tax:TransferPricingMethod ;
+    rdfs:label "Profit Split Method" ;
+    rdfs:comment "Splits combined profits based on relative contributions" .
+
+tax:methodName a owl:DatatypeProperty ;
+    rdfs:domain tax:TransferPricingMethod ;
+    rdfs:range xsd:string ;
+    rdfs:label "Method Name" .
+
+tax:methodDescription a owl:DatatypeProperty ;
+    rdfs:domain tax:TransferPricingMethod ;
+    rdfs:range xsd:string ;
+    rdfs:label "Method Description" .
+
+tax:profitLevelIndicator a owl:DatatypeProperty ;
+    rdfs:domain tax:TransferPricingMethod ;
+    rdfs:range xsd:string ;
+    rdfs:label "Profit Level Indicator" ;
+    rdfs:comment "PLI used (operating margin, gross margin, Berry ratio, etc.)" .
+
+tax:usesMethod a owl:ObjectProperty ;
+    rdfs:domain tax:IntercompanyTransaction ;
+    rdfs:range tax:TransferPricingMethod ;
+    rdfs:label "Uses Method" .
+
+# =============================================================================
+# PART 4: COMPARABILITY ANALYSIS
+# =============================================================================
+
+tax:ComparabilityAnalysis a owl:Class ;
+    rdfs:label "Comparability Analysis" ;
+    rdfs:comment "Analysis of comparable transactions or companies" .
+
+tax:ComparableCompany a owl:Class ;
+    rdfs:label "Comparable Company" ;
+    rdfs:comment "An unrelated company used for benchmarking" .
+
+tax:ComparableTransaction a owl:Class ;
+    rdfs:label "Comparable Transaction" ;
+    rdfs:comment "An uncontrolled transaction used for comparison" .
+
+tax:InternalComparable a owl:Class ;
+    rdfs:subClassOf tax:ComparableTransaction ;
+    rdfs:label "Internal Comparable" ;
+    rdfs:comment "Transaction between controlled party and unrelated party" .
+
+tax:ExternalComparable a owl:Class ;
+    rdfs:subClassOf tax:ComparableTransaction ;
+    rdfs:label "External Comparable" ;
+    rdfs:comment "Transaction between two unrelated parties" .
+
+# Comparable Company Properties
+tax:companyName a owl:DatatypeProperty ;
+    rdfs:domain tax:ComparableCompany ;
+    rdfs:range xsd:string ;
+    rdfs:label "Company Name" .
+
+tax:sicCode a owl:DatatypeProperty ;
+    rdfs:domain tax:ComparableCompany ;
+    rdfs:range xsd:string ;
+    rdfs:label "SIC Code" ;
+    rdfs:comment "Standard Industrial Classification code" .
+
+tax:naicsCode a owl:DatatypeProperty ;
+    rdfs:domain tax:ComparableCompany ;
+    rdfs:range xsd:string ;
+    rdfs:label "NAICS Code" ;
+    rdfs:comment "North American Industry Classification System code" .
+
+tax:operatingMargin a owl:DatatypeProperty ;
+    rdfs:domain tax:ComparableCompany ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "Operating Margin" ;
+    rdfs:comment "Operating income / Revenue" .
+
+tax:grossMargin a owl:DatatypeProperty ;
+    rdfs:domain tax:ComparableCompany ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "Gross Margin" ;
+    rdfs:comment "Gross profit / Revenue" .
+
+tax:berryRatio a owl:DatatypeProperty ;
+    rdfs:domain tax:ComparableCompany ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "Berry Ratio" ;
+    rdfs:comment "Gross profit / Operating expenses" .
+
+tax:returnOnAssets a owl:DatatypeProperty ;
+    rdfs:domain tax:ComparableCompany ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "Return on Assets" ;
+    rdfs:comment "Operating income / Total assets" .
+
+tax:netCostPlusMarkup a owl:DatatypeProperty ;
+    rdfs:domain tax:ComparableCompany ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "Net Cost Plus Markup" ;
+    rdfs:comment "Operating income / Total costs" .
+
+tax:revenue a owl:DatatypeProperty ;
+    rdfs:domain tax:ComparableCompany ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "Revenue" .
+
+tax:totalAssets a owl:DatatypeProperty ;
+    rdfs:domain tax:ComparableCompany ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "Total Assets" .
+
+tax:employees a owl:DatatypeProperty ;
+    rdfs:domain tax:ComparableCompany ;
+    rdfs:range xsd:integer ;
+    rdfs:label "Employees" .
+
+tax:dataYear a owl:DatatypeProperty ;
+    rdfs:domain tax:ComparableCompany ;
+    rdfs:range xsd:gYear ;
+    rdfs:label "Data Year" .
+
+tax:acceptedAsComparable a owl:DatatypeProperty ;
+    rdfs:domain tax:ComparableCompany ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "Accepted as Comparable" ;
+    rdfs:comment "Whether company passed all screening criteria" .
+
+tax:rejectionReason a owl:DatatypeProperty ;
+    rdfs:domain tax:ComparableCompany ;
+    rdfs:range xsd:string ;
+    rdfs:label "Rejection Reason" .
+
+# Comparability Analysis Properties
+tax:searchStrategy a owl:DatatypeProperty ;
+    rdfs:domain tax:ComparabilityAnalysis ;
+    rdfs:range xsd:string ;
+    rdfs:label "Search Strategy" .
+
+tax:databaseUsed a owl:DatatypeProperty ;
+    rdfs:domain tax:ComparabilityAnalysis ;
+    rdfs:range xsd:string ;
+    rdfs:label "Database Used" ;
+    rdfs:comment "Database source (S&P Capital IQ, Orbis, etc.)" .
+
+tax:searchDate a owl:DatatypeProperty ;
+    rdfs:domain tax:ComparabilityAnalysis ;
+    rdfs:range xsd:date ;
+    rdfs:label "Search Date" .
+
+tax:companiesIdentified a owl:DatatypeProperty ;
+    rdfs:domain tax:ComparabilityAnalysis ;
+    rdfs:range xsd:integer ;
+    rdfs:label "Companies Identified" .
+
+tax:companiesAccepted a owl:DatatypeProperty ;
+    rdfs:domain tax:ComparabilityAnalysis ;
+    rdfs:range xsd:integer ;
+    rdfs:label "Companies Accepted" .
+
+tax:hasComparable a owl:ObjectProperty ;
+    rdfs:domain tax:ComparabilityAnalysis ;
+    rdfs:range tax:ComparableCompany ;
+    rdfs:label "Has Comparable" .
+
+# =============================================================================
+# PART 5: ARM'S LENGTH RANGE
+# =============================================================================
+
+tax:ArmLengthRange a owl:Class ;
+    rdfs:label "Arm's Length Range" ;
+    rdfs:comment "The interquartile range of comparable results" .
+
+tax:minimumValue a owl:DatatypeProperty ;
+    rdfs:domain tax:ArmLengthRange ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "Minimum Value" .
+
+tax:lowerQuartile a owl:DatatypeProperty ;
+    rdfs:domain tax:ArmLengthRange ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "Lower Quartile (25th percentile)" .
+
+tax:median a owl:DatatypeProperty ;
+    rdfs:domain tax:ArmLengthRange ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "Median (50th percentile)" .
+
+tax:upperQuartile a owl:DatatypeProperty ;
+    rdfs:domain tax:ArmLengthRange ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "Upper Quartile (75th percentile)" .
+
+tax:maximumValue a owl:DatatypeProperty ;
+    rdfs:domain tax:ArmLengthRange ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "Maximum Value" .
+
+tax:hasArmLengthRange a owl:ObjectProperty ;
+    rdfs:domain tax:ComparabilityAnalysis ;
+    rdfs:range tax:ArmLengthRange ;
+    rdfs:label "Has Arm's Length Range" .
+
+# =============================================================================
+# PART 6: TRANSFER PRICING DOCUMENTATION
+# =============================================================================
+
+tax:TransferPricingDocumentation a owl:Class ;
+    rdfs:label "Transfer Pricing Documentation" ;
+    rdfs:comment "Documentation supporting transfer pricing positions" .
+
+tax:PrincipalDocument a owl:Class ;
+    rdfs:subClassOf tax:TransferPricingDocumentation ;
+    rdfs:label "Principal Document" ;
+    rdfs:comment "Primary documentation required within 30 days of IRS request" .
+
+tax:BackgroundDocument a owl:Class ;
+    rdfs:subClassOf tax:TransferPricingDocumentation ;
+    rdfs:label "Background Document" ;
+    rdfs:comment "Supporting documentation provided upon specific request" .
+
+tax:LocalFile a owl:Class ;
+    rdfs:subClassOf tax:PrincipalDocument ;
+    rdfs:label "Local File" ;
+    rdfs:comment "Entity-specific transfer pricing documentation" .
+
+tax:MasterFile a owl:Class ;
+    rdfs:subClassOf tax:PrincipalDocument ;
+    rdfs:label "Master File" ;
+    rdfs:comment "Group-level transfer pricing documentation" .
+
+tax:CountryByCountryReport a owl:Class ;
+    rdfs:subClassOf tax:TransferPricingDocumentation ;
+    rdfs:label "Country-by-Country Report" ;
+    rdfs:comment "OECD CbCR with revenue, profit, tax by jurisdiction" .
+
+# Document Components
+tax:FunctionalAnalysis a owl:Class ;
+    rdfs:label "Functional Analysis" ;
+    rdfs:comment "Analysis of functions, assets, and risks" .
+
+tax:EconomicAnalysis a owl:Class ;
+    rdfs:label "Economic Analysis" ;
+    rdfs:comment "Benchmarking and arm's length analysis" .
+
+tax:IndustryAnalysis a owl:Class ;
+    rdfs:label "Industry Analysis" ;
+    rdfs:comment "Analysis of industry conditions and market factors" .
+
+# Document Properties
+tax:documentId a owl:DatatypeProperty ;
+    rdfs:domain tax:TransferPricingDocumentation ;
+    rdfs:range xsd:string ;
+    rdfs:label "Document ID" .
+
+tax:documentTitle a owl:DatatypeProperty ;
+    rdfs:domain tax:TransferPricingDocumentation ;
+    rdfs:range xsd:string ;
+    rdfs:label "Document Title" .
+
+tax:preparedDate a owl:DatatypeProperty ;
+    rdfs:domain tax:TransferPricingDocumentation ;
+    rdfs:range xsd:date ;
+    rdfs:label "Prepared Date" .
+
+tax:preparedBy a owl:DatatypeProperty ;
+    rdfs:domain tax:TransferPricingDocumentation ;
+    rdfs:range xsd:string ;
+    rdfs:label "Prepared By" .
+
+tax:reviewedBy a owl:DatatypeProperty ;
+    rdfs:domain tax:TransferPricingDocumentation ;
+    rdfs:range xsd:string ;
+    rdfs:label "Reviewed By" .
+
+tax:taxYear a owl:DatatypeProperty ;
+    rdfs:domain tax:TransferPricingDocumentation ;
+    rdfs:range xsd:gYear ;
+    rdfs:label "Tax Year" .
+
+tax:documentContent a owl:DatatypeProperty ;
+    rdfs:domain tax:TransferPricingDocumentation ;
+    rdfs:range xsd:string ;
+    rdfs:label "Document Content" ;
+    rdfs:comment "Full text or reference to document content" .
+
+tax:documentStatus a owl:DatatypeProperty ;
+    rdfs:domain tax:TransferPricingDocumentation ;
+    rdfs:range xsd:string ;
+    rdfs:label "Document Status" ;
+    rdfs:comment "draft, final, superseded" .
+
+# Document Relationships
+tax:documentsTransaction a owl:ObjectProperty ;
+    rdfs:domain tax:TransferPricingDocumentation ;
+    rdfs:range tax:IntercompanyTransaction ;
+    rdfs:label "Documents Transaction" .
+
+tax:documentsEntity a owl:ObjectProperty ;
+    rdfs:domain tax:TransferPricingDocumentation ;
+    rdfs:range tax:LegalEntity ;
+    rdfs:label "Documents Entity" .
+
+tax:includesAnalysis a owl:ObjectProperty ;
+    rdfs:domain tax:PrincipalDocument ;
+    rdfs:range tax:EconomicAnalysis ;
+    rdfs:label "Includes Analysis" .
+
+tax:includesFunctionalAnalysis a owl:ObjectProperty ;
+    rdfs:domain tax:PrincipalDocument ;
+    rdfs:range tax:FunctionalAnalysis ;
+    rdfs:label "Includes Functional Analysis" .
+
+tax:supportsDocument a owl:ObjectProperty ;
+    rdfs:domain tax:BackgroundDocument ;
+    rdfs:range tax:PrincipalDocument ;
+    rdfs:label "Supports Document" .
+
+# =============================================================================
+# PART 7: COMPLIANCE & RISK
+# =============================================================================
+
+tax:RiskAssessment a owl:Class ;
+    rdfs:label "Risk Assessment" ;
+    rdfs:comment "Assessment of transfer pricing risk exposure" .
+
+tax:Adjustment a owl:Class ;
+    rdfs:label "Adjustment" ;
+    rdfs:comment "Proposed or actual adjustment to transfer pricing" .
+
+tax:Penalty a owl:Class ;
+    rdfs:label "Penalty" ;
+    rdfs:comment "Potential penalty under Section 6662(e)" .
+
+tax:riskLevel a owl:DatatypeProperty ;
+    rdfs:domain tax:RiskAssessment ;
+    rdfs:range xsd:string ;
+    rdfs:label "Risk Level" ;
+    rdfs:comment "low, medium, high, critical" .
+
+tax:adjustmentAmount a owl:DatatypeProperty ;
+    rdfs:domain tax:Adjustment ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "Adjustment Amount" .
+
+tax:penaltyRate a owl:DatatypeProperty ;
+    rdfs:domain tax:Penalty ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "Penalty Rate" ;
+    rdfs:comment "20% for substantial, 40% for gross valuation misstatement" .
+
+tax:hasRiskAssessment a owl:ObjectProperty ;
+    rdfs:domain tax:IntercompanyTransaction ;
+    rdfs:range tax:RiskAssessment ;
+    rdfs:label "Has Risk Assessment" .
+
+# =============================================================================
+# SHACL SHAPES - VALIDATION RULES
+# =============================================================================
+
+tax:LegalEntityShape a sh:NodeShape ;
+    sh:targetClass tax:LegalEntity ;
+    sh:property [
+        sh:path tax:entityName ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:minLength 1
+    ] ;
+    sh:property [
+        sh:path tax:locatedIn ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:class tax:Jurisdiction
+    ] .
+
+tax:IntercompanyTransactionShape a sh:NodeShape ;
+    sh:targetClass tax:IntercompanyTransaction ;
+    sh:property [
+        sh:path tax:payer ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:class tax:LegalEntity
+    ] ;
+    sh:property [
+        sh:path tax:payee ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:class tax:LegalEntity
+    ] ;
+    sh:property [
+        sh:path tax:transactionValue ;
+        sh:minCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0
+    ] ;
+    sh:property [
+        sh:path tax:fiscalYear ;
+        sh:minCount 1 ;
+        sh:datatype xsd:gYear
+    ] ;
+    sh:property [
+        sh:path tax:usesMethod ;
+        sh:minCount 1 ;
+        sh:class tax:TransferPricingMethod ;
+        sh:message "Each transaction must specify a transfer pricing method"
+    ] .
+
+tax:GoodsTransactionShape a sh:NodeShape ;
+    sh:targetClass tax:GoodsTransaction ;
+    sh:property [
+        sh:path tax:productDescription ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string
+    ] ;
+    sh:property [
+        sh:path tax:unitPrice ;
+        sh:minCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minExclusive 0
+    ] .
+
+tax:ComparableCompanyShape a sh:NodeShape ;
+    sh:targetClass tax:ComparableCompany ;
+    sh:property [
+        sh:path tax:companyName ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string
+    ] ;
+    sh:property [
+        sh:path tax:operatingMargin ;
+        sh:minCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive -1.0 ;
+        sh:maxInclusive 1.0
+    ] ;
+    sh:property [
+        sh:path tax:dataYear ;
+        sh:minCount 1 ;
+        sh:datatype xsd:gYear
+    ] .
+
+tax:PrincipalDocumentShape a sh:NodeShape ;
+    sh:targetClass tax:PrincipalDocument ;
+    sh:property [
+        sh:path tax:documentTitle ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string
+    ] ;
+    sh:property [
+        sh:path tax:taxYear ;
+        sh:minCount 1 ;
+        sh:datatype xsd:gYear
+    ] ;
+    sh:property [
+        sh:path tax:preparedBy ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "Principal documents must identify the preparer"
+    ] ;
+    sh:property [
+        sh:path tax:documentsTransaction ;
+        sh:minCount 1 ;
+        sh:class tax:IntercompanyTransaction ;
+        sh:message "Principal document must document at least one transaction"
+    ] .
+
+tax:ArmLengthRangeShape a sh:NodeShape ;
+    sh:targetClass tax:ArmLengthRange ;
+    sh:property [
+        sh:path tax:lowerQuartile ;
+        sh:minCount 1 ;
+        sh:datatype xsd:decimal
+    ] ;
+    sh:property [
+        sh:path tax:median ;
+        sh:minCount 1 ;
+        sh:datatype xsd:decimal
+    ] ;
+    sh:property [
+        sh:path tax:upperQuartile ;
+        sh:minCount 1 ;
+        sh:datatype xsd:decimal
+    ] ;
+    sh:sparql [
+        sh:message "Lower quartile must be less than or equal to median" ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this tax:lowerQuartile ?lq .
+                $this tax:median ?med .
+                FILTER (?lq > ?med)
+            }
+        """
+    ] ;
+    sh:sparql [
+        sh:message "Median must be less than or equal to upper quartile" ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this tax:median ?med .
+                $this tax:upperQuartile ?uq .
+                FILTER (?med > ?uq)
+            }
+        """
+    ] .

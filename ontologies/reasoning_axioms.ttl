@@ -1,0 +1,259 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix tesserai: <http://tesserai.io/ontology/core#> .
+@prefix auto: <http://tesserai.io/ontology/automotive#> .
+@prefix bldg: <http://tesserai.io/ontology/smart_building#> .
+@prefix energy: <http://tesserai.io/ontology/energy_grid#> .
+@prefix robo: <http://tesserai.io/ontology/robotics#> .
+
+# =============================================================================
+# Reasoning Axioms Extension Ontology
+# =============================================================================
+# This ontology extends the domain ontologies with OWL 2 RL axioms that enable
+# advanced reasoning capabilities. Load this after the domain ontologies.
+
+<http://tesserai.io/ontology/reasoning_axioms> a owl:Ontology ;
+    rdfs:label "TesserAI Reasoning Axioms" ;
+    rdfs:comment "OWL 2 RL axioms for semantic reasoning over digital twins." ;
+    owl:versionInfo "1.0.0" .
+
+# =============================================================================
+# Transitive Properties
+# =============================================================================
+# Enable reasoning over transitive relationships
+
+tesserai:connectedTo a owl:TransitiveProperty ;
+    rdfs:comment "If A is connected to B, and B is connected to C, then A is connected to C." .
+
+tesserai:isPartOf a owl:ObjectProperty, owl:TransitiveProperty ;
+    rdfs:label "is part of" ;
+    rdfs:comment "Transitive part-whole relationship. If X is part of Y and Y is part of Z, then X is part of Z." ;
+    rdfs:domain tesserai:DigitalTwin ;
+    rdfs:range tesserai:DigitalTwin .
+
+tesserai:contains a owl:ObjectProperty, owl:TransitiveProperty ;
+    owl:inverseOf tesserai:isPartOf ;
+    rdfs:label "contains" ;
+    rdfs:comment "Inverse of isPartOf - also transitive." .
+
+# =============================================================================
+# Symmetric Properties
+# =============================================================================
+
+tesserai:connectedTo a owl:SymmetricProperty ;
+    rdfs:comment "If A is connected to B, then B is connected to A." .
+
+tesserai:adjacentTo a owl:ObjectProperty, owl:SymmetricProperty ;
+    rdfs:label "adjacent to" ;
+    rdfs:comment "Spatial adjacency - symmetric relationship." ;
+    rdfs:domain tesserai:DigitalTwin ;
+    rdfs:range tesserai:DigitalTwin .
+
+# =============================================================================
+# Inverse Properties
+# =============================================================================
+
+# Core inverse pairs already defined - just ensuring completeness
+tesserai:hasComponent owl:inverseOf tesserai:isComponentOf .
+tesserai:isComponentOf owl:inverseOf tesserai:hasComponent .
+
+# Building structural relationships
+bldg:isOnFloor a owl:ObjectProperty ;
+    rdfs:label "is on floor" ;
+    rdfs:comment "Room is located on this floor." ;
+    owl:inverseOf bldg:hasRoom ;
+    rdfs:domain bldg:Room ;
+    rdfs:range bldg:Floor .
+
+bldg:isInBuilding a owl:ObjectProperty ;
+    rdfs:label "is in building" ;
+    rdfs:comment "Floor is in this building." ;
+    owl:inverseOf bldg:hasFloor ;
+    rdfs:domain bldg:Floor ;
+    rdfs:range bldg:Building .
+
+# Vehicle fleet relationships
+auto:containsVehicle a owl:ObjectProperty ;
+    owl:inverseOf auto:belongsToFleet ;
+    rdfs:label "contains vehicle" ;
+    rdfs:domain auto:Fleet ;
+    rdfs:range auto:FleetVehicle .
+
+# =============================================================================
+# Property Chains (OWL 2 RL SubPropertyOf Chains)
+# =============================================================================
+# Powerful inference: if X hasFloor Y and Y hasRoom Z, then X indirectlyContainsRoom Z
+
+tesserai:indirectlyContains a owl:ObjectProperty ;
+    rdfs:label "indirectly contains" ;
+    rdfs:comment "Inferred through property chains - entity contains another through intermediate levels." ;
+    owl:propertyChainAxiom ( bldg:hasFloor bldg:hasRoom ) .
+
+# If building hasHVAC hvac and hvac servesZone zone, building climaticallyServes zone
+bldg:climaticallyServes a owl:ObjectProperty ;
+    rdfs:label "climatically serves" ;
+    rdfs:comment "Building provides climate control to zone through its HVAC system." ;
+    owl:propertyChainAxiom ( bldg:hasHVAC bldg:servesZone ) .
+
+# If vehicle belongsToFleet fleet and fleet operatedBy company, vehicle indirectlyOperatedBy company
+auto:indirectlyOperatedBy a owl:ObjectProperty ;
+    rdfs:label "indirectly operated by" ;
+    rdfs:comment "Vehicle operated by company through fleet membership." .
+
+# =============================================================================
+# Class Hierarchies for Inference
+# =============================================================================
+
+# Equipment categories for inference
+tesserai:HeatingEquipment a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Heating Equipment" ;
+    rdfs:comment "Equipment that provides heating." .
+
+tesserai:CoolingEquipment a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Cooling Equipment" ;
+    rdfs:comment "Equipment that provides cooling." .
+
+tesserai:HVACEquipment a owl:Class ;
+    owl:unionOf ( tesserai:HeatingEquipment tesserai:CoolingEquipment ) ;
+    rdfs:label "HVAC Equipment" ;
+    rdfs:comment "Climate control equipment - either heating or cooling." .
+
+# Boilers are heating equipment
+bldg:Boiler rdfs:subClassOf tesserai:HeatingEquipment .
+
+# Chillers are cooling equipment
+bldg:Chiller rdfs:subClassOf tesserai:CoolingEquipment .
+
+# Air handling units can do both
+bldg:AHU rdfs:subClassOf tesserai:HVACEquipment .
+
+# =============================================================================
+# Status Classification Classes
+# =============================================================================
+
+tesserai:OperationalEntity a owl:Class ;
+    rdfs:subClassOf tesserai:DigitalTwin ;
+    rdfs:label "Operational Entity" ;
+    rdfs:comment "An entity that is currently operational (status = active/running)." .
+
+tesserai:MaintenanceRequired a owl:Class ;
+    rdfs:subClassOf tesserai:DigitalTwin ;
+    rdfs:label "Maintenance Required" ;
+    rdfs:comment "An entity that requires maintenance." .
+
+tesserai:CriticalCondition a owl:Class ;
+    rdfs:subClassOf tesserai:DigitalTwin ;
+    rdfs:label "Critical Condition" ;
+    rdfs:comment "An entity in critical condition requiring immediate attention." .
+
+# =============================================================================
+# Automotive Status Classes
+# =============================================================================
+
+auto:LowBatteryVehicle a owl:Class ;
+    rdfs:subClassOf auto:ElectricVehicle ;
+    rdfs:label "Low Battery Vehicle" ;
+    rdfs:comment "Electric vehicle with battery level below 20%." .
+
+auto:HighMileageVehicle a owl:Class ;
+    rdfs:subClassOf auto:Vehicle ;
+    rdfs:label "High Mileage Vehicle" ;
+    rdfs:comment "Vehicle with mileage exceeding 100,000 km." .
+
+auto:MaintenanceDueVehicle a owl:Class ;
+    rdfs:subClassOf auto:Vehicle ;
+    rdfs:label "Maintenance Due Vehicle" ;
+    rdfs:comment "Vehicle requiring scheduled maintenance." .
+
+# =============================================================================
+# Building Status Classes
+# =============================================================================
+
+bldg:OverheatedZone a owl:Class ;
+    rdfs:subClassOf bldg:Zone ;
+    rdfs:label "Overheated Zone" ;
+    rdfs:comment "Zone with temperature significantly above setpoint." .
+
+bldg:PoorAirQualityZone a owl:Class ;
+    rdfs:subClassOf bldg:Zone ;
+    rdfs:label "Poor Air Quality Zone" ;
+    rdfs:comment "Zone with CO2 levels above 1000 ppm." .
+
+bldg:OvercrowdedRoom a owl:Class ;
+    rdfs:subClassOf bldg:Room ;
+    rdfs:label "Overcrowded Room" ;
+    rdfs:comment "Room with occupancy exceeding capacity." .
+
+bldg:HighEnergyConsumer a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "High Energy Consumer" ;
+    rdfs:comment "Equipment with energy consumption above threshold." .
+
+# =============================================================================
+# Disjoint Classes (Consistency Checking)
+# =============================================================================
+
+# Vehicles cannot be both fleet and private simultaneously
+auto:PrivateVehicle a owl:Class ;
+    rdfs:subClassOf auto:Vehicle ;
+    owl:disjointWith auto:FleetVehicle ;
+    rdfs:label "Private Vehicle" ;
+    rdfs:comment "A privately owned vehicle (not part of a fleet)." .
+
+# Heating and cooling equipment are disjoint
+tesserai:HeatingEquipment owl:disjointWith tesserai:CoolingEquipment .
+
+# A zone cannot be both overheated and overcooled
+bldg:OvercooledZone a owl:Class ;
+    rdfs:subClassOf bldg:Zone ;
+    owl:disjointWith bldg:OverheatedZone ;
+    rdfs:label "Overcooled Zone" ;
+    rdfs:comment "Zone with temperature significantly below setpoint." .
+
+# =============================================================================
+# Equivalent Classes (Class Inference)
+# =============================================================================
+
+# Any vehicle belonging to a fleet IS a fleet vehicle
+auto:FleetMember a owl:Class ;
+    owl:equivalentClass [
+        a owl:Restriction ;
+        owl:onProperty auto:belongsToFleet ;
+        owl:someValuesFrom auto:Fleet
+    ] ;
+    rdfs:subClassOf auto:FleetVehicle ;
+    rdfs:label "Fleet Member" ;
+    rdfs:comment "Any vehicle with a belongsToFleet relationship." .
+
+# =============================================================================
+# Domain/Range Inference Support
+# =============================================================================
+
+# If something serves a zone, it must be HVAC-related
+bldg:servesZone rdfs:domain bldg:HVACSystem ;
+                rdfs:range bldg:Zone .
+
+# If something monitors a building component, it's a sensor
+tesserai:monitors rdfs:range tesserai:DigitalTwin .
+
+# =============================================================================
+# Property Restrictions for Inference
+# =============================================================================
+
+# Every building has at least one floor
+bldg:Building rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty bldg:hasFloor ;
+    owl:minCardinality 1
+] .
+
+# Every fleet has at least one vehicle
+auto:Fleet rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty auto:hasVehicle ;
+    owl:minCardinality 1
+] .

@@ -1,0 +1,220 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix tesserai: <http://tesserai.io/ontology/core#> .
+@prefix aero: <http://tesserai.io/ontology/aerospace#> .
+
+# =============================================================================
+# TesserAI Aerospace Domain Ontology
+# =============================================================================
+
+<http://tesserai.io/ontology/aerospace> a owl:Ontology ;
+    rdfs:label "TesserAI Aerospace Ontology" ;
+    rdfs:comment "Ontology for aerospace digital twins including satellites, ground stations, and space systems." ;
+    owl:imports <http://tesserai.io/ontology/core> ;
+    owl:versionInfo "1.0.0" .
+
+# =============================================================================
+# Classes
+# =============================================================================
+
+aero:SatelliteConstellation a owl:Class ;
+    rdfs:subClassOf tesserai:System ;
+    rdfs:label "Satellite Constellation" ;
+    rdfs:comment "A group of satellites working together as a system." .
+
+aero:Satellite a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Satellite" ;
+    rdfs:comment "An artificial object placed into orbit around a celestial body." .
+
+aero:CommunicationsSatellite a owl:Class ;
+    rdfs:subClassOf aero:Satellite ;
+    rdfs:label "Communications Satellite" ;
+    rdfs:comment "A satellite designed for telecommunications." .
+
+aero:Payload a owl:Class ;
+    rdfs:subClassOf tesserai:Component ;
+    rdfs:label "Payload" ;
+    rdfs:comment "The equipment carried by a satellite to perform its mission." .
+
+aero:KaBandPayload a owl:Class ;
+    rdfs:subClassOf aero:Payload ;
+    rdfs:label "Ka-Band Payload" ;
+    rdfs:comment "A payload operating in the Ka frequency band (26.5-40 GHz)." .
+
+aero:KuBandPayload a owl:Class ;
+    rdfs:subClassOf aero:Payload ;
+    rdfs:label "Ku-Band Payload" ;
+    rdfs:comment "A payload operating in the Ku frequency band (12-18 GHz)." .
+
+aero:GroundStation a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Ground Station" ;
+    rdfs:comment "A facility on Earth for communicating with satellites." .
+
+aero:MissionControlCenter a owl:Class ;
+    rdfs:subClassOf tesserai:System ;
+    rdfs:label "Mission Control Center" ;
+    rdfs:comment "A facility that manages space mission operations." .
+
+aero:OrbitDeterminationSystem a owl:Class ;
+    rdfs:subClassOf tesserai:System ;
+    rdfs:label "Orbit Determination System" ;
+    rdfs:comment "A system that calculates and tracks orbital parameters." .
+
+aero:CollisionAvoidanceSystem a owl:Class ;
+    rdfs:subClassOf tesserai:System ;
+    rdfs:label "Collision Avoidance System" ;
+    rdfs:comment "A system that monitors and prevents orbital collisions." .
+
+aero:Subsystem a owl:Class ;
+    rdfs:subClassOf tesserai:Component ;
+    rdfs:label "Subsystem" ;
+    rdfs:comment "A functional component of a satellite." .
+
+aero:ADCS a owl:Class ;
+    rdfs:subClassOf aero:Subsystem ;
+    rdfs:label "Attitude Determination & Control System" ;
+    rdfs:comment "System that determines and controls spacecraft orientation." .
+
+aero:EPS a owl:Class ;
+    rdfs:subClassOf aero:Subsystem ;
+    rdfs:label "Electrical Power System" ;
+    rdfs:comment "System that generates, stores, and distributes electrical power." .
+
+aero:TCS a owl:Class ;
+    rdfs:subClassOf aero:Subsystem ;
+    rdfs:label "Thermal Control System" ;
+    rdfs:comment "System that maintains proper temperature ranges." .
+
+aero:OBC a owl:Class ;
+    rdfs:subClassOf aero:Subsystem ;
+    rdfs:label "On-Board Computer" ;
+    rdfs:comment "The main computer system on a satellite." .
+
+aero:COMM a owl:Class ;
+    rdfs:subClassOf aero:Subsystem ;
+    rdfs:label "Communications Subsystem" ;
+    rdfs:comment "System that handles communication with ground stations." .
+
+aero:PROP a owl:Class ;
+    rdfs:subClassOf aero:Subsystem ;
+    rdfs:label "Propulsion System" ;
+    rdfs:comment "System that provides thrust for orbital maneuvers." .
+
+aero:Launch a owl:Class ;
+    rdfs:subClassOf tesserai:Event ;
+    rdfs:label "Launch" ;
+    rdfs:comment "A satellite launch event." .
+
+aero:SpaceWeatherMonitor a owl:Class ;
+    rdfs:subClassOf tesserai:System ;
+    rdfs:label "Space Weather Monitor" ;
+    rdfs:comment "A system that monitors solar and space weather conditions." .
+
+aero:InterSatelliteLink a owl:Class ;
+    rdfs:subClassOf tesserai:Connection ;
+    rdfs:label "Inter-Satellite Link" ;
+    rdfs:comment "A communication link between two satellites." .
+
+aero:TelemetrySystem a owl:Class ;
+    rdfs:subClassOf tesserai:System ;
+    rdfs:label "Telemetry System" ;
+    rdfs:comment "A system that collects and transmits satellite health data." .
+
+# =============================================================================
+# Properties
+# =============================================================================
+
+aero:orbitType a owl:DatatypeProperty ;
+    rdfs:label "orbit type" ;
+    rdfs:comment "The type of orbit (LEO, MEO, GEO, HEO)." ;
+    rdfs:domain aero:Satellite ;
+    rdfs:range xsd:string .
+
+aero:altitude a owl:DatatypeProperty ;
+    rdfs:label "altitude" ;
+    rdfs:comment "The orbital altitude in kilometers." ;
+    rdfs:domain aero:Satellite ;
+    rdfs:range xsd:decimal .
+
+aero:inclination a owl:DatatypeProperty ;
+    rdfs:label "inclination" ;
+    rdfs:comment "The orbital inclination in degrees." ;
+    rdfs:domain aero:Satellite ;
+    rdfs:range xsd:decimal .
+
+aero:noradId a owl:DatatypeProperty ;
+    rdfs:label "NORAD ID" ;
+    rdfs:comment "The NORAD catalog number for the satellite." ;
+    rdfs:domain aero:Satellite ;
+    rdfs:range xsd:string .
+
+aero:launchDate a owl:DatatypeProperty ;
+    rdfs:label "launch date" ;
+    rdfs:comment "The date the satellite was launched." ;
+    rdfs:domain aero:Satellite ;
+    rdfs:range xsd:date .
+
+aero:hasPayload a owl:ObjectProperty ;
+    rdfs:subPropertyOf tesserai:hasComponent ;
+    rdfs:label "has payload" ;
+    rdfs:domain aero:Satellite ;
+    rdfs:range aero:Payload .
+
+aero:hasSubsystem a owl:ObjectProperty ;
+    rdfs:subPropertyOf tesserai:hasComponent ;
+    rdfs:label "has subsystem" ;
+    rdfs:domain aero:Satellite ;
+    rdfs:range aero:Subsystem .
+
+aero:belongsToConstellation a owl:ObjectProperty ;
+    rdfs:label "belongs to constellation" ;
+    rdfs:domain aero:Satellite ;
+    rdfs:range aero:SatelliteConstellation .
+
+aero:communicatesWith a owl:ObjectProperty ;
+    rdfs:label "communicates with" ;
+    rdfs:domain aero:Satellite ;
+    rdfs:range aero:GroundStation .
+
+# =============================================================================
+# SHACL Shapes
+# =============================================================================
+
+aero:SatelliteShape a sh:NodeShape ;
+    sh:targetClass aero:Satellite, aero:CommunicationsSatellite ;
+    rdfs:label "Satellite Shape" ;
+    sh:property [
+        sh:path tesserai:name ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "A satellite must have a name." ;
+    ] ;
+    sh:property [
+        sh:path aero:orbitType ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:in ("LEO" "MEO" "GEO" "HEO") ;
+        sh:message "Orbit type must be LEO, MEO, GEO, or HEO." ;
+    ] ;
+    sh:property [
+        sh:path aero:altitude ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 160 ;
+        sh:message "Orbital altitude must be at least 160 km." ;
+    ] .
+
+aero:ConstellationShape a sh:NodeShape ;
+    sh:targetClass aero:SatelliteConstellation ;
+    rdfs:label "Constellation Shape" ;
+    sh:property [
+        sh:path tesserai:name ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "A constellation must have a name." ;
+    ] .

@@ -1,0 +1,442 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix tesserai: <http://tesserai.io/ontology/core#> .
+@prefix pm: <http://tesserai.io/ontology/predictive_maintenance#> .
+
+# =============================================================================
+# TesserAI Predictive Maintenance Domain Ontology
+# =============================================================================
+# Models industrial equipment with failure modes, degradation patterns,
+# and maintenance scheduling using Weibull reliability analysis and FMEA.
+# =============================================================================
+
+<http://tesserai.io/ontology/predictive_maintenance> a owl:Ontology ;
+    rdfs:label "TesserAI Predictive Maintenance Ontology" ;
+    rdfs:comment "Ontology for predictive maintenance of industrial equipment using Weibull failure modeling and FMEA-based risk analysis." ;
+    owl:imports <http://tesserai.io/ontology/core> ;
+    owl:versionInfo "1.0.0" .
+
+# =============================================================================
+# Abstract Base Classes
+# =============================================================================
+
+pm:IndustrialEquipment a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Industrial Equipment" ;
+    rdfs:comment "Abstract base class for all industrial equipment subject to predictive maintenance." .
+
+pm:RotatingEquipment a owl:Class ;
+    rdfs:subClassOf pm:IndustrialEquipment ;
+    rdfs:label "Rotating Equipment" ;
+    rdfs:comment "Equipment with rotating components subject to wear and vibration analysis." .
+
+pm:StaticEquipment a owl:Class ;
+    rdfs:subClassOf pm:IndustrialEquipment ;
+    rdfs:label "Static Equipment" ;
+    rdfs:comment "Non-rotating equipment such as heat exchangers and pressure vessels." .
+
+# =============================================================================
+# Equipment Classes
+# =============================================================================
+
+pm:IndustrialPump a owl:Class ;
+    rdfs:subClassOf pm:RotatingEquipment ;
+    rdfs:label "Industrial Pump" ;
+    rdfs:comment "A mechanical device for moving fluids, subject to seal wear, cavitation, and impeller erosion." .
+
+pm:ElectricMotor a owl:Class ;
+    rdfs:subClassOf pm:RotatingEquipment ;
+    rdfs:label "Electric Motor" ;
+    rdfs:comment "An electrical machine converting electrical energy to mechanical energy, subject to bearing and winding failures." .
+
+pm:RollingBearing a owl:Class ;
+    rdfs:subClassOf pm:RotatingEquipment ;
+    rdfs:label "Rolling Bearing" ;
+    rdfs:comment "A bearing using rolling elements, subject to spalling, cage wear, and lubrication failure." .
+
+pm:Gearbox a owl:Class ;
+    rdfs:subClassOf pm:RotatingEquipment ;
+    rdfs:label "Gearbox" ;
+    rdfs:comment "A mechanical transmission device, subject to gear tooth wear, pitting, and oil degradation." .
+
+pm:Compressor a owl:Class ;
+    rdfs:subClassOf pm:RotatingEquipment ;
+    rdfs:label "Compressor" ;
+    rdfs:comment "A device for increasing gas pressure, subject to valve, seal, and bearing failures." .
+
+pm:HeatExchanger a owl:Class ;
+    rdfs:subClassOf pm:StaticEquipment ;
+    rdfs:label "Heat Exchanger" ;
+    rdfs:comment "A device for transferring heat between fluids, subject to fouling, tube leaks, and corrosion." .
+
+pm:PressureVessel a owl:Class ;
+    rdfs:subClassOf pm:StaticEquipment ;
+    rdfs:label "Pressure Vessel" ;
+    rdfs:comment "A container holding fluids at pressure, subject to corrosion and fatigue cracking." .
+
+# =============================================================================
+# Failure and Maintenance Classes
+# =============================================================================
+
+pm:FailureMode a owl:Class ;
+    rdfs:subClassOf tesserai:Event ;
+    rdfs:label "Failure Mode" ;
+    rdfs:comment "A specific way in which equipment can fail, characterized by FMEA parameters." .
+
+pm:MaintenanceEvent a owl:Class ;
+    rdfs:subClassOf tesserai:Event ;
+    rdfs:label "Maintenance Event" ;
+    rdfs:comment "A scheduled or unscheduled maintenance activity performed on equipment." .
+
+pm:CorrectiveMaintenance a owl:Class ;
+    rdfs:subClassOf pm:MaintenanceEvent ;
+    rdfs:label "Corrective Maintenance" ;
+    rdfs:comment "Maintenance performed after a failure has occurred." .
+
+pm:PreventiveMaintenance a owl:Class ;
+    rdfs:subClassOf pm:MaintenanceEvent ;
+    rdfs:label "Preventive Maintenance" ;
+    rdfs:comment "Scheduled maintenance to prevent failures." .
+
+pm:PredictiveMaintenance a owl:Class ;
+    rdfs:subClassOf pm:MaintenanceEvent ;
+    rdfs:label "Predictive Maintenance" ;
+    rdfs:comment "Condition-based maintenance triggered by degradation analysis." .
+
+pm:DegradationPattern a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
+    rdfs:label "Degradation Pattern" ;
+    rdfs:comment "A model describing how equipment health degrades over time." .
+
+# =============================================================================
+# Sensor Classes
+# =============================================================================
+
+pm:VibrationSensor a owl:Class ;
+    rdfs:subClassOf tesserai:Sensor ;
+    rdfs:label "Vibration Sensor" ;
+    rdfs:comment "Sensor measuring mechanical vibration for rotating equipment monitoring." .
+
+pm:TemperatureSensor a owl:Class ;
+    rdfs:subClassOf tesserai:Sensor ;
+    rdfs:label "Temperature Sensor" ;
+    rdfs:comment "Sensor measuring temperature for thermal monitoring." .
+
+pm:PressureSensor a owl:Class ;
+    rdfs:subClassOf tesserai:Sensor ;
+    rdfs:label "Pressure Sensor" ;
+    rdfs:comment "Sensor measuring fluid or gas pressure." .
+
+pm:FlowSensor a owl:Class ;
+    rdfs:subClassOf tesserai:Sensor ;
+    rdfs:label "Flow Sensor" ;
+    rdfs:comment "Sensor measuring fluid flow rate." .
+
+pm:CurrentSensor a owl:Class ;
+    rdfs:subClassOf tesserai:Sensor ;
+    rdfs:label "Current Sensor" ;
+    rdfs:comment "Sensor measuring electrical current draw." .
+
+pm:OilAnalysisSensor a owl:Class ;
+    rdfs:subClassOf tesserai:Sensor ;
+    rdfs:label "Oil Analysis Sensor" ;
+    rdfs:comment "Sensor for continuous oil condition monitoring." .
+
+pm:AcousticEmissionSensor a owl:Class ;
+    rdfs:subClassOf tesserai:Sensor ;
+    rdfs:label "Acoustic Emission Sensor" ;
+    rdfs:comment "Sensor detecting high-frequency stress waves from material defects." .
+
+# =============================================================================
+# Health and Reliability Properties
+# =============================================================================
+
+pm:healthScore a owl:DatatypeProperty ;
+    rdfs:label "health score" ;
+    rdfs:comment "Current equipment health as a percentage (0-100), where 100 is perfect condition." ;
+    rdfs:domain pm:IndustrialEquipment ;
+    rdfs:range xsd:decimal .
+
+pm:remainingUsefulLife a owl:DatatypeProperty ;
+    rdfs:label "remaining useful life" ;
+    rdfs:comment "Estimated remaining useful life in operating hours before failure." ;
+    rdfs:domain pm:IndustrialEquipment ;
+    rdfs:range xsd:decimal .
+
+pm:operatingHours a owl:DatatypeProperty ;
+    rdfs:label "operating hours" ;
+    rdfs:comment "Total accumulated operating hours since installation or last overhaul." ;
+    rdfs:domain pm:IndustrialEquipment ;
+    rdfs:range xsd:decimal .
+
+pm:degradationRate a owl:DatatypeProperty ;
+    rdfs:label "degradation rate" ;
+    rdfs:comment "Rate of health degradation per operating hour." ;
+    rdfs:domain pm:IndustrialEquipment ;
+    rdfs:range xsd:decimal .
+
+pm:failureProbability a owl:DatatypeProperty ;
+    rdfs:label "failure probability" ;
+    rdfs:comment "Probability of failure within the next operating period (0-1)." ;
+    rdfs:domain pm:IndustrialEquipment ;
+    rdfs:range xsd:decimal .
+
+# =============================================================================
+# Weibull Distribution Properties
+# =============================================================================
+
+pm:weibullShape a owl:DatatypeProperty ;
+    rdfs:label "Weibull shape parameter" ;
+    rdfs:comment "Shape parameter (beta) of Weibull distribution. >1 indicates wear-out failure." ;
+    rdfs:domain pm:IndustrialEquipment ;
+    rdfs:range xsd:decimal .
+
+pm:weibullScale a owl:DatatypeProperty ;
+    rdfs:label "Weibull scale parameter" ;
+    rdfs:comment "Scale parameter (eta) of Weibull distribution, representing characteristic life in hours." ;
+    rdfs:domain pm:IndustrialEquipment ;
+    rdfs:range xsd:decimal .
+
+pm:weibullLocation a owl:DatatypeProperty ;
+    rdfs:label "Weibull location parameter" ;
+    rdfs:comment "Location parameter (gamma) of Weibull distribution, representing failure-free period." ;
+    rdfs:domain pm:IndustrialEquipment ;
+    rdfs:range xsd:decimal .
+
+pm:mtbf a owl:DatatypeProperty ;
+    rdfs:label "mean time between failures" ;
+    rdfs:comment "Mean time between failures in operating hours." ;
+    rdfs:domain pm:IndustrialEquipment ;
+    rdfs:range xsd:decimal .
+
+pm:mttf a owl:DatatypeProperty ;
+    rdfs:label "mean time to failure" ;
+    rdfs:comment "Mean time to first failure in operating hours." ;
+    rdfs:domain pm:IndustrialEquipment ;
+    rdfs:range xsd:decimal .
+
+# =============================================================================
+# FMEA (Failure Mode and Effects Analysis) Properties
+# =============================================================================
+
+pm:severity a owl:DatatypeProperty ;
+    rdfs:label "severity" ;
+    rdfs:comment "FMEA severity rating (1-10) indicating impact of failure." ;
+    rdfs:domain pm:FailureMode ;
+    rdfs:range xsd:integer .
+
+pm:occurrence a owl:DatatypeProperty ;
+    rdfs:label "occurrence" ;
+    rdfs:comment "FMEA occurrence rating (1-10) indicating likelihood of failure." ;
+    rdfs:domain pm:FailureMode ;
+    rdfs:range xsd:integer .
+
+pm:detection a owl:DatatypeProperty ;
+    rdfs:label "detection" ;
+    rdfs:comment "FMEA detection rating (1-10) indicating difficulty of detecting failure before it occurs." ;
+    rdfs:domain pm:FailureMode ;
+    rdfs:range xsd:integer .
+
+pm:riskPriorityNumber a owl:DatatypeProperty ;
+    rdfs:label "risk priority number" ;
+    rdfs:comment "RPN = Severity x Occurrence x Detection. Higher values indicate higher risk." ;
+    rdfs:domain pm:FailureMode ;
+    rdfs:range xsd:integer .
+
+pm:failureModeDescription a owl:DatatypeProperty ;
+    rdfs:label "failure mode description" ;
+    rdfs:comment "Textual description of the failure mode." ;
+    rdfs:domain pm:FailureMode ;
+    rdfs:range xsd:string .
+
+pm:failureEffect a owl:DatatypeProperty ;
+    rdfs:label "failure effect" ;
+    rdfs:comment "Description of the effect when this failure mode occurs." ;
+    rdfs:domain pm:FailureMode ;
+    rdfs:range xsd:string .
+
+pm:recommendedAction a owl:DatatypeProperty ;
+    rdfs:label "recommended action" ;
+    rdfs:comment "Recommended maintenance or corrective action for this failure mode." ;
+    rdfs:domain pm:FailureMode ;
+    rdfs:range xsd:string .
+
+# =============================================================================
+# Sensor Reading Properties
+# =============================================================================
+
+pm:vibrationLevel a owl:DatatypeProperty ;
+    rdfs:label "vibration level" ;
+    rdfs:comment "Current vibration level in mm/s RMS." ;
+    rdfs:domain pm:VibrationSensor ;
+    rdfs:range xsd:decimal .
+
+pm:bearingTemperature a owl:DatatypeProperty ;
+    rdfs:label "bearing temperature" ;
+    rdfs:comment "Bearing temperature in degrees Celsius." ;
+    rdfs:domain pm:TemperatureSensor ;
+    rdfs:range xsd:decimal .
+
+pm:oilParticleCount a owl:DatatypeProperty ;
+    rdfs:label "oil particle count" ;
+    rdfs:comment "Particle count per milliliter of oil sample." ;
+    rdfs:domain pm:OilAnalysisSensor ;
+    rdfs:range xsd:integer .
+
+pm:oilViscosity a owl:DatatypeProperty ;
+    rdfs:label "oil viscosity" ;
+    rdfs:comment "Oil viscosity in centistokes (cSt)." ;
+    rdfs:domain pm:OilAnalysisSensor ;
+    rdfs:range xsd:decimal .
+
+# =============================================================================
+# Object Properties (Relationships)
+# =============================================================================
+
+pm:hasFailureMode a owl:ObjectProperty ;
+    rdfs:label "has failure mode" ;
+    rdfs:comment "Links equipment to its potential failure modes." ;
+    rdfs:domain pm:IndustrialEquipment ;
+    rdfs:range pm:FailureMode .
+
+pm:hasSensor a owl:ObjectProperty ;
+    rdfs:label "has sensor" ;
+    rdfs:comment "Links equipment to its monitoring sensors." ;
+    rdfs:domain pm:IndustrialEquipment ;
+    rdfs:range tesserai:Sensor .
+
+pm:hasDegradationPattern a owl:ObjectProperty ;
+    rdfs:label "has degradation pattern" ;
+    rdfs:comment "Links equipment to its degradation model." ;
+    rdfs:domain pm:IndustrialEquipment ;
+    rdfs:range pm:DegradationPattern .
+
+pm:triggeredBy a owl:ObjectProperty ;
+    rdfs:label "triggered by" ;
+    rdfs:comment "Links a maintenance event to the failure mode that triggered it." ;
+    rdfs:domain pm:MaintenanceEvent ;
+    rdfs:range pm:FailureMode .
+
+pm:performedOn a owl:ObjectProperty ;
+    rdfs:label "performed on" ;
+    rdfs:comment "Links a maintenance event to the equipment it was performed on." ;
+    rdfs:domain pm:MaintenanceEvent ;
+    rdfs:range pm:IndustrialEquipment .
+
+pm:monitors a owl:ObjectProperty ;
+    rdfs:label "monitors" ;
+    rdfs:comment "Links a sensor to the equipment it monitors." ;
+    rdfs:domain tesserai:Sensor ;
+    rdfs:range pm:IndustrialEquipment ;
+    owl:inverseOf pm:hasSensor .
+
+pm:indicatesFailure a owl:ObjectProperty ;
+    rdfs:label "indicates failure" ;
+    rdfs:comment "Links a sensor reading pattern to the failure mode it indicates." ;
+    rdfs:domain tesserai:Sensor ;
+    rdfs:range pm:FailureMode .
+
+# =============================================================================
+# SHACL Shapes
+# =============================================================================
+
+pm:IndustrialEquipmentShape a sh:NodeShape ;
+    sh:targetClass pm:IndustrialEquipment ;
+    rdfs:label "Industrial Equipment Shape" ;
+    sh:property [
+        sh:path tesserai:name ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "Industrial equipment must have a name." ;
+    ] ;
+    sh:property [
+        sh:path pm:healthScore ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 100 ;
+        sh:message "Health score must be between 0 and 100." ;
+    ] ;
+    sh:property [
+        sh:path pm:remainingUsefulLife ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:message "Remaining useful life must be non-negative." ;
+    ] ;
+    sh:property [
+        sh:path pm:operatingHours ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:message "Operating hours must be non-negative." ;
+    ] .
+
+pm:FailureModeShape a sh:NodeShape ;
+    sh:targetClass pm:FailureMode ;
+    rdfs:label "Failure Mode Shape" ;
+    sh:property [
+        sh:path pm:severity ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 10 ;
+        sh:message "Severity must be between 1 and 10." ;
+    ] ;
+    sh:property [
+        sh:path pm:occurrence ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 10 ;
+        sh:message "Occurrence must be between 1 and 10." ;
+    ] ;
+    sh:property [
+        sh:path pm:detection ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 10 ;
+        sh:message "Detection must be between 1 and 10." ;
+    ] .
+
+pm:WeibullParametersShape a sh:NodeShape ;
+    sh:targetClass pm:IndustrialEquipment ;
+    rdfs:label "Weibull Parameters Shape" ;
+    sh:property [
+        sh:path pm:weibullShape ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minExclusive 0 ;
+        sh:message "Weibull shape parameter must be positive." ;
+    ] ;
+    sh:property [
+        sh:path pm:weibullScale ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minExclusive 0 ;
+        sh:message "Weibull scale parameter must be positive." ;
+    ] ;
+    sh:property [
+        sh:path pm:weibullLocation ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:message "Weibull location parameter must be non-negative." ;
+    ] .
+
+pm:MaintenanceEventShape a sh:NodeShape ;
+    sh:targetClass pm:MaintenanceEvent ;
+    rdfs:label "Maintenance Event Shape" ;
+    sh:property [
+        sh:path pm:performedOn ;
+        sh:minCount 1 ;
+        sh:class pm:IndustrialEquipment ;
+        sh:message "Maintenance event must be linked to equipment." ;
+    ] .

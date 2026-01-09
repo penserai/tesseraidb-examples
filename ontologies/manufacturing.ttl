@@ -1,0 +1,218 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix tesserai: <http://tesserai.io/ontology/core#> .
+@prefix mfg: <http://tesserai.io/ontology/manufacturing#> .
+
+# =============================================================================
+# TesserAI Manufacturing Domain Ontology
+# =============================================================================
+
+<http://tesserai.io/ontology/manufacturing> a owl:Ontology ;
+    rdfs:label "TesserAI Manufacturing Ontology" ;
+    rdfs:comment "Ontology for Industry 4.0 digital twins including factories, production lines, and equipment." ;
+    owl:imports <http://tesserai.io/ontology/core> ;
+    owl:versionInfo "1.0.0" .
+
+# =============================================================================
+# Classes
+# =============================================================================
+
+mfg:Factory a owl:Class ;
+    rdfs:subClassOf tesserai:System ;
+    rdfs:label "Factory" ;
+    rdfs:comment "A manufacturing facility." .
+
+mfg:ProductionArea a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Production Area" ;
+    rdfs:comment "A designated area within a factory for specific operations." .
+
+mfg:ProductionLine a owl:Class ;
+    rdfs:subClassOf tesserai:System ;
+    rdfs:label "Production Line" ;
+    rdfs:comment "A sequence of operations for manufacturing a product." .
+
+mfg:CNCMachine a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "CNC Machine" ;
+    rdfs:comment "A computer numerical control machine tool." .
+
+mfg:IndustrialRobot a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Industrial Robot" ;
+    rdfs:comment "A robotic system for manufacturing automation." .
+
+mfg:Conveyor a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Conveyor" ;
+    rdfs:comment "A material handling system for moving items." .
+
+mfg:QualityControlEquipment a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Quality Control Equipment" ;
+    rdfs:comment "Equipment for inspecting and measuring products." .
+
+mfg:CoordinateMeasuringMachine a owl:Class ;
+    rdfs:subClassOf mfg:QualityControlEquipment ;
+    rdfs:label "Coordinate Measuring Machine" ;
+    rdfs:comment "A device for measuring physical geometrical characteristics." .
+
+mfg:VisionInspectionSystem a owl:Class ;
+    rdfs:subClassOf mfg:QualityControlEquipment ;
+    rdfs:label "Vision Inspection System" ;
+    rdfs:comment "An automated visual inspection system." .
+
+mfg:XRayInspectionSystem a owl:Class ;
+    rdfs:subClassOf mfg:QualityControlEquipment ;
+    rdfs:label "X-Ray Inspection System" ;
+    rdfs:comment "A system for non-destructive internal inspection." .
+
+mfg:HardnessTester a owl:Class ;
+    rdfs:subClassOf mfg:QualityControlEquipment ;
+    rdfs:label "Hardness Tester" ;
+    rdfs:comment "A device for measuring material hardness." .
+
+mfg:SurfaceRoughnessTester a owl:Class ;
+    rdfs:subClassOf mfg:QualityControlEquipment ;
+    rdfs:label "Surface Roughness Tester" ;
+    rdfs:comment "A device for measuring surface texture." .
+
+mfg:CuttingTool a owl:Class ;
+    rdfs:subClassOf tesserai:Component ;
+    rdfs:label "Cutting Tool" ;
+    rdfs:comment "A tool used for machining operations." .
+
+mfg:Workpiece a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Workpiece" ;
+    rdfs:comment "A part being manufactured or processed." .
+
+mfg:VibrationSensor a owl:Class ;
+    rdfs:subClassOf tesserai:Sensor ;
+    rdfs:label "Vibration Sensor" ;
+    rdfs:comment "A sensor for monitoring machine vibrations." .
+
+mfg:TemperatureSensor a owl:Class ;
+    rdfs:subClassOf tesserai:Sensor ;
+    rdfs:label "Temperature Sensor" ;
+    rdfs:comment "A sensor for monitoring temperature." .
+
+mfg:HumiditySensor a owl:Class ;
+    rdfs:subClassOf tesserai:Sensor ;
+    rdfs:label "Humidity Sensor" ;
+    rdfs:comment "A sensor for monitoring humidity levels." .
+
+mfg:EnergyMeter a owl:Class ;
+    rdfs:subClassOf tesserai:Sensor ;
+    rdfs:label "Energy Meter" ;
+    rdfs:comment "A device for measuring energy consumption." .
+
+mfg:MaintenanceTask a owl:Class ;
+    rdfs:subClassOf tesserai:Event ;
+    rdfs:label "Maintenance Task" ;
+    rdfs:comment "A scheduled or unscheduled maintenance activity." .
+
+# =============================================================================
+# Properties
+# =============================================================================
+
+mfg:oee a owl:DatatypeProperty ;
+    rdfs:label "OEE" ;
+    rdfs:comment "Overall Equipment Effectiveness as a percentage." ;
+    rdfs:domain mfg:CNCMachine ;
+    rdfs:range xsd:decimal .
+
+mfg:cycleTime a owl:DatatypeProperty ;
+    rdfs:label "cycle time" ;
+    rdfs:comment "Time to complete one production cycle in seconds." ;
+    rdfs:domain mfg:ProductionLine ;
+    rdfs:range xsd:decimal .
+
+mfg:spindleSpeed a owl:DatatypeProperty ;
+    rdfs:label "spindle speed" ;
+    rdfs:comment "Current spindle speed in RPM." ;
+    rdfs:domain mfg:CNCMachine ;
+    rdfs:range xsd:integer .
+
+mfg:toolLife a owl:DatatypeProperty ;
+    rdfs:label "tool life" ;
+    rdfs:comment "Remaining tool life as a percentage." ;
+    rdfs:domain mfg:CuttingTool ;
+    rdfs:range xsd:decimal .
+
+mfg:payload a owl:DatatypeProperty ;
+    rdfs:label "payload" ;
+    rdfs:comment "Maximum payload capacity in kilograms." ;
+    rdfs:domain mfg:IndustrialRobot ;
+    rdfs:range xsd:decimal .
+
+mfg:belongsToLine a owl:ObjectProperty ;
+    rdfs:label "belongs to line" ;
+    rdfs:domain mfg:CNCMachine ;
+    rdfs:range mfg:ProductionLine .
+
+mfg:hasArea a owl:ObjectProperty ;
+    rdfs:label "has area" ;
+    rdfs:domain mfg:Factory ;
+    rdfs:range mfg:ProductionArea .
+
+mfg:processesWorkpiece a owl:ObjectProperty ;
+    rdfs:label "processes workpiece" ;
+    rdfs:domain mfg:CNCMachine ;
+    rdfs:range mfg:Workpiece .
+
+# =============================================================================
+# SHACL Shapes
+# =============================================================================
+
+mfg:FactoryShape a sh:NodeShape ;
+    sh:targetClass mfg:Factory ;
+    rdfs:label "Factory Shape" ;
+    sh:property [
+        sh:path tesserai:name ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "A factory must have a name." ;
+    ] .
+
+mfg:CNCMachineShape a sh:NodeShape ;
+    sh:targetClass mfg:CNCMachine ;
+    rdfs:label "CNC Machine Shape" ;
+    sh:property [
+        sh:path tesserai:name ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "A CNC machine must have a name." ;
+    ] ;
+    sh:property [
+        sh:path mfg:oee ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 100 ;
+        sh:message "OEE must be between 0 and 100 percent." ;
+    ] .
+
+mfg:IndustrialRobotShape a sh:NodeShape ;
+    sh:targetClass mfg:IndustrialRobot ;
+    rdfs:label "Industrial Robot Shape" ;
+    sh:property [
+        sh:path mfg:payload ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:message "Payload must be a non-negative value in kg." ;
+    ] .
+
+mfg:WorkpieceShape a sh:NodeShape ;
+    sh:targetClass mfg:Workpiece ;
+    rdfs:label "Workpiece Shape" ;
+    sh:property [
+        sh:path tesserai:name ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "A workpiece must have a name or identifier." ;
+    ] .

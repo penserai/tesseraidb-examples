@@ -1,0 +1,15 @@
+{
+  "hash": "4c0b6f0b",
+  "configHash": "9ea56408",
+  "lockfileHash": "f6e38b61",
+  "browserHash": "576b7a7d",
+  "optimized": {
+    "oxigraph/web": {
+      "src": "../../node_modules/oxigraph/web.js",
+      "file": "oxigraph_web.js",
+      "fileHash": "32a9d046",
+      "needsInterop": false
+    }
+  },
+  "chunks": {}
+}

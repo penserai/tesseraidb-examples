@@ -1,0 +1,81 @@
+{
+  "name": "Robot Coordination Rules",
+  "description": "SPARQL inference rules for multi-robot coordination and collision avoidance",
+  "version": "1.0.0",
+  "rules": [
+    {
+      "id": "blocked_cell_inference",
+      "name": "Blocked Cell Inference",
+      "description": "Infer that a cell is blocked when a robot occupies it",
+      "priority": 100,
+      "enabled": true,
+      "rule_type": {
+        "type": "sparql_construct",
+        "pattern": "?robot a <http://tesserai.io/ontology/robot_simulation#Robot> ; <http://tesserai.io/ontology/robot_simulation#occupiesCell> ?cell ; <http://tesserai.io/ontology/robot_simulation#isActive> true .",
+        "construct": "?cell <http://tesserai.io/ontology/robot_simulation#blockedByRobot> ?robot . ?cell a <http://tesserai.io/ontology/robot_simulation#BlockedCell> ."
+      }
+    },
+    {
+      "id": "robot_at_grid_cell",
+      "name": "Robot Grid Cell Position",
+      "description": "Derive the grid cell a robot occupies from its continuous position",
+      "priority": 110,
+      "enabled": true,
+      "rule_type": {
+        "type": "sparql_construct",
+        "pattern": "?robot a <http://tesserai.io/ontology/robot_simulation#Robot> ; <http://tesserai.io/ontology/robot_simulation#positionX> ?px ; <http://tesserai.io/ontology/robot_simulation#positionY> ?py . BIND(FLOOR(?px) AS ?gx) BIND(FLOOR(?py) AS ?gy) BIND(IRI(CONCAT('http://tesserai.io/grid/cell_', STR(?gx), '_', STR(?gy))) AS ?cell)",
+        "construct": "?robot <http://tesserai.io/ontology/robot_simulation#occupiesCell> ?cell . ?cell a <http://tesserai.io/ontology/robot_simulation#GridCell> ; <http://tesserai.io/ontology/robot_simulation#gridX> ?gx ; <http://tesserai.io/ontology/robot_simulation#gridY> ?gy ."
+      }
+    },
+    {
+      "id": "assign_home_offset",
+      "name": "Assign Home Offset Cell",
+      "description": "Assign each robot a unique home cell based on its index",
+      "priority": 90,
+      "enabled": true,
+      "rule_type": {
+        "type": "sparql_construct",
+        "pattern": "?robot a <http://tesserai.io/ontology/robot_simulation#Robot> ; <http://tesserai.io/ontology/robot_simulation#homeOffsetIndex> ?idx . ?base a <http://tesserai.io/ontology/robot_simulation#HomeBase> ; <http://tesserai.io/ontology/robot_simulation#gridX> ?bx ; <http://tesserai.io/ontology/robot_simulation#gridY> ?by . BIND(2.0 AS ?radius) BIND((3.14159 * 2.0 * ?idx / 8.0) AS ?angle) BIND(FLOOR(?bx + ?radius * COS(?angle)) AS ?hx) BIND(FLOOR(?by + ?radius * SIN(?angle)) AS ?hy) BIND(IRI(CONCAT('http://tesserai.io/grid/home_', STR(?hx), '_', STR(?hy))) AS ?homeCell)",
+        "construct": "?robot <http://tesserai.io/ontology/robot_simulation#assignedHomeCell> ?homeCell . ?homeCell a <http://tesserai.io/ontology/robot_simulation#HomeCell> ; <http://tesserai.io/ontology/robot_simulation#gridX> ?hx ; <http://tesserai.io/ontology/robot_simulation#gridY> ?hy ."
+      }
+    },
+    {
+      "id": "low_battery_returning",
+      "name": "Low Battery Returning Home",
+      "description": "Classify robots with low battery as returning home",
+      "priority": 80,
+      "enabled": true,
+      "rule_type": {
+        "type": "threshold",
+        "property": "http://tesserai.io/ontology/robot_simulation#batteryLevel",
+        "operator": "less_than",
+        "value": 20.0,
+        "target_class": "http://tesserai.io/ontology/robot_simulation#ReturningHome"
+      }
+    },
+    {
+      "id": "waiting_for_path",
+      "name": "Waiting For Path Detection",
+      "description": "Detect when robot's target cell is blocked by another robot",
+      "priority": 70,
+      "enabled": true,
+      "rule_type": {
+        "type": "sparql_construct",
+        "pattern": "?robot a <http://tesserai.io/ontology/robot_simulation#Robot> ; <http://tesserai.io/ontology/robot_simulation#hasTargetLocation> ?target . ?target <http://tesserai.io/ontology/robot_simulation#blockedByRobot> ?blocker . FILTER(?blocker != ?robot)",
+        "construct": "?robot a <http://tesserai.io/ontology/robot_simulation#WaitingForPath> ."
+      }
+    },
+    {
+      "id": "at_assigned_home",
+      "name": "At Assigned Home Detection",
+      "description": "Detect when robot has reached its assigned home cell",
+      "priority": 60,
+      "enabled": true,
+      "rule_type": {
+        "type": "sparql_construct",
+        "pattern": "?robot a <http://tesserai.io/ontology/robot_simulation#Robot> ; <http://tesserai.io/ontology/robot_simulation#occupiesCell> ?cell ; <http://tesserai.io/ontology/robot_simulation#assignedHomeCell> ?cell .",
+        "construct": "?robot a <http://tesserai.io/ontology/robot_simulation#AtAssignedHome> ."
+      }
+    }
+  ]
+}

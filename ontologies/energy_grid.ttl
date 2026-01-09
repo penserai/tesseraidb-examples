@@ -1,0 +1,324 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix tesserai: <http://tesserai.io/ontology/core#> .
+@prefix energy: <http://tesserai.io/ontology/energy_grid#> .
+
+# =============================================================================
+# TesserAI Energy Grid Domain Ontology
+# =============================================================================
+
+<http://tesserai.io/ontology/energy_grid> a owl:Ontology ;
+    rdfs:label "TesserAI Energy Grid Ontology" ;
+    rdfs:comment "Ontology for energy grid digital twins including power generation, distribution, and consumption." ;
+    owl:imports <http://tesserai.io/ontology/core> ;
+    owl:versionInfo "1.0.0" .
+
+# =============================================================================
+# Classes
+# =============================================================================
+
+energy:PowerGrid a owl:Class ;
+    rdfs:subClassOf tesserai:System ;
+    rdfs:label "Power Grid" ;
+    rdfs:comment "An interconnected network for delivering electricity." .
+
+energy:PowerPlant a owl:Class ;
+    rdfs:subClassOf tesserai:System ;
+    rdfs:label "Power Plant" ;
+    rdfs:comment "A facility for generating electrical power." .
+
+energy:SolarFarm a owl:Class ;
+    rdfs:subClassOf energy:PowerPlant ;
+    rdfs:label "Solar Farm" ;
+    rdfs:comment "A large-scale solar power installation." .
+
+energy:WindFarm a owl:Class ;
+    rdfs:subClassOf energy:PowerPlant ;
+    rdfs:label "Wind Farm" ;
+    rdfs:comment "A collection of wind turbines for power generation." .
+
+energy:Generator a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Generator" ;
+    rdfs:comment "A device that converts energy into electricity." .
+
+energy:WindTurbine a owl:Class ;
+    rdfs:subClassOf energy:Generator ;
+    rdfs:label "Wind Turbine" ;
+    rdfs:comment "A turbine that converts wind energy to electricity." .
+
+energy:SolarPanel a owl:Class ;
+    rdfs:subClassOf energy:Generator ;
+    rdfs:label "Solar Panel" ;
+    rdfs:comment "A panel that converts solar energy to electricity." .
+
+energy:Transformer a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Transformer" ;
+    rdfs:comment "A device for changing voltage levels." .
+
+energy:Substation a owl:Class ;
+    rdfs:subClassOf tesserai:System ;
+    rdfs:label "Substation" ;
+    rdfs:comment "A facility for voltage transformation and distribution." .
+
+energy:TransmissionLine a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Transmission Line" ;
+    rdfs:comment "High voltage lines for bulk power transmission." .
+
+energy:DistributionLine a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Distribution Line" ;
+    rdfs:comment "Lines for distributing power to consumers." .
+
+energy:SmartMeter a owl:Class ;
+    rdfs:subClassOf tesserai:Sensor ;
+    rdfs:label "Smart Meter" ;
+    rdfs:comment "An electronic meter that records energy consumption." .
+
+energy:BatteryStorage a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Battery Storage" ;
+    rdfs:comment "Large-scale battery for grid energy storage." .
+
+energy:LoadCenter a owl:Class ;
+    rdfs:subClassOf tesserai:Component ;
+    rdfs:label "Load Center" ;
+    rdfs:comment "A point of electrical load consumption." .
+
+# =============================================================================
+# Properties
+# =============================================================================
+
+energy:capacity a owl:DatatypeProperty ;
+    rdfs:label "capacity" ;
+    rdfs:comment "Power generation capacity in megawatts (MW)." ;
+    rdfs:domain energy:PowerPlant ;
+    rdfs:range xsd:decimal .
+
+energy:currentOutput a owl:DatatypeProperty ;
+    rdfs:label "current output" ;
+    rdfs:comment "Current power output in megawatts (MW)." ;
+    rdfs:domain energy:Generator ;
+    rdfs:range xsd:decimal .
+
+energy:efficiency a owl:DatatypeProperty ;
+    rdfs:label "efficiency" ;
+    rdfs:comment "Energy conversion efficiency percentage (0-100)." ;
+    rdfs:domain energy:Generator ;
+    rdfs:range xsd:decimal .
+
+energy:voltage a owl:DatatypeProperty ;
+    rdfs:label "voltage" ;
+    rdfs:comment "Voltage level in kilovolts (kV)." ;
+    rdfs:domain tesserai:Asset ;
+    rdfs:range xsd:decimal .
+
+energy:frequency a owl:DatatypeProperty ;
+    rdfs:label "frequency" ;
+    rdfs:comment "Grid frequency in hertz (Hz)." ;
+    rdfs:domain energy:PowerGrid ;
+    rdfs:range xsd:decimal .
+
+energy:load a owl:DatatypeProperty ;
+    rdfs:label "load" ;
+    rdfs:comment "Current electrical load in megawatts (MW)." ;
+    rdfs:domain energy:LoadCenter ;
+    rdfs:range xsd:decimal .
+
+energy:energyProduced a owl:DatatypeProperty ;
+    rdfs:label "energy produced" ;
+    rdfs:comment "Total energy produced in megawatt-hours (MWh)." ;
+    rdfs:domain energy:Generator ;
+    rdfs:range xsd:decimal .
+
+energy:storageCapacity a owl:DatatypeProperty ;
+    rdfs:label "storage capacity" ;
+    rdfs:comment "Energy storage capacity in megawatt-hours (MWh)." ;
+    rdfs:domain energy:BatteryStorage ;
+    rdfs:range xsd:decimal .
+
+energy:stateOfCharge a owl:DatatypeProperty ;
+    rdfs:label "state of charge" ;
+    rdfs:comment "Battery state of charge percentage (0-100)." ;
+    rdfs:domain energy:BatteryStorage ;
+    rdfs:range xsd:decimal .
+
+energy:windSpeed a owl:DatatypeProperty ;
+    rdfs:label "wind speed" ;
+    rdfs:comment "Current wind speed in meters per second." ;
+    rdfs:domain energy:WindTurbine ;
+    rdfs:range xsd:decimal .
+
+energy:solarIrradiance a owl:DatatypeProperty ;
+    rdfs:label "solar irradiance" ;
+    rdfs:comment "Solar irradiance in watts per square meter (W/m2)." ;
+    rdfs:domain energy:SolarPanel ;
+    rdfs:range xsd:decimal .
+
+energy:connectedTo a owl:ObjectProperty ;
+    rdfs:subPropertyOf tesserai:connectedTo ;
+    rdfs:label "connected to" ;
+    rdfs:comment "Electrical connection between grid components." ;
+    rdfs:domain tesserai:Asset ;
+    rdfs:range tesserai:Asset .
+
+energy:feeds a owl:ObjectProperty ;
+    rdfs:label "feeds" ;
+    rdfs:comment "Power flow from source to destination." ;
+    rdfs:domain energy:PowerPlant ;
+    rdfs:range energy:Substation .
+
+energy:supplies a owl:ObjectProperty ;
+    rdfs:label "supplies" ;
+    rdfs:comment "Power supply to a load center." ;
+    rdfs:domain energy:Substation ;
+    rdfs:range energy:LoadCenter .
+
+energy:hasGenerator a owl:ObjectProperty ;
+    rdfs:subPropertyOf tesserai:hasComponent ;
+    rdfs:label "has generator" ;
+    rdfs:domain energy:PowerPlant ;
+    rdfs:range energy:Generator .
+
+energy:hasTransformer a owl:ObjectProperty ;
+    rdfs:subPropertyOf tesserai:hasComponent ;
+    rdfs:label "has transformer" ;
+    rdfs:domain energy:Substation ;
+    rdfs:range energy:Transformer .
+
+# =============================================================================
+# SHACL Shapes
+# =============================================================================
+
+energy:PowerPlantShape a sh:NodeShape ;
+    sh:targetClass energy:PowerPlant ;
+    rdfs:label "Power Plant Shape" ;
+    sh:property [
+        sh:path tesserai:name ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "A power plant must have a name." ;
+    ] ;
+    sh:property [
+        sh:path energy:capacity ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minExclusive 0 ;
+        sh:message "Power plant must have a positive capacity in MW." ;
+    ] .
+
+energy:GeneratorShape a sh:NodeShape ;
+    sh:targetClass energy:Generator ;
+    rdfs:label "Generator Shape" ;
+    sh:property [
+        sh:path energy:currentOutput ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:message "Current output must be a non-negative value in MW." ;
+    ] ;
+    sh:property [
+        sh:path energy:efficiency ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 100 ;
+        sh:message "Efficiency must be between 0 and 100 percent." ;
+    ] .
+
+energy:WindTurbineShape a sh:NodeShape ;
+    sh:targetClass energy:WindTurbine ;
+    rdfs:label "Wind Turbine Shape" ;
+    sh:property [
+        sh:path tesserai:name ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "A wind turbine must have a name." ;
+    ] ;
+    sh:property [
+        sh:path energy:windSpeed ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:message "Wind speed must be a non-negative value in m/s." ;
+    ] .
+
+energy:SolarPanelShape a sh:NodeShape ;
+    sh:targetClass energy:SolarPanel ;
+    rdfs:label "Solar Panel Shape" ;
+    sh:property [
+        sh:path energy:solarIrradiance ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 1500 ;
+        sh:message "Solar irradiance must be between 0 and 1500 W/m2." ;
+    ] .
+
+energy:BatteryStorageShape a sh:NodeShape ;
+    sh:targetClass energy:BatteryStorage ;
+    rdfs:label "Battery Storage Shape" ;
+    sh:property [
+        sh:path tesserai:name ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "Battery storage must have a name." ;
+    ] ;
+    sh:property [
+        sh:path energy:storageCapacity ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minExclusive 0 ;
+        sh:message "Battery storage must have a positive capacity in MWh." ;
+    ] ;
+    sh:property [
+        sh:path energy:stateOfCharge ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 100 ;
+        sh:message "State of charge must be between 0 and 100 percent." ;
+    ] .
+
+energy:SubstationShape a sh:NodeShape ;
+    sh:targetClass energy:Substation ;
+    rdfs:label "Substation Shape" ;
+    sh:property [
+        sh:path tesserai:name ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "A substation must have a name." ;
+    ] ;
+    sh:property [
+        sh:path energy:voltage ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minExclusive 0 ;
+        sh:message "Substation must have a positive voltage level in kV." ;
+    ] .
+
+energy:PowerGridShape a sh:NodeShape ;
+    sh:targetClass energy:PowerGrid ;
+    rdfs:label "Power Grid Shape" ;
+    sh:property [
+        sh:path tesserai:name ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "A power grid must have a name." ;
+    ] ;
+    sh:property [
+        sh:path energy:frequency ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:in (50.0 60.0) ;
+        sh:message "Grid frequency must be either 50 Hz or 60 Hz." ;
+    ] .

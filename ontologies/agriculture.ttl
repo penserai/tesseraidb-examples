@@ -1,0 +1,187 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix tesserai: <http://tesserai.io/ontology/core#> .
+@prefix agri: <http://tesserai.io/ontology/agriculture#> .
+
+# =============================================================================
+# TesserAI Agriculture Domain Ontology
+# =============================================================================
+
+<http://tesserai.io/ontology/agriculture> a owl:Ontology ;
+    rdfs:label "TesserAI Agriculture Ontology" ;
+    rdfs:comment "Ontology for precision agriculture digital twins including farms, crops, irrigation, and equipment." ;
+    owl:imports <http://tesserai.io/ontology/core> ;
+    owl:versionInfo "1.0.0" .
+
+# =============================================================================
+# Classes
+# =============================================================================
+
+agri:Farm a owl:Class ;
+    rdfs:subClassOf tesserai:System ;
+    rdfs:label "Farm" ;
+    rdfs:comment "An agricultural operation managing land, crops, and equipment." .
+
+agri:AgriculturalField a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Agricultural Field" ;
+    rdfs:comment "A parcel of land used for growing crops." .
+
+agri:Crop a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Crop" ;
+    rdfs:comment "A plant cultivated for harvest." .
+
+agri:IrrigationController a owl:Class ;
+    rdfs:subClassOf tesserai:System ;
+    rdfs:label "Irrigation Controller" ;
+    rdfs:comment "A system that manages automated irrigation." .
+
+agri:IrrigationZone a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Irrigation Zone" ;
+    rdfs:comment "A defined area with independent irrigation control." .
+
+agri:SoilSensor a owl:Class ;
+    rdfs:subClassOf tesserai:Sensor ;
+    rdfs:label "Soil Sensor" ;
+    rdfs:comment "A sensor that measures soil conditions (moisture, pH, nutrients)." .
+
+agri:WeatherStation a owl:Class ;
+    rdfs:subClassOf tesserai:System ;
+    rdfs:label "Weather Station" ;
+    rdfs:comment "A station that monitors atmospheric conditions." .
+
+agri:AgriculturalDrone a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Agricultural Drone" ;
+    rdfs:comment "An unmanned aerial vehicle for agricultural operations." .
+
+agri:AgriculturalTractor a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Agricultural Tractor" ;
+    rdfs:comment "A farm vehicle for pulling and powering implements." .
+
+agri:AgriculturalImplement a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Agricultural Implement" ;
+    rdfs:comment "A tool or attachment used with farm equipment." .
+
+agri:StorageFacility a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Storage Facility" ;
+    rdfs:comment "A structure for storing agricultural products or materials." .
+
+agri:WaterSource a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Water Source" ;
+    rdfs:comment "A source of water for irrigation (well, pond, canal)." .
+
+agri:PestTrap a owl:Class ;
+    rdfs:subClassOf tesserai:Sensor ;
+    rdfs:label "Pest Trap" ;
+    rdfs:comment "A device for monitoring pest populations." .
+
+agri:CropHealthCamera a owl:Class ;
+    rdfs:subClassOf tesserai:Sensor ;
+    rdfs:label "Crop Health Camera" ;
+    rdfs:comment "A camera system for monitoring crop health (NDVI, multispectral)." .
+
+agri:FarmManagementSystem a owl:Class ;
+    rdfs:subClassOf tesserai:System ;
+    rdfs:label "Farm Management System" ;
+    rdfs:comment "A software system for managing farm operations." .
+
+# =============================================================================
+# Properties
+# =============================================================================
+
+agri:area a owl:DatatypeProperty ;
+    rdfs:label "area" ;
+    rdfs:comment "The area of land in acres or hectares." ;
+    rdfs:domain agri:AgriculturalField ;
+    rdfs:range xsd:decimal .
+
+agri:soilType a owl:DatatypeProperty ;
+    rdfs:label "soil type" ;
+    rdfs:comment "The type of soil (clay, loam, sandy, etc.)." ;
+    rdfs:domain agri:AgriculturalField ;
+    rdfs:range xsd:string .
+
+agri:cropType a owl:DatatypeProperty ;
+    rdfs:label "crop type" ;
+    rdfs:comment "The type of crop (vegetable, grain, tree, vine, etc.)." ;
+    rdfs:domain agri:Crop ;
+    rdfs:range xsd:string .
+
+agri:growthCycle a owl:DatatypeProperty ;
+    rdfs:label "growth cycle" ;
+    rdfs:comment "The typical growth cycle in days." ;
+    rdfs:domain agri:Crop ;
+    rdfs:range xsd:integer .
+
+agri:moistureLevel a owl:DatatypeProperty ;
+    rdfs:label "moisture level" ;
+    rdfs:comment "Soil moisture level as a percentage." ;
+    rdfs:domain agri:SoilSensor ;
+    rdfs:range xsd:decimal .
+
+agri:hasField a owl:ObjectProperty ;
+    rdfs:label "has field" ;
+    rdfs:domain agri:Farm ;
+    rdfs:range agri:AgriculturalField .
+
+agri:growsIn a owl:ObjectProperty ;
+    rdfs:label "grows in" ;
+    rdfs:domain agri:Crop ;
+    rdfs:range agri:AgriculturalField .
+
+agri:irrigates a owl:ObjectProperty ;
+    rdfs:label "irrigates" ;
+    rdfs:domain agri:IrrigationZone ;
+    rdfs:range agri:AgriculturalField .
+
+# =============================================================================
+# SHACL Shapes
+# =============================================================================
+
+agri:FarmShape a sh:NodeShape ;
+    sh:targetClass agri:Farm ;
+    rdfs:label "Farm Shape" ;
+    sh:property [
+        sh:path tesserai:name ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "A farm must have a name." ;
+    ] .
+
+agri:FieldShape a sh:NodeShape ;
+    sh:targetClass agri:AgriculturalField ;
+    rdfs:label "Field Shape" ;
+    sh:property [
+        sh:path agri:area ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minExclusive 0 ;
+        sh:message "Field area must be a positive value." ;
+    ] .
+
+agri:CropShape a sh:NodeShape ;
+    sh:targetClass agri:Crop ;
+    rdfs:label "Crop Shape" ;
+    sh:property [
+        sh:path tesserai:name ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "A crop must have a name." ;
+    ] ;
+    sh:property [
+        sh:path agri:growthCycle ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:integer ;
+        sh:minExclusive 0 ;
+        sh:message "Growth cycle must be a positive integer (days)." ;
+    ] .

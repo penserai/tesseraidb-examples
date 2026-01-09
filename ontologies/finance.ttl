@@ -1,0 +1,567 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix tesserai: <http://tesserai.io/ontology/core#> .
+@prefix fin: <http://tesserai.io/ontology/finance#> .
+
+# =============================================================================
+# TesserAI Finance Domain Ontology
+# =============================================================================
+# This ontology defines concepts for financial services digital twins,
+# including trading systems, risk management, portfolios, and compliance.
+
+<http://tesserai.io/ontology/finance> a owl:Ontology ;
+    rdfs:label "TesserAI Finance Ontology" ;
+    rdfs:comment "Ontology for Financial Services Digital Twins - Trading, Risk Management, Portfolios, and Compliance" ;
+    owl:versionInfo "1.0.0" ;
+    owl:imports <http://tesserai.io/ontology/core> .
+
+# =============================================================================
+# Core Financial Classes
+# =============================================================================
+
+fin:FinancialEntity a owl:Class ;
+    rdfs:subClassOf tesserai:DigitalTwin ;
+    rdfs:label "Financial Entity" ;
+    rdfs:comment "Base class for all financial digital twins." .
+
+fin:FinancialInstitution a owl:Class ;
+    rdfs:subClassOf fin:FinancialEntity ;
+    rdfs:label "Financial Institution" ;
+    rdfs:comment "A bank, investment firm, or other financial services organization." .
+
+fin:TradingDesk a owl:Class ;
+    rdfs:subClassOf fin:FinancialEntity ;
+    rdfs:label "Trading Desk" ;
+    rdfs:comment "A specialized unit within a financial institution for trading specific asset classes." .
+
+fin:Portfolio a owl:Class ;
+    rdfs:subClassOf fin:FinancialEntity ;
+    rdfs:label "Portfolio" ;
+    rdfs:comment "A collection of financial investments held by an institution or individual." .
+
+fin:Account a owl:Class ;
+    rdfs:subClassOf fin:FinancialEntity ;
+    rdfs:label "Account" ;
+    rdfs:comment "A financial account that holds assets or tracks transactions." .
+
+# =============================================================================
+# Financial Instruments
+# =============================================================================
+
+fin:FinancialInstrument a owl:Class ;
+    rdfs:subClassOf fin:FinancialEntity ;
+    rdfs:label "Financial Instrument" ;
+    rdfs:comment "A tradeable asset or contract." .
+
+fin:Equity a owl:Class ;
+    rdfs:subClassOf fin:FinancialInstrument ;
+    rdfs:label "Equity" ;
+    rdfs:comment "Stock or shares representing ownership in a company." .
+
+fin:Bond a owl:Class ;
+    rdfs:subClassOf fin:FinancialInstrument ;
+    rdfs:label "Bond" ;
+    rdfs:comment "A fixed-income debt instrument." .
+
+fin:Derivative a owl:Class ;
+    rdfs:subClassOf fin:FinancialInstrument ;
+    rdfs:label "Derivative" ;
+    rdfs:comment "A financial contract whose value derives from an underlying asset." .
+
+fin:Option a owl:Class ;
+    rdfs:subClassOf fin:Derivative ;
+    rdfs:label "Option" ;
+    rdfs:comment "A contract giving the right to buy or sell at a specified price." .
+
+fin:Future a owl:Class ;
+    rdfs:subClassOf fin:Derivative ;
+    rdfs:label "Future" ;
+    rdfs:comment "A standardized contract to buy or sell at a future date." .
+
+fin:Swap a owl:Class ;
+    rdfs:subClassOf fin:Derivative ;
+    rdfs:label "Swap" ;
+    rdfs:comment "A contract to exchange cash flows between parties." .
+
+fin:Currency a owl:Class ;
+    rdfs:subClassOf fin:FinancialInstrument ;
+    rdfs:label "Currency" ;
+    rdfs:comment "A fiat or digital currency for foreign exchange trading." .
+
+fin:Cryptocurrency a owl:Class ;
+    rdfs:subClassOf fin:Currency ;
+    rdfs:label "Cryptocurrency" ;
+    rdfs:comment "A digital or virtual currency using cryptography." .
+
+fin:ETF a owl:Class ;
+    rdfs:subClassOf fin:FinancialInstrument ;
+    rdfs:label "ETF" ;
+    rdfs:comment "Exchange-Traded Fund - a basket of securities traded on exchanges." .
+
+fin:MutualFund a owl:Class ;
+    rdfs:subClassOf fin:FinancialInstrument ;
+    rdfs:label "Mutual Fund" ;
+    rdfs:comment "A pooled investment fund managed by professionals." .
+
+# =============================================================================
+# Trading & Market Infrastructure
+# =============================================================================
+
+fin:TradingSystem a owl:Class ;
+    rdfs:subClassOf tesserai:System ;
+    rdfs:label "Trading System" ;
+    rdfs:comment "An automated system for executing trades." .
+
+fin:OrderManagementSystem a owl:Class ;
+    rdfs:subClassOf fin:TradingSystem ;
+    rdfs:label "Order Management System" ;
+    rdfs:comment "System for managing the lifecycle of trading orders." .
+
+fin:MarketDataFeed a owl:Class ;
+    rdfs:subClassOf tesserai:Sensor ;
+    rdfs:label "Market Data Feed" ;
+    rdfs:comment "Real-time source of market prices and trading data." .
+
+fin:Exchange a owl:Class ;
+    rdfs:subClassOf fin:FinancialEntity ;
+    rdfs:label "Exchange" ;
+    rdfs:comment "A marketplace for trading financial instruments." .
+
+fin:ClearingHouse a owl:Class ;
+    rdfs:subClassOf fin:FinancialEntity ;
+    rdfs:label "Clearing House" ;
+    rdfs:comment "An intermediary that clears and settles trades." .
+
+fin:Order a owl:Class ;
+    rdfs:subClassOf fin:FinancialEntity ;
+    rdfs:label "Order" ;
+    rdfs:comment "An instruction to buy or sell a financial instrument." .
+
+fin:Trade a owl:Class ;
+    rdfs:subClassOf fin:FinancialEntity ;
+    rdfs:label "Trade" ;
+    rdfs:comment "An executed transaction of a financial instrument." .
+
+fin:Position a owl:Class ;
+    rdfs:subClassOf fin:FinancialEntity ;
+    rdfs:label "Position" ;
+    rdfs:comment "The amount of a financial instrument held in a portfolio." .
+
+# =============================================================================
+# Risk Management
+# =============================================================================
+
+fin:RiskMetric a owl:Class ;
+    rdfs:subClassOf tesserai:Sensor ;
+    rdfs:label "Risk Metric" ;
+    rdfs:comment "A quantitative measure of financial risk." .
+
+fin:VaRMetric a owl:Class ;
+    rdfs:subClassOf fin:RiskMetric ;
+    rdfs:label "Value at Risk Metric" ;
+    rdfs:comment "Measures potential loss in value at a given confidence level." .
+
+fin:ExposureMetric a owl:Class ;
+    rdfs:subClassOf fin:RiskMetric ;
+    rdfs:label "Exposure Metric" ;
+    rdfs:comment "Measures the amount at risk in a particular asset or market." .
+
+fin:LiquidityMetric a owl:Class ;
+    rdfs:subClassOf fin:RiskMetric ;
+    rdfs:label "Liquidity Metric" ;
+    rdfs:comment "Measures the ability to convert assets to cash." .
+
+fin:CreditRisk a owl:Class ;
+    rdfs:subClassOf fin:RiskMetric ;
+    rdfs:label "Credit Risk" ;
+    rdfs:comment "Risk of loss from counterparty default." .
+
+fin:MarketRisk a owl:Class ;
+    rdfs:subClassOf fin:RiskMetric ;
+    rdfs:label "Market Risk" ;
+    rdfs:comment "Risk of loss from market movements." .
+
+fin:OperationalRisk a owl:Class ;
+    rdfs:subClassOf fin:RiskMetric ;
+    rdfs:label "Operational Risk" ;
+    rdfs:comment "Risk of loss from failed internal processes or systems." .
+
+fin:RiskLimit a owl:Class ;
+    rdfs:subClassOf fin:FinancialEntity ;
+    rdfs:label "Risk Limit" ;
+    rdfs:comment "A threshold or constraint on risk exposure." .
+
+fin:RiskAlert a owl:Class ;
+    rdfs:subClassOf tesserai:DigitalTwin ;
+    rdfs:label "Risk Alert" ;
+    rdfs:comment "A notification triggered when risk thresholds are breached." .
+
+# =============================================================================
+# Compliance & Regulatory
+# =============================================================================
+
+fin:ComplianceRule a owl:Class ;
+    rdfs:subClassOf fin:FinancialEntity ;
+    rdfs:label "Compliance Rule" ;
+    rdfs:comment "A regulatory requirement or internal policy." .
+
+fin:RegulatoryReport a owl:Class ;
+    rdfs:subClassOf fin:FinancialEntity ;
+    rdfs:label "Regulatory Report" ;
+    rdfs:comment "A report submitted to regulatory authorities." .
+
+fin:AuditTrail a owl:Class ;
+    rdfs:subClassOf tesserai:Process ;
+    rdfs:label "Audit Trail" ;
+    rdfs:comment "A record of all transactions and changes for auditing." .
+
+fin:Counterparty a owl:Class ;
+    rdfs:subClassOf fin:FinancialEntity ;
+    rdfs:label "Counterparty" ;
+    rdfs:comment "The other party in a financial transaction." .
+
+fin:KYCProfile a owl:Class ;
+    rdfs:subClassOf fin:FinancialEntity ;
+    rdfs:label "KYC Profile" ;
+    rdfs:comment "Know Your Customer profile for counterparty due diligence." .
+
+# =============================================================================
+# Data Properties
+# =============================================================================
+
+# Pricing & Valuation
+fin:price a owl:DatatypeProperty ;
+    rdfs:label "price" ;
+    rdfs:comment "Current market price of an instrument." ;
+    rdfs:domain fin:FinancialInstrument ;
+    rdfs:range xsd:decimal .
+
+fin:marketValue a owl:DatatypeProperty ;
+    rdfs:label "market value" ;
+    rdfs:comment "Total market value of a position or portfolio." ;
+    rdfs:domain fin:FinancialEntity ;
+    rdfs:range xsd:decimal .
+
+fin:notionalValue a owl:DatatypeProperty ;
+    rdfs:label "notional value" ;
+    rdfs:comment "Nominal or face value of a financial instrument." ;
+    rdfs:domain fin:FinancialInstrument ;
+    rdfs:range xsd:decimal .
+
+fin:currency a owl:DatatypeProperty ;
+    rdfs:label "currency" ;
+    rdfs:comment "The currency in which values are denominated." ;
+    rdfs:domain fin:FinancialEntity ;
+    rdfs:range xsd:string .
+
+# Quantity & Holdings
+fin:quantity a owl:DatatypeProperty ;
+    rdfs:label "quantity" ;
+    rdfs:comment "Number of units held." ;
+    rdfs:domain fin:Position ;
+    rdfs:range xsd:decimal .
+
+fin:averageCost a owl:DatatypeProperty ;
+    rdfs:label "average cost" ;
+    rdfs:comment "Average acquisition cost per unit." ;
+    rdfs:domain fin:Position ;
+    rdfs:range xsd:decimal .
+
+# Risk Metrics
+fin:valueAtRisk a owl:DatatypeProperty ;
+    rdfs:label "value at risk" ;
+    rdfs:comment "Potential loss at given confidence level." ;
+    rdfs:domain fin:FinancialEntity ;
+    rdfs:range xsd:decimal .
+
+fin:exposure a owl:DatatypeProperty ;
+    rdfs:label "exposure" ;
+    rdfs:comment "Total exposure amount." ;
+    rdfs:domain fin:FinancialEntity ;
+    rdfs:range xsd:decimal .
+
+fin:confidenceLevel a owl:DatatypeProperty ;
+    rdfs:label "confidence level" ;
+    rdfs:comment "Statistical confidence level (e.g., 0.95 for 95%)." ;
+    rdfs:domain fin:RiskMetric ;
+    rdfs:range xsd:decimal .
+
+fin:timeHorizon a owl:DatatypeProperty ;
+    rdfs:label "time horizon" ;
+    rdfs:comment "Time period for risk calculation in days." ;
+    rdfs:domain fin:RiskMetric ;
+    rdfs:range xsd:integer .
+
+fin:limitAmount a owl:DatatypeProperty ;
+    rdfs:label "limit amount" ;
+    rdfs:comment "Maximum allowed exposure or value." ;
+    rdfs:domain fin:RiskLimit ;
+    rdfs:range xsd:decimal .
+
+fin:utilizationPercent a owl:DatatypeProperty ;
+    rdfs:label "utilization percent" ;
+    rdfs:comment "Percentage of limit currently used." ;
+    rdfs:domain fin:RiskLimit ;
+    rdfs:range xsd:decimal .
+
+# Trading
+fin:bidPrice a owl:DatatypeProperty ;
+    rdfs:label "bid price" ;
+    rdfs:comment "Current bid price." ;
+    rdfs:domain fin:FinancialInstrument ;
+    rdfs:range xsd:decimal .
+
+fin:askPrice a owl:DatatypeProperty ;
+    rdfs:label "ask price" ;
+    rdfs:comment "Current ask price." ;
+    rdfs:domain fin:FinancialInstrument ;
+    rdfs:range xsd:decimal .
+
+fin:volume a owl:DatatypeProperty ;
+    rdfs:label "volume" ;
+    rdfs:comment "Trading volume." ;
+    rdfs:domain fin:FinancialInstrument ;
+    rdfs:range xsd:decimal .
+
+fin:volatility a owl:DatatypeProperty ;
+    rdfs:label "volatility" ;
+    rdfs:comment "Price volatility as annualized standard deviation." ;
+    rdfs:domain fin:FinancialInstrument ;
+    rdfs:range xsd:decimal .
+
+fin:orderType a owl:DatatypeProperty ;
+    rdfs:label "order type" ;
+    rdfs:comment "Type of order (market, limit, stop, etc.)." ;
+    rdfs:domain fin:Order ;
+    rdfs:range xsd:string .
+
+fin:orderStatus a owl:DatatypeProperty ;
+    rdfs:label "order status" ;
+    rdfs:comment "Current status of the order." ;
+    rdfs:domain fin:Order ;
+    rdfs:range xsd:string .
+
+fin:side a owl:DatatypeProperty ;
+    rdfs:label "side" ;
+    rdfs:comment "Buy or sell side." ;
+    rdfs:domain fin:Order ;
+    rdfs:range xsd:string .
+
+# Performance
+fin:returnPct a owl:DatatypeProperty ;
+    rdfs:label "return percentage" ;
+    rdfs:comment "Percentage return on investment." ;
+    rdfs:domain fin:Portfolio ;
+    rdfs:range xsd:decimal .
+
+fin:sharpeRatio a owl:DatatypeProperty ;
+    rdfs:label "Sharpe ratio" ;
+    rdfs:comment "Risk-adjusted return metric." ;
+    rdfs:domain fin:Portfolio ;
+    rdfs:range xsd:decimal .
+
+fin:beta a owl:DatatypeProperty ;
+    rdfs:label "beta" ;
+    rdfs:comment "Systematic risk relative to market." ;
+    rdfs:domain fin:Portfolio ;
+    rdfs:range xsd:decimal .
+
+fin:alpha a owl:DatatypeProperty ;
+    rdfs:label "alpha" ;
+    rdfs:comment "Excess return over benchmark." ;
+    rdfs:domain fin:Portfolio ;
+    rdfs:range xsd:decimal .
+
+# Compliance
+fin:complianceStatus a owl:DatatypeProperty ;
+    rdfs:label "compliance status" ;
+    rdfs:comment "Current compliance status." ;
+    rdfs:domain fin:FinancialEntity ;
+    rdfs:range xsd:string .
+
+fin:riskRating a owl:DatatypeProperty ;
+    rdfs:label "risk rating" ;
+    rdfs:comment "Assigned risk rating (e.g., low, medium, high)." ;
+    rdfs:domain fin:Counterparty ;
+    rdfs:range xsd:string .
+
+fin:creditLimit a owl:DatatypeProperty ;
+    rdfs:label "credit limit" ;
+    rdfs:comment "Maximum credit exposure allowed." ;
+    rdfs:domain fin:Counterparty ;
+    rdfs:range xsd:decimal .
+
+# =============================================================================
+# Object Properties
+# =============================================================================
+
+fin:hasPortfolio a owl:ObjectProperty ;
+    rdfs:label "has portfolio" ;
+    rdfs:comment "Links an institution or account to its portfolios." ;
+    rdfs:domain fin:FinancialEntity ;
+    rdfs:range fin:Portfolio .
+
+fin:hasPosition a owl:ObjectProperty ;
+    rdfs:label "has position" ;
+    rdfs:comment "Links a portfolio to its positions." ;
+    rdfs:domain fin:Portfolio ;
+    rdfs:range fin:Position .
+
+fin:holdsInstrument a owl:ObjectProperty ;
+    rdfs:label "holds instrument" ;
+    rdfs:comment "Links a position to the instrument it holds." ;
+    rdfs:domain fin:Position ;
+    rdfs:range fin:FinancialInstrument .
+
+fin:tradedOn a owl:ObjectProperty ;
+    rdfs:label "traded on" ;
+    rdfs:comment "Links an instrument to its exchange." ;
+    rdfs:domain fin:FinancialInstrument ;
+    rdfs:range fin:Exchange .
+
+fin:clearedBy a owl:ObjectProperty ;
+    rdfs:label "cleared by" ;
+    rdfs:comment "Links a trade to its clearing house." ;
+    rdfs:domain fin:Trade ;
+    rdfs:range fin:ClearingHouse .
+
+fin:hasCounterparty a owl:ObjectProperty ;
+    rdfs:label "has counterparty" ;
+    rdfs:comment "Links a trade to its counterparty." ;
+    rdfs:domain fin:Trade ;
+    rdfs:range fin:Counterparty .
+
+fin:hasRiskLimit a owl:ObjectProperty ;
+    rdfs:label "has risk limit" ;
+    rdfs:comment "Links an entity to its risk limits." ;
+    rdfs:domain fin:FinancialEntity ;
+    rdfs:range fin:RiskLimit .
+
+fin:monitorsRisk a owl:ObjectProperty ;
+    rdfs:label "monitors risk" ;
+    rdfs:comment "Links a risk metric to the entity it monitors." ;
+    rdfs:domain fin:RiskMetric ;
+    rdfs:range fin:FinancialEntity .
+
+fin:triggeredBy a owl:ObjectProperty ;
+    rdfs:label "triggered by" ;
+    rdfs:comment "Links a risk alert to the metric that triggered it." ;
+    rdfs:domain fin:RiskAlert ;
+    rdfs:range fin:RiskMetric .
+
+fin:managedBy a owl:ObjectProperty ;
+    rdfs:label "managed by" ;
+    rdfs:comment "Links a portfolio to its trading desk." ;
+    rdfs:domain fin:Portfolio ;
+    rdfs:range fin:TradingDesk .
+
+fin:usesDataFeed a owl:ObjectProperty ;
+    rdfs:label "uses data feed" ;
+    rdfs:comment "Links a trading system to its market data sources." ;
+    rdfs:domain fin:TradingSystem ;
+    rdfs:range fin:MarketDataFeed .
+
+fin:subjectTo a owl:ObjectProperty ;
+    rdfs:label "subject to" ;
+    rdfs:comment "Links an entity to applicable compliance rules." ;
+    rdfs:domain fin:FinancialEntity ;
+    rdfs:range fin:ComplianceRule .
+
+# =============================================================================
+# SHACL Shapes for Validation
+# =============================================================================
+
+fin:PortfolioShape a sh:NodeShape ;
+    sh:targetClass fin:Portfolio ;
+    sh:property [
+        sh:path fin:marketValue ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:message "Portfolio market value must be non-negative"
+    ] ;
+    sh:property [
+        sh:path fin:currency ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:message "Portfolio must have a currency"
+    ] .
+
+fin:PositionShape a sh:NodeShape ;
+    sh:targetClass fin:Position ;
+    sh:property [
+        sh:path fin:holdsInstrument ;
+        sh:class fin:FinancialInstrument ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Position must hold exactly one instrument"
+    ] ;
+    sh:property [
+        sh:path fin:quantity ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 1 ;
+        sh:message "Position must have a quantity"
+    ] .
+
+fin:RiskLimitShape a sh:NodeShape ;
+    sh:targetClass fin:RiskLimit ;
+    sh:property [
+        sh:path fin:limitAmount ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:minCount 1 ;
+        sh:message "Risk limit must have a positive limit amount"
+    ] ;
+    sh:property [
+        sh:path fin:utilizationPercent ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 150 ;
+        sh:message "Utilization must be between 0% and 150%"
+    ] .
+
+fin:OrderShape a sh:NodeShape ;
+    sh:targetClass fin:Order ;
+    sh:property [
+        sh:path fin:side ;
+        sh:in ("buy" "sell") ;
+        sh:minCount 1 ;
+        sh:message "Order must have a side (buy or sell)"
+    ] ;
+    sh:property [
+        sh:path fin:orderType ;
+        sh:in ("market" "limit" "stop" "stop_limit") ;
+        sh:message "Invalid order type"
+    ] .
+
+fin:CounterpartyShape a sh:NodeShape ;
+    sh:targetClass fin:Counterparty ;
+    sh:property [
+        sh:path fin:riskRating ;
+        sh:in ("low" "medium" "high" "critical") ;
+        sh:message "Invalid risk rating"
+    ] ;
+    sh:property [
+        sh:path fin:creditLimit ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:message "Credit limit must be non-negative"
+    ] .
+
+# =============================================================================
+# SWRL-like Rules (expressed as SPARQL for reasoning)
+# =============================================================================
+
+# Rule: Flag portfolios with high VaR utilization
+# IF portfolio.valueAtRisk / portfolio.varLimit > 0.8 THEN portfolio.riskStatus = "elevated"
+
+# Rule: Classify instruments by volatility
+# IF instrument.volatility > 0.40 THEN instrument.volatilityClass = "high"
+# IF instrument.volatility > 0.20 AND instrument.volatility <= 0.40 THEN instrument.volatilityClass = "medium"
+# IF instrument.volatility <= 0.20 THEN instrument.volatilityClass = "low"
+
+# Rule: Auto-generate risk alerts
+# IF riskLimit.utilizationPercent > 90 THEN CREATE RiskAlert with severity = "critical"
+# IF riskLimit.utilizationPercent > 75 THEN CREATE RiskAlert with severity = "warning"

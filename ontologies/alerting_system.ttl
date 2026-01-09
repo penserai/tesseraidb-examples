@@ -1,0 +1,664 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix tesserai: <http://tesserai.io/ontology/core#> .
+@prefix alert: <http://tesserai.io/ontology/alerting_system#> .
+
+# =============================================================================
+# TesserAI Real-Time Alerting System Domain Ontology
+# =============================================================================
+# Models a production-grade alerting system with configurable rules,
+# multi-severity classification, alert lifecycle management, and
+# notification channels with escalation policies.
+# =============================================================================
+
+<http://tesserai.io/ontology/alerting_system> a owl:Ontology ;
+    rdfs:label "TesserAI Alerting System Ontology" ;
+    rdfs:comment "Ontology for real-time monitoring and alerting with configurable rules, notifications, and escalation." ;
+    owl:imports <http://tesserai.io/ontology/core> ;
+    owl:versionInfo "1.0.0" .
+
+# =============================================================================
+# Monitored System Classes
+# =============================================================================
+
+alert:MonitoredSystem a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Monitored System" ;
+    rdfs:comment "Abstract base class for any system being monitored for alerts." .
+
+alert:WebServer a owl:Class ;
+    rdfs:subClassOf alert:MonitoredSystem ;
+    rdfs:label "Web Server" ;
+    rdfs:comment "HTTP/HTTPS web server being monitored." .
+
+alert:DatabaseServer a owl:Class ;
+    rdfs:subClassOf alert:MonitoredSystem ;
+    rdfs:label "Database Server" ;
+    rdfs:comment "Database server being monitored." .
+
+alert:ApplicationService a owl:Class ;
+    rdfs:subClassOf alert:MonitoredSystem ;
+    rdfs:label "Application Service" ;
+    rdfs:comment "Application or microservice being monitored." .
+
+alert:MessageQueue a owl:Class ;
+    rdfs:subClassOf alert:MonitoredSystem ;
+    rdfs:label "Message Queue" ;
+    rdfs:comment "Message queue or broker being monitored." .
+
+alert:CacheServer a owl:Class ;
+    rdfs:subClassOf alert:MonitoredSystem ;
+    rdfs:label "Cache Server" ;
+    rdfs:comment "Caching server (Redis, Memcached) being monitored." .
+
+alert:LoadBalancer a owl:Class ;
+    rdfs:subClassOf alert:MonitoredSystem ;
+    rdfs:label "Load Balancer" ;
+    rdfs:comment "Load balancer being monitored." .
+
+alert:ContainerHost a owl:Class ;
+    rdfs:subClassOf alert:MonitoredSystem ;
+    rdfs:label "Container Host" ;
+    rdfs:comment "Container orchestration host (Docker, Kubernetes node)." .
+
+# =============================================================================
+# Alert Rule Classes
+# =============================================================================
+
+alert:AlertRule a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
+    rdfs:label "Alert Rule" ;
+    rdfs:comment "A configurable rule that defines conditions for triggering alerts." .
+
+alert:ThresholdRule a owl:Class ;
+    rdfs:subClassOf alert:AlertRule ;
+    rdfs:label "Threshold Rule" ;
+    rdfs:comment "Rule triggered when a metric exceeds or falls below a threshold." .
+
+alert:RateOfChangeRule a owl:Class ;
+    rdfs:subClassOf alert:AlertRule ;
+    rdfs:label "Rate of Change Rule" ;
+    rdfs:comment "Rule triggered when a metric changes too rapidly." .
+
+alert:AnomalyRule a owl:Class ;
+    rdfs:subClassOf alert:AlertRule ;
+    rdfs:label "Anomaly Rule" ;
+    rdfs:comment "Rule triggered when metric deviates from expected patterns." .
+
+alert:CompositeRule a owl:Class ;
+    rdfs:subClassOf alert:AlertRule ;
+    rdfs:label "Composite Rule" ;
+    rdfs:comment "Rule combining multiple conditions with AND/OR logic." .
+
+alert:AbsenceRule a owl:Class ;
+    rdfs:subClassOf alert:AlertRule ;
+    rdfs:label "Absence Rule" ;
+    rdfs:comment "Rule triggered when expected data is missing (heartbeat)." .
+
+# =============================================================================
+# Alert Classes
+# =============================================================================
+
+alert:Alert a owl:Class ;
+    rdfs:subClassOf tesserai:Event ;
+    rdfs:label "Alert" ;
+    rdfs:comment "An alert instance created when a rule is triggered." .
+
+alert:CriticalAlert a owl:Class ;
+    rdfs:subClassOf alert:Alert ;
+    rdfs:label "Critical Alert" ;
+    rdfs:comment "Highest severity alert requiring immediate attention." .
+
+alert:WarningAlert a owl:Class ;
+    rdfs:subClassOf alert:Alert ;
+    rdfs:label "Warning Alert" ;
+    rdfs:comment "Warning-level alert indicating potential issues." .
+
+alert:InfoAlert a owl:Class ;
+    rdfs:subClassOf alert:Alert ;
+    rdfs:label "Info Alert" ;
+    rdfs:comment "Informational alert for awareness." .
+
+# =============================================================================
+# Notification Classes
+# =============================================================================
+
+alert:NotificationChannel a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
+    rdfs:label "Notification Channel" ;
+    rdfs:comment "A channel for delivering alert notifications." .
+
+alert:ConsoleChannel a owl:Class ;
+    rdfs:subClassOf alert:NotificationChannel ;
+    rdfs:label "Console Channel" ;
+    rdfs:comment "Notification via console/terminal output." .
+
+alert:WebhookChannel a owl:Class ;
+    rdfs:subClassOf alert:NotificationChannel ;
+    rdfs:label "Webhook Channel" ;
+    rdfs:comment "Notification via HTTP webhook (Slack, Teams, etc)." .
+
+alert:EmailChannel a owl:Class ;
+    rdfs:subClassOf alert:NotificationChannel ;
+    rdfs:label "Email Channel" ;
+    rdfs:comment "Notification via email." .
+
+alert:SMSChannel a owl:Class ;
+    rdfs:subClassOf alert:NotificationChannel ;
+    rdfs:label "SMS Channel" ;
+    rdfs:comment "Notification via SMS/text message." .
+
+alert:PagerChannel a owl:Class ;
+    rdfs:subClassOf alert:NotificationChannel ;
+    rdfs:label "Pager Channel" ;
+    rdfs:comment "Notification via pager service (PagerDuty, OpsGenie)." .
+
+alert:LogChannel a owl:Class ;
+    rdfs:subClassOf alert:NotificationChannel ;
+    rdfs:label "Log Channel" ;
+    rdfs:comment "Notification via log file or logging service." .
+
+# =============================================================================
+# Escalation Classes
+# =============================================================================
+
+alert:EscalationPolicy a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
+    rdfs:label "Escalation Policy" ;
+    rdfs:comment "Policy defining how alerts escalate over time." .
+
+alert:EscalationStage a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
+    rdfs:label "Escalation Stage" ;
+    rdfs:comment "A stage in the escalation process with timing and recipients." .
+
+alert:OnCallSchedule a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
+    rdfs:label "On-Call Schedule" ;
+    rdfs:comment "Schedule defining who is on-call for alert response." .
+
+# =============================================================================
+# Notification Record Classes
+# =============================================================================
+
+alert:Notification a owl:Class ;
+    rdfs:subClassOf tesserai:Event ;
+    rdfs:label "Notification" ;
+    rdfs:comment "Record of a notification sent for an alert." .
+
+alert:Acknowledgment a owl:Class ;
+    rdfs:subClassOf tesserai:Event ;
+    rdfs:label "Acknowledgment" ;
+    rdfs:comment "Record of an alert being acknowledged." .
+
+# =============================================================================
+# System Metric Properties
+# =============================================================================
+
+alert:cpuUsage a owl:DatatypeProperty ;
+    rdfs:label "CPU usage" ;
+    rdfs:comment "Current CPU usage as a percentage (0-100)." ;
+    rdfs:domain alert:MonitoredSystem ;
+    rdfs:range xsd:decimal .
+
+alert:memoryUsage a owl:DatatypeProperty ;
+    rdfs:label "memory usage" ;
+    rdfs:comment "Current memory usage as a percentage (0-100)." ;
+    rdfs:domain alert:MonitoredSystem ;
+    rdfs:range xsd:decimal .
+
+alert:diskUsage a owl:DatatypeProperty ;
+    rdfs:label "disk usage" ;
+    rdfs:comment "Current disk usage as a percentage (0-100)." ;
+    rdfs:domain alert:MonitoredSystem ;
+    rdfs:range xsd:decimal .
+
+alert:requestsPerSecond a owl:DatatypeProperty ;
+    rdfs:label "requests per second" ;
+    rdfs:comment "Current request rate." ;
+    rdfs:domain alert:MonitoredSystem ;
+    rdfs:range xsd:decimal .
+
+alert:responseTimeMs a owl:DatatypeProperty ;
+    rdfs:label "response time" ;
+    rdfs:comment "Average response time in milliseconds." ;
+    rdfs:domain alert:MonitoredSystem ;
+    rdfs:range xsd:decimal .
+
+alert:errorRate a owl:DatatypeProperty ;
+    rdfs:label "error rate" ;
+    rdfs:comment "Error rate as a percentage (0-100)." ;
+    rdfs:domain alert:MonitoredSystem ;
+    rdfs:range xsd:decimal .
+
+alert:activeConnections a owl:DatatypeProperty ;
+    rdfs:label "active connections" ;
+    rdfs:comment "Number of active connections." ;
+    rdfs:domain alert:MonitoredSystem ;
+    rdfs:range xsd:integer .
+
+alert:queueDepth a owl:DatatypeProperty ;
+    rdfs:label "queue depth" ;
+    rdfs:comment "Number of messages in queue." ;
+    rdfs:domain alert:MessageQueue ;
+    rdfs:range xsd:integer .
+
+alert:replicationLagMs a owl:DatatypeProperty ;
+    rdfs:label "replication lag" ;
+    rdfs:comment "Database replication lag in milliseconds." ;
+    rdfs:domain alert:DatabaseServer ;
+    rdfs:range xsd:decimal .
+
+alert:lastHeartbeat a owl:DatatypeProperty ;
+    rdfs:label "last heartbeat" ;
+    rdfs:comment "Timestamp of last health check heartbeat." ;
+    rdfs:domain alert:MonitoredSystem ;
+    rdfs:range xsd:dateTime .
+
+# =============================================================================
+# Alert Rule Properties
+# =============================================================================
+
+alert:metric a owl:DatatypeProperty ;
+    rdfs:label "metric" ;
+    rdfs:comment "The metric being monitored by this rule." ;
+    rdfs:domain alert:AlertRule ;
+    rdfs:range xsd:string .
+
+alert:operator a owl:DatatypeProperty ;
+    rdfs:label "operator" ;
+    rdfs:comment "Comparison operator: gt, lt, eq, ne, gte, lte." ;
+    rdfs:domain alert:AlertRule ;
+    rdfs:range xsd:string .
+
+alert:threshold a owl:DatatypeProperty ;
+    rdfs:label "threshold" ;
+    rdfs:comment "Threshold value for triggering the alert." ;
+    rdfs:domain alert:AlertRule ;
+    rdfs:range xsd:decimal .
+
+alert:duration a owl:DatatypeProperty ;
+    rdfs:label "duration" ;
+    rdfs:comment "Duration in seconds threshold must be exceeded before alerting." ;
+    rdfs:domain alert:AlertRule ;
+    rdfs:range xsd:integer .
+
+alert:severity a owl:DatatypeProperty ;
+    rdfs:label "severity" ;
+    rdfs:comment "Alert severity level: critical, warning, info." ;
+    rdfs:domain alert:AlertRule ;
+    rdfs:range xsd:string .
+
+alert:isEnabled a owl:DatatypeProperty ;
+    rdfs:label "is enabled" ;
+    rdfs:comment "Whether the rule is currently enabled." ;
+    rdfs:domain alert:AlertRule ;
+    rdfs:range xsd:boolean .
+
+alert:cooldownSeconds a owl:DatatypeProperty ;
+    rdfs:label "cooldown seconds" ;
+    rdfs:comment "Minimum time between repeated alerts from this rule." ;
+    rdfs:domain alert:AlertRule ;
+    rdfs:range xsd:integer .
+
+alert:evaluationInterval a owl:DatatypeProperty ;
+    rdfs:label "evaluation interval" ;
+    rdfs:comment "How often the rule is evaluated in seconds." ;
+    rdfs:domain alert:AlertRule ;
+    rdfs:range xsd:integer .
+
+# =============================================================================
+# Alert Instance Properties
+# =============================================================================
+
+alert:alertStatus a owl:DatatypeProperty ;
+    rdfs:label "alert status" ;
+    rdfs:comment "Current status: pending, firing, open, acknowledged, resolved." ;
+    rdfs:domain alert:Alert ;
+    rdfs:range xsd:string .
+
+alert:triggeredAt a owl:DatatypeProperty ;
+    rdfs:label "triggered at" ;
+    rdfs:comment "Timestamp when the alert was triggered." ;
+    rdfs:domain alert:Alert ;
+    rdfs:range xsd:dateTime .
+
+alert:acknowledgedAt a owl:DatatypeProperty ;
+    rdfs:label "acknowledged at" ;
+    rdfs:comment "Timestamp when the alert was acknowledged." ;
+    rdfs:domain alert:Alert ;
+    rdfs:range xsd:dateTime .
+
+alert:resolvedAt a owl:DatatypeProperty ;
+    rdfs:label "resolved at" ;
+    rdfs:comment "Timestamp when the alert was resolved." ;
+    rdfs:domain alert:Alert ;
+    rdfs:range xsd:dateTime .
+
+alert:currentValue a owl:DatatypeProperty ;
+    rdfs:label "current value" ;
+    rdfs:comment "The metric value when the alert was triggered." ;
+    rdfs:domain alert:Alert ;
+    rdfs:range xsd:decimal .
+
+alert:acknowledgedBy a owl:DatatypeProperty ;
+    rdfs:label "acknowledged by" ;
+    rdfs:comment "Username or ID of person who acknowledged." ;
+    rdfs:domain alert:Alert ;
+    rdfs:range xsd:string .
+
+alert:resolvedBy a owl:DatatypeProperty ;
+    rdfs:label "resolved by" ;
+    rdfs:comment "Username, ID, or 'auto' for automatic resolution." ;
+    rdfs:domain alert:Alert ;
+    rdfs:range xsd:string .
+
+alert:resolutionNotes a owl:DatatypeProperty ;
+    rdfs:label "resolution notes" ;
+    rdfs:comment "Notes about how the alert was resolved." ;
+    rdfs:domain alert:Alert ;
+    rdfs:range xsd:string .
+
+alert:occurrenceCount a owl:DatatypeProperty ;
+    rdfs:label "occurrence count" ;
+    rdfs:comment "Number of times this alert has occurred." ;
+    rdfs:domain alert:Alert ;
+    rdfs:range xsd:integer .
+
+# =============================================================================
+# Notification Channel Properties
+# =============================================================================
+
+alert:channelName a owl:DatatypeProperty ;
+    rdfs:label "channel name" ;
+    rdfs:comment "Display name of the notification channel." ;
+    rdfs:domain alert:NotificationChannel ;
+    rdfs:range xsd:string .
+
+alert:webhookUrl a owl:DatatypeProperty ;
+    rdfs:label "webhook URL" ;
+    rdfs:comment "URL for webhook notifications." ;
+    rdfs:domain alert:WebhookChannel ;
+    rdfs:range xsd:anyURI .
+
+alert:emailAddress a owl:DatatypeProperty ;
+    rdfs:label "email address" ;
+    rdfs:comment "Email address for email notifications." ;
+    rdfs:domain alert:EmailChannel ;
+    rdfs:range xsd:string .
+
+alert:phoneNumber a owl:DatatypeProperty ;
+    rdfs:label "phone number" ;
+    rdfs:comment "Phone number for SMS notifications." ;
+    rdfs:domain alert:SMSChannel ;
+    rdfs:range xsd:string .
+
+alert:isActive a owl:DatatypeProperty ;
+    rdfs:label "is active" ;
+    rdfs:comment "Whether the notification channel is active." ;
+    rdfs:domain alert:NotificationChannel ;
+    rdfs:range xsd:boolean .
+
+# =============================================================================
+# Escalation Properties
+# =============================================================================
+
+alert:escalationDelay a owl:DatatypeProperty ;
+    rdfs:label "escalation delay" ;
+    rdfs:comment "Delay in seconds before escalating to next stage." ;
+    rdfs:domain alert:EscalationStage ;
+    rdfs:range xsd:integer .
+
+alert:stageOrder a owl:DatatypeProperty ;
+    rdfs:label "stage order" ;
+    rdfs:comment "Order of this stage in the escalation policy (1-based)." ;
+    rdfs:domain alert:EscalationStage ;
+    rdfs:range xsd:integer .
+
+alert:repeatCount a owl:DatatypeProperty ;
+    rdfs:label "repeat count" ;
+    rdfs:comment "Number of times to repeat notification at this stage." ;
+    rdfs:domain alert:EscalationStage ;
+    rdfs:range xsd:integer .
+
+alert:repeatInterval a owl:DatatypeProperty ;
+    rdfs:label "repeat interval" ;
+    rdfs:comment "Interval in seconds between repeated notifications." ;
+    rdfs:domain alert:EscalationStage ;
+    rdfs:range xsd:integer .
+
+# =============================================================================
+# Object Properties (Relationships)
+# =============================================================================
+
+alert:monitors a owl:ObjectProperty ;
+    rdfs:label "monitors" ;
+    rdfs:comment "Links an alert rule to the systems it monitors." ;
+    rdfs:domain alert:AlertRule ;
+    rdfs:range alert:MonitoredSystem .
+
+alert:triggeredByRule a owl:ObjectProperty ;
+    rdfs:label "triggered by rule" ;
+    rdfs:comment "Links an alert to the rule that triggered it." ;
+    rdfs:domain alert:Alert ;
+    rdfs:range alert:AlertRule .
+
+alert:alertsOn a owl:ObjectProperty ;
+    rdfs:label "alerts on" ;
+    rdfs:comment "Links an alert to the system that caused it." ;
+    rdfs:domain alert:Alert ;
+    rdfs:range alert:MonitoredSystem .
+
+alert:notifiesVia a owl:ObjectProperty ;
+    rdfs:label "notifies via" ;
+    rdfs:comment "Links an alert rule to its notification channels." ;
+    rdfs:domain alert:AlertRule ;
+    rdfs:range alert:NotificationChannel .
+
+alert:escalatesTo a owl:ObjectProperty ;
+    rdfs:label "escalates to" ;
+    rdfs:comment "Links an alert rule to its escalation policy." ;
+    rdfs:domain alert:AlertRule ;
+    rdfs:range alert:EscalationPolicy .
+
+alert:hasStage a owl:ObjectProperty ;
+    rdfs:label "has stage" ;
+    rdfs:comment "Links an escalation policy to its stages." ;
+    rdfs:domain alert:EscalationPolicy ;
+    rdfs:range alert:EscalationStage .
+
+alert:stageNotifiesVia a owl:ObjectProperty ;
+    rdfs:label "stage notifies via" ;
+    rdfs:comment "Links an escalation stage to its notification channels." ;
+    rdfs:domain alert:EscalationStage ;
+    rdfs:range alert:NotificationChannel .
+
+alert:sentNotification a owl:ObjectProperty ;
+    rdfs:label "sent notification" ;
+    rdfs:comment "Links an alert to notifications sent for it." ;
+    rdfs:domain alert:Alert ;
+    rdfs:range alert:Notification .
+
+alert:notificationChannel a owl:ObjectProperty ;
+    rdfs:label "notification channel" ;
+    rdfs:comment "Links a notification to the channel used." ;
+    rdfs:domain alert:Notification ;
+    rdfs:range alert:NotificationChannel .
+
+alert:suppressedBy a owl:ObjectProperty ;
+    rdfs:label "suppressed by" ;
+    rdfs:comment "Links an alert to another alert that suppresses it." ;
+    rdfs:domain alert:Alert ;
+    rdfs:range alert:Alert .
+
+# =============================================================================
+# SHACL Shapes
+# =============================================================================
+
+alert:MonitoredSystemShape a sh:NodeShape ;
+    sh:targetClass alert:MonitoredSystem ;
+    rdfs:label "Monitored System Shape" ;
+    sh:property [
+        sh:path tesserai:name ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "Monitored system must have a name." ;
+    ] ;
+    sh:property [
+        sh:path alert:cpuUsage ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 100 ;
+        sh:message "CPU usage must be between 0 and 100." ;
+    ] ;
+    sh:property [
+        sh:path alert:memoryUsage ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 100 ;
+        sh:message "Memory usage must be between 0 and 100." ;
+    ] ;
+    sh:property [
+        sh:path alert:errorRate ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 100 ;
+        sh:message "Error rate must be between 0 and 100." ;
+    ] .
+
+alert:AlertRuleShape a sh:NodeShape ;
+    sh:targetClass alert:AlertRule ;
+    rdfs:label "Alert Rule Shape" ;
+    sh:property [
+        sh:path tesserai:name ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "Alert rule must have a name." ;
+    ] ;
+    sh:property [
+        sh:path alert:metric ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "Alert rule must specify a metric to monitor." ;
+    ] ;
+    sh:property [
+        sh:path alert:severity ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:in ( "critical" "warning" "info" ) ;
+        sh:message "Severity must be one of: critical, warning, info." ;
+    ] ;
+    sh:property [
+        sh:path alert:operator ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:in ( "gt" "lt" "eq" "ne" "gte" "lte" ) ;
+        sh:message "Operator must be one of: gt, lt, eq, ne, gte, lte." ;
+    ] ;
+    sh:property [
+        sh:path alert:duration ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 0 ;
+        sh:message "Duration must be non-negative." ;
+    ] .
+
+alert:AlertShape a sh:NodeShape ;
+    sh:targetClass alert:Alert ;
+    rdfs:label "Alert Shape" ;
+    sh:property [
+        sh:path alert:alertStatus ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:in ( "pending" "firing" "open" "acknowledged" "resolved" "suppressed" ) ;
+        sh:message "Alert status must be one of: pending, firing, open, acknowledged, resolved, suppressed." ;
+    ] ;
+    sh:property [
+        sh:path alert:triggeredAt ;
+        sh:minCount 1 ;
+        sh:datatype xsd:dateTime ;
+        sh:message "Alert must have a triggered timestamp." ;
+    ] ;
+    sh:property [
+        sh:path alert:triggeredByRule ;
+        sh:minCount 1 ;
+        sh:class alert:AlertRule ;
+        sh:message "Alert must be linked to the rule that triggered it." ;
+    ] ;
+    sh:property [
+        sh:path alert:alertsOn ;
+        sh:minCount 1 ;
+        sh:class alert:MonitoredSystem ;
+        sh:message "Alert must be linked to the affected system." ;
+    ] .
+
+alert:NotificationChannelShape a sh:NodeShape ;
+    sh:targetClass alert:NotificationChannel ;
+    rdfs:label "Notification Channel Shape" ;
+    sh:property [
+        sh:path alert:channelName ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "Notification channel must have a name." ;
+    ] ;
+    sh:property [
+        sh:path alert:isActive ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:boolean ;
+    ] .
+
+alert:WebhookChannelShape a sh:NodeShape ;
+    sh:targetClass alert:WebhookChannel ;
+    rdfs:label "Webhook Channel Shape" ;
+    sh:property [
+        sh:path alert:webhookUrl ;
+        sh:minCount 1 ;
+        sh:datatype xsd:anyURI ;
+        sh:message "Webhook channel must have a URL." ;
+    ] .
+
+alert:EscalationPolicyShape a sh:NodeShape ;
+    sh:targetClass alert:EscalationPolicy ;
+    rdfs:label "Escalation Policy Shape" ;
+    sh:property [
+        sh:path tesserai:name ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "Escalation policy must have a name." ;
+    ] ;
+    sh:property [
+        sh:path alert:hasStage ;
+        sh:minCount 1 ;
+        sh:class alert:EscalationStage ;
+        sh:message "Escalation policy must have at least one stage." ;
+    ] .
+
+alert:EscalationStageShape a sh:NodeShape ;
+    sh:targetClass alert:EscalationStage ;
+    rdfs:label "Escalation Stage Shape" ;
+    sh:property [
+        sh:path alert:stageOrder ;
+        sh:minCount 1 ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 1 ;
+        sh:message "Stage order must be a positive integer." ;
+    ] ;
+    sh:property [
+        sh:path alert:escalationDelay ;
+        sh:minCount 1 ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 0 ;
+        sh:message "Escalation delay must be non-negative." ;
+    ] ;
+    sh:property [
+        sh:path alert:stageNotifiesVia ;
+        sh:minCount 1 ;
+        sh:class alert:NotificationChannel ;
+        sh:message "Escalation stage must have at least one notification channel." ;
+    ] .

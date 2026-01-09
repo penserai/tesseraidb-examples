@@ -1,0 +1,1309 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix robo: <http://tesserai.io/ontology/robot_simulation#> .
+@prefix tesserai: <http://tesserai.io/ontology/core#> .
+
+# =============================================================================
+# Robot Simulation Ontology
+# =============================================================================
+# This ontology models a robot operating in a 2D grid world, collecting objects
+# while avoiding obstacles. It demonstrates how semantic reasoning enables
+# intelligent robot behavior through declarative rules.
+#
+# Key concepts:
+# - Robot: The agent that moves and collects objects
+# - Object: Collectible items with value
+# - Obstacle: Things the robot must avoid
+# - Location: Grid positions in the world
+# - Action: What the robot should do next
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Ontology Metadata
+# -----------------------------------------------------------------------------
+
+<http://tesserai.io/ontology/robot_simulation> a owl:Ontology ;
+    rdfs:label "Robot Simulation Ontology" ;
+    rdfs:comment "OWL 2 RL ontology for robot simulation with SWRL-style reasoning" ;
+    owl:versionInfo "1.0" .
+
+# =============================================================================
+# CLASSES
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Core Entity Classes
+# -----------------------------------------------------------------------------
+
+robo:Entity a owl:Class ;
+    rdfs:label "Entity" ;
+    rdfs:comment "Base class for all simulation entities" .
+
+robo:Robot a owl:Class ;
+    rdfs:subClassOf robo:Entity ;
+    rdfs:label "Robot" ;
+    rdfs:comment "An autonomous robot agent in the simulation" .
+
+robo:WorldObject a owl:Class ;
+    rdfs:subClassOf robo:Entity ;
+    rdfs:label "World Object" ;
+    rdfs:comment "An object in the simulation world" .
+
+robo:CollectibleObject a owl:Class ;
+    rdfs:subClassOf robo:WorldObject ;
+    rdfs:label "Collectible Object" ;
+    rdfs:comment "An object that can be collected by the robot" .
+
+robo:Obstacle a owl:Class ;
+    rdfs:subClassOf robo:WorldObject ;
+    rdfs:label "Obstacle" ;
+    rdfs:comment "An obstacle the robot must avoid" ;
+    owl:disjointWith robo:CollectibleObject .
+
+robo:Location a owl:Class ;
+    rdfs:label "Location" ;
+    rdfs:comment "A position in the 2D grid world" .
+
+# -----------------------------------------------------------------------------
+# State Classes (for classification by reasoning)
+# -----------------------------------------------------------------------------
+
+robo:ActiveRobot a owl:Class ;
+    rdfs:subClassOf robo:Robot ;
+    rdfs:label "Active Robot" ;
+    rdfs:comment "A robot that is currently active and operating" .
+
+robo:StoppedRobot a owl:Class ;
+    rdfs:subClassOf robo:Robot ;
+    rdfs:label "Stopped Robot" ;
+    rdfs:comment "A robot that has stopped due to collision or completion" ;
+    owl:disjointWith robo:ActiveRobot .
+
+robo:WinnerRobot a owl:Class ;
+    rdfs:subClassOf robo:Robot ;
+    rdfs:label "Winner Robot" ;
+    rdfs:comment "The robot that won the competition" .
+
+robo:RobotCollisionState a owl:Class ;
+    rdfs:subClassOf robo:Robot ;
+    rdfs:label "Robot Collision State" ;
+    rdfs:comment "Robot is in collision with another robot" .
+
+robo:CollisionState a owl:Class ;
+    rdfs:subClassOf robo:Robot ;
+    rdfs:label "Collision State" ;
+    rdfs:comment "Robot is in collision with an obstacle" .
+
+robo:StuckState a owl:Class ;
+    rdfs:subClassOf robo:Robot ;
+    rdfs:label "Stuck State" ;
+    rdfs:comment "Robot is stuck and not making progress - needs escape behavior" .
+
+robo:EscapingState a owl:Class ;
+    rdfs:subClassOf robo:Robot ;
+    rdfs:label "Escaping State" ;
+    rdfs:comment "Robot is actively trying to escape from a stuck position" .
+
+robo:NearObject a owl:Class ;
+    rdfs:subClassOf robo:Robot ;
+    rdfs:label "Near Object" ;
+    rdfs:comment "Robot is near a collectible object" .
+
+robo:AtObject a owl:Class ;
+    rdfs:subClassOf robo:Robot ;
+    rdfs:label "At Object" ;
+    rdfs:comment "Robot is at the same location as a collectible object" .
+
+robo:MissionComplete a owl:Class ;
+    rdfs:subClassOf robo:Robot ;
+    rdfs:label "Mission Complete" ;
+    rdfs:comment "Robot has collected all objects" .
+
+robo:HighPerformer a owl:Class ;
+    rdfs:subClassOf robo:Robot ;
+    rdfs:label "High Performer" ;
+    rdfs:comment "Robot with success metric above threshold" .
+
+robo:LowBattery a owl:Class ;
+    rdfs:subClassOf robo:Robot ;
+    rdfs:label "Low Battery" ;
+    rdfs:comment "Robot with battery below safe threshold" .
+
+# -----------------------------------------------------------------------------
+# Action Classes
+# -----------------------------------------------------------------------------
+
+robo:Action a owl:Class ;
+    rdfs:label "Action" ;
+    rdfs:comment "An action the robot can perform" .
+
+robo:MoveAction a owl:Class ;
+    rdfs:subClassOf robo:Action ;
+    rdfs:label "Move Action" ;
+    rdfs:comment "Move to a target location" .
+
+robo:CollectAction a owl:Class ;
+    rdfs:subClassOf robo:Action ;
+    rdfs:label "Collect Action" ;
+    rdfs:comment "Collect an object at current location" .
+
+robo:StopAction a owl:Class ;
+    rdfs:subClassOf robo:Action ;
+    rdfs:label "Stop Action" ;
+    rdfs:comment "Stop all movement" .
+
+robo:AvoidAction a owl:Class ;
+    rdfs:subClassOf robo:Action ;
+    rdfs:label "Avoid Action" ;
+    rdfs:comment "Avoid an obstacle" .
+
+robo:ReturnHomeAction a owl:Class ;
+    rdfs:subClassOf robo:Action ;
+    rdfs:label "Return Home Action" ;
+    rdfs:comment "Return to home/charging location" .
+
+robo:IdleAction a owl:Class ;
+    rdfs:subClassOf robo:Action ;
+    rdfs:label "Idle Action" ;
+    rdfs:comment "No action needed" .
+
+# -----------------------------------------------------------------------------
+# Pheromone Classes - Ant-inspired Stigmergic Communication
+# -----------------------------------------------------------------------------
+
+robo:Pheromone a owl:Class ;
+    rdfs:subClassOf robo:Entity ;
+    rdfs:label "Pheromone" ;
+    rdfs:comment "A chemical marker left by robots for indirect communication (stigmergy)" .
+
+robo:ExplorationPheromone a owl:Class ;
+    rdfs:subClassOf robo:Pheromone ;
+    rdfs:label "Exploration Pheromone" ;
+    rdfs:comment "Marks explored areas - helps robots avoid redundant exploration" .
+
+robo:ObjectFoundPheromone a owl:Class ;
+    rdfs:subClassOf robo:Pheromone ;
+    rdfs:label "Object Found Pheromone" ;
+    rdfs:comment "Marks locations where objects were found - attracts other robots" .
+
+robo:ObjectCollectedPheromone a owl:Class ;
+    rdfs:subClassOf robo:Pheromone ;
+    rdfs:label "Object Collected Pheromone" ;
+    rdfs:comment "Marks locations where objects were already collected - repels robots" .
+
+robo:DangerPheromone a owl:Class ;
+    rdfs:subClassOf robo:Pheromone ;
+    rdfs:label "Danger Pheromone" ;
+    rdfs:comment "Marks dangerous areas (collisions) - warns other robots" .
+
+# =============================================================================
+# OBJECT PROPERTIES
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Spatial Properties
+# -----------------------------------------------------------------------------
+
+robo:hasLocation a owl:ObjectProperty ;
+    rdfs:domain robo:Entity ;
+    rdfs:range robo:Location ;
+    rdfs:label "has location" ;
+    rdfs:comment "The current location of an entity" .
+
+robo:hasTargetLocation a owl:ObjectProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range robo:Location ;
+    rdfs:label "has target location" ;
+    rdfs:comment "The robot's target destination" .
+
+robo:hasHomeLocation a owl:ObjectProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range robo:Location ;
+    rdfs:label "has home location" ;
+    rdfs:comment "The robot's home/charging station" .
+
+robo:adjacentTo a owl:ObjectProperty, owl:SymmetricProperty ;
+    rdfs:domain robo:Location ;
+    rdfs:range robo:Location ;
+    rdfs:label "adjacent to" ;
+    rdfs:comment "Two locations are adjacent (can move between them)" .
+
+# -----------------------------------------------------------------------------
+# Action Properties
+# -----------------------------------------------------------------------------
+
+robo:hasNextAction a owl:ObjectProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range robo:Action ;
+    rdfs:label "has next action" ;
+    rdfs:comment "The next action the robot should perform" .
+
+robo:hasCurrentAction a owl:ObjectProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range robo:Action ;
+    rdfs:label "has current action" ;
+    rdfs:comment "The action currently being executed" .
+
+robo:actionTarget a owl:ObjectProperty ;
+    rdfs:domain robo:Action ;
+    rdfs:range robo:Entity ;
+    rdfs:label "action target" ;
+    rdfs:comment "The target entity of an action" .
+
+# -----------------------------------------------------------------------------
+# Relationship Properties
+# -----------------------------------------------------------------------------
+
+robo:nearObject a owl:ObjectProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range robo:WorldObject ;
+    rdfs:label "near object" ;
+    rdfs:comment "Objects within sensor range of the robot" .
+
+robo:collidingWith a owl:ObjectProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range robo:Obstacle ;
+    rdfs:label "colliding with" ;
+    rdfs:comment "Obstacle the robot is colliding with" .
+
+robo:collidingWithRobot a owl:ObjectProperty, owl:SymmetricProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range robo:Robot ;
+    rdfs:label "colliding with robot" ;
+    rdfs:comment "Another robot this robot is colliding with" .
+
+robo:collected a owl:ObjectProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range robo:CollectibleObject ;
+    rdfs:label "collected" ;
+    rdfs:comment "Objects the robot has collected" .
+
+robo:canReach a owl:ObjectProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range robo:Location ;
+    rdfs:label "can reach" ;
+    rdfs:comment "Locations the robot can reach from current position" .
+
+# -----------------------------------------------------------------------------
+# Pheromone Properties
+# -----------------------------------------------------------------------------
+
+robo:depositedBy a owl:ObjectProperty ;
+    rdfs:domain robo:Pheromone ;
+    rdfs:range robo:Robot ;
+    rdfs:label "deposited by" ;
+    rdfs:comment "The robot that deposited this pheromone" .
+
+robo:sensesPheromone a owl:ObjectProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range robo:Pheromone ;
+    rdfs:label "senses pheromone" ;
+    rdfs:comment "Pheromones the robot can currently sense" .
+
+robo:followsPheromoneTrail a owl:ObjectProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range robo:Pheromone ;
+    rdfs:label "follows pheromone trail" ;
+    rdfs:comment "Pheromone trail the robot is following" .
+
+# =============================================================================
+# DATA PROPERTIES
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Position Properties
+# -----------------------------------------------------------------------------
+
+robo:positionX a owl:DatatypeProperty ;
+    rdfs:domain robo:Entity ;
+    rdfs:range xsd:float ;
+    rdfs:label "position X" ;
+    rdfs:comment "X coordinate in the grid" .
+
+robo:positionY a owl:DatatypeProperty ;
+    rdfs:domain robo:Entity ;
+    rdfs:range xsd:float ;
+    rdfs:label "position Y" ;
+    rdfs:comment "Y coordinate in the grid" .
+
+robo:gridX a owl:DatatypeProperty ;
+    rdfs:domain robo:Location ;
+    rdfs:range xsd:integer ;
+    rdfs:label "grid X" ;
+    rdfs:comment "Grid X coordinate" .
+
+robo:gridY a owl:DatatypeProperty ;
+    rdfs:domain robo:Location ;
+    rdfs:range xsd:integer ;
+    rdfs:label "grid Y" ;
+    rdfs:comment "Grid Y coordinate" .
+
+# -----------------------------------------------------------------------------
+# Pheromone Data Properties
+# -----------------------------------------------------------------------------
+
+robo:pheromoneStrength a owl:DatatypeProperty ;
+    rdfs:domain robo:Pheromone ;
+    rdfs:range xsd:float ;
+    rdfs:label "pheromone strength" ;
+    rdfs:comment "Current strength of the pheromone (0.0 to 1.0, decays over time)" .
+
+robo:tickDeposited a owl:DatatypeProperty ;
+    rdfs:domain robo:Pheromone ;
+    rdfs:range xsd:integer ;
+    rdfs:label "tick deposited" ;
+    rdfs:comment "Simulation tick when the pheromone was deposited" .
+
+robo:decayRate a owl:DatatypeProperty ;
+    rdfs:domain robo:Pheromone ;
+    rdfs:range xsd:float ;
+    rdfs:label "decay rate" ;
+    rdfs:comment "Rate at which pheromone strength decays per tick" .
+
+robo:pheromoneType a owl:DatatypeProperty ;
+    rdfs:domain robo:Pheromone ;
+    rdfs:range xsd:string ;
+    rdfs:label "pheromone type" ;
+    rdfs:comment "Type of pheromone (exploration, object_found, object_collected, danger)" .
+
+# -----------------------------------------------------------------------------
+# Robot State Properties
+# -----------------------------------------------------------------------------
+
+robo:hasCollision a owl:DatatypeProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "has collision" ;
+    rdfs:comment "Whether the robot is currently in collision" .
+
+robo:isActive a owl:DatatypeProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "is active" ;
+    rdfs:comment "Whether the robot is currently active" .
+
+robo:batteryLevel a owl:DatatypeProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range xsd:float ;
+    rdfs:label "battery level" ;
+    rdfs:comment "Current battery level (0-100)" .
+
+robo:speed a owl:DatatypeProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range xsd:float ;
+    rdfs:label "speed" ;
+    rdfs:comment "Current movement speed" .
+
+robo:heading a owl:DatatypeProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range xsd:float ;
+    rdfs:label "heading" ;
+    rdfs:comment "Current heading in degrees (0-360)" .
+
+robo:isStuck a owl:DatatypeProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "is stuck" ;
+    rdfs:comment "Whether the robot is stuck and not making progress" .
+
+robo:ticksWithoutMovement a owl:DatatypeProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range xsd:integer ;
+    rdfs:label "ticks without movement" ;
+    rdfs:comment "Number of consecutive ticks without significant movement" .
+
+robo:escapeHeading a owl:DatatypeProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range xsd:float ;
+    rdfs:label "escape heading" ;
+    rdfs:comment "Direction the robot should try to escape when stuck" .
+
+# -----------------------------------------------------------------------------
+# Metric Properties
+# -----------------------------------------------------------------------------
+
+robo:successMetric a owl:DatatypeProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range xsd:float ;
+    rdfs:label "success metric" ;
+    rdfs:comment "Cumulative success score" .
+
+robo:objectsCollected a owl:DatatypeProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range xsd:integer ;
+    rdfs:label "objects collected" ;
+    rdfs:comment "Number of objects collected" .
+
+robo:totalObjects a owl:DatatypeProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range xsd:integer ;
+    rdfs:label "total objects" ;
+    rdfs:comment "Total number of collectible objects in the world" .
+
+robo:distanceTraveled a owl:DatatypeProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range xsd:float ;
+    rdfs:label "distance traveled" ;
+    rdfs:comment "Total distance traveled" .
+
+robo:collisionCount a owl:DatatypeProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range xsd:integer ;
+    rdfs:label "collision count" ;
+    rdfs:comment "Number of collisions with obstacles" .
+
+robo:robotCollisionCount a owl:DatatypeProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range xsd:integer ;
+    rdfs:label "robot collision count" ;
+    rdfs:comment "Number of collisions with other robots" .
+
+robo:hasRobotCollision a owl:DatatypeProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "has robot collision" ;
+    rdfs:comment "Whether the robot is currently colliding with another robot" .
+
+robo:rank a owl:DatatypeProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range xsd:integer ;
+    rdfs:label "rank" ;
+    rdfs:comment "Competition rank (1 = winner)" .
+
+robo:isWinner a owl:DatatypeProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "is winner" ;
+    rdfs:comment "Whether this robot won the competition" .
+
+robo:tickCount a owl:DatatypeProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range xsd:integer ;
+    rdfs:label "tick count" ;
+    rdfs:comment "Number of simulation ticks elapsed" .
+
+# -----------------------------------------------------------------------------
+# Object Properties
+# -----------------------------------------------------------------------------
+
+robo:objectValue a owl:DatatypeProperty ;
+    rdfs:domain robo:CollectibleObject ;
+    rdfs:range xsd:float ;
+    rdfs:label "object value" ;
+    rdfs:comment "Value/score of collecting this object" .
+
+robo:isCollected a owl:DatatypeProperty ;
+    rdfs:domain robo:CollectibleObject ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "is collected" ;
+    rdfs:comment "Whether this object has been collected" .
+
+robo:collectedBy a owl:ObjectProperty ;
+    rdfs:domain robo:CollectibleObject ;
+    rdfs:range robo:Robot ;
+    rdfs:label "collected by" ;
+    rdfs:comment "The robot that collected this object" .
+
+# -----------------------------------------------------------------------------
+# Sensor Properties
+# -----------------------------------------------------------------------------
+
+robo:sensorRange a owl:DatatypeProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range xsd:float ;
+    rdfs:label "sensor range" ;
+    rdfs:comment "Range of the robot's sensors" .
+
+robo:distanceToNearest a owl:DatatypeProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range xsd:float ;
+    rdfs:label "distance to nearest" ;
+    rdfs:comment "Distance to nearest object" .
+
+robo:distanceToObstacle a owl:DatatypeProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range xsd:float ;
+    rdfs:label "distance to obstacle" ;
+    rdfs:comment "Distance to nearest obstacle" .
+
+# =============================================================================
+# SHACL SHAPES (Validation)
+# =============================================================================
+
+robo:RobotShape a sh:NodeShape ;
+    sh:targetClass robo:Robot ;
+    sh:property [
+        sh:path robo:positionX ;
+        sh:datatype xsd:float ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+    ] ;
+    sh:property [
+        sh:path robo:positionY ;
+        sh:datatype xsd:float ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+    ] ;
+    sh:property [
+        sh:path robo:batteryLevel ;
+        sh:datatype xsd:float ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 100 ;
+    ] ;
+    sh:property [
+        sh:path robo:successMetric ;
+        sh:datatype xsd:float ;
+        sh:minInclusive 0 ;
+    ] .
+
+robo:CollectibleObjectShape a sh:NodeShape ;
+    sh:targetClass robo:CollectibleObject ;
+    sh:property [
+        sh:path robo:objectValue ;
+        sh:datatype xsd:float ;
+        sh:minCount 1 ;
+        sh:minInclusive 0 ;
+    ] .
+
+# =============================================================================
+# EXPLORATION & MEMORY CLASSES
+# =============================================================================
+# These classes model the robot's spatial memory for exploration with
+# partial observability. The robot tracks visited positions to detect
+# loops and make informed exploration decisions.
+
+# -----------------------------------------------------------------------------
+# Position Memory Classes
+# -----------------------------------------------------------------------------
+
+robo:PositionRecord a owl:Class ;
+    rdfs:label "Position Record" ;
+    rdfs:comment "A record of a position visited by the robot at a specific tick" .
+
+robo:ExploredCell a owl:Class ;
+    rdfs:label "Explored Cell" ;
+    rdfs:comment "A grid cell that the robot has explored (been within sensor range)" .
+
+robo:FrontierCell a owl:Class ;
+    rdfs:label "Frontier Cell" ;
+    rdfs:comment "An unexplored cell adjacent to explored cells - exploration targets" .
+
+# -----------------------------------------------------------------------------
+# Exploration State Classes (inferred by reasoning)
+# -----------------------------------------------------------------------------
+
+robo:InLoop a owl:Class ;
+    rdfs:subClassOf robo:Robot ;
+    rdfs:label "In Loop" ;
+    rdfs:comment "Robot is stuck in an exploration loop (revisiting same cells)" .
+
+robo:ExploringMode a owl:Class ;
+    rdfs:subClassOf robo:Robot ;
+    rdfs:label "Exploring Mode" ;
+    rdfs:comment "Robot is in exploration mode (no known objects to collect)" .
+
+robo:StuckExploring a owl:Class ;
+    rdfs:subClassOf robo:Robot ;
+    rdfs:label "Stuck Exploring" ;
+    rdfs:comment "Robot has been in a loop for extended time - needs random direction" .
+
+robo:DiscoveredObject a owl:Class ;
+    rdfs:subClassOf robo:CollectibleObject ;
+    rdfs:label "Discovered Object" ;
+    rdfs:comment "An object that has been discovered by the robot's sensors" .
+
+robo:DiscoveredObstacle a owl:Class ;
+    rdfs:subClassOf robo:Obstacle ;
+    rdfs:label "Discovered Obstacle" ;
+    rdfs:comment "An obstacle that has been discovered by the robot's sensors" .
+
+# =============================================================================
+# EXPLORATION OBJECT PROPERTIES
+# =============================================================================
+
+robo:hasPositionRecord a owl:ObjectProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range robo:PositionRecord ;
+    rdfs:label "has position record" ;
+    rdfs:comment "Links robot to its position history records" .
+
+robo:hasExploredCell a owl:ObjectProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range robo:ExploredCell ;
+    rdfs:label "has explored cell" ;
+    rdfs:comment "Links robot to cells it has explored" .
+
+# =============================================================================
+# EXPLORATION DATA PROPERTIES
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Position Record Properties
+# -----------------------------------------------------------------------------
+
+robo:cellX a owl:DatatypeProperty ;
+    rdfs:domain [ owl:unionOf (robo:PositionRecord robo:ExploredCell robo:FrontierCell) ] ;
+    rdfs:range xsd:integer ;
+    rdfs:label "cell X" ;
+    rdfs:comment "X coordinate of the grid cell" .
+
+robo:cellY a owl:DatatypeProperty ;
+    rdfs:domain [ owl:unionOf (robo:PositionRecord robo:ExploredCell robo:FrontierCell) ] ;
+    rdfs:range xsd:integer ;
+    rdfs:label "cell Y" ;
+    rdfs:comment "Y coordinate of the grid cell" .
+
+robo:atTick a owl:DatatypeProperty ;
+    rdfs:domain robo:PositionRecord ;
+    rdfs:range xsd:integer ;
+    rdfs:label "at tick" ;
+    rdfs:comment "The simulation tick when this position was recorded" .
+
+# -----------------------------------------------------------------------------
+# Exploration Cell Properties
+# -----------------------------------------------------------------------------
+
+robo:visitCount a owl:DatatypeProperty ;
+    rdfs:domain robo:ExploredCell ;
+    rdfs:range xsd:integer ;
+    rdfs:label "visit count" ;
+    rdfs:comment "Number of times this cell has been visited" .
+
+robo:lastVisitTick a owl:DatatypeProperty ;
+    rdfs:domain robo:ExploredCell ;
+    rdfs:range xsd:integer ;
+    rdfs:label "last visit tick" ;
+    rdfs:comment "The last tick this cell was visited" .
+
+robo:recentVisitCount a owl:DatatypeProperty ;
+    rdfs:domain robo:ExploredCell ;
+    rdfs:range xsd:integer ;
+    rdfs:label "recent visit count" ;
+    rdfs:comment "Number of visits in recent history (for loop detection)" .
+
+# -----------------------------------------------------------------------------
+# Robot Exploration State Properties
+# -----------------------------------------------------------------------------
+
+robo:isExploring a owl:DatatypeProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "is exploring" ;
+    rdfs:comment "Whether the robot is in exploration mode" .
+
+robo:inLoop a owl:DatatypeProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "in loop" ;
+    rdfs:comment "Whether the robot is detected to be in an exploration loop" .
+
+robo:stuckCounter a owl:DatatypeProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range xsd:integer ;
+    rdfs:label "stuck counter" ;
+    rdfs:comment "Counter for how long the robot has been stuck in a loop" .
+
+robo:explorationHeading a owl:DatatypeProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range xsd:float ;
+    rdfs:label "exploration heading" ;
+    rdfs:comment "Current heading direction for exploration (degrees)" .
+
+robo:knownObjects a owl:DatatypeProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range xsd:integer ;
+    rdfs:label "known objects" ;
+    rdfs:comment "Number of uncollected objects currently known to the robot" .
+
+robo:exploredCellCount a owl:DatatypeProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range xsd:integer ;
+    rdfs:label "explored cell count" ;
+    rdfs:comment "Number of cells the robot has explored" .
+
+# -----------------------------------------------------------------------------
+# Border Discovery Properties
+# -----------------------------------------------------------------------------
+
+robo:knownMinX a owl:DatatypeProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range xsd:float ;
+    rdfs:label "known min X" ;
+    rdfs:comment "Known western border (null if undiscovered)" .
+
+robo:knownMaxX a owl:DatatypeProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range xsd:float ;
+    rdfs:label "known max X" ;
+    rdfs:comment "Known eastern border (null if undiscovered)" .
+
+robo:knownMinY a owl:DatatypeProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range xsd:float ;
+    rdfs:label "known min Y" ;
+    rdfs:comment "Known southern border (null if undiscovered)" .
+
+robo:knownMaxY a owl:DatatypeProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range xsd:float ;
+    rdfs:label "known max Y" ;
+    rdfs:comment "Known northern border (null if undiscovered)" .
+
+# =============================================================================
+# BEHAVIOR CONFIGURATION (Language-Agnostic Parameters)
+# =============================================================================
+# These configuration instances store all behavior parameters as queryable data.
+# Any implementation (Python, TypeScript, Rust, etc.) queries these values
+# instead of hardcoding them. This is the key to ontology-driven architecture.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Configuration Classes
+# -----------------------------------------------------------------------------
+
+robo:BehaviorConfig a owl:Class ;
+    rdfs:label "Behavior Configuration" ;
+    rdfs:comment "Configuration parameters for robot behavior" .
+
+robo:ExplorationConfig a owl:Class ;
+    rdfs:subClassOf robo:BehaviorConfig ;
+    rdfs:label "Exploration Configuration" ;
+    rdfs:comment "Parameters for exploration scoring and direction selection" .
+
+robo:EscapeConfig a owl:Class ;
+    rdfs:subClassOf robo:BehaviorConfig ;
+    rdfs:label "Escape Configuration" ;
+    rdfs:comment "Parameters for escape behavior when stuck" .
+
+robo:DetectionConfig a owl:Class ;
+    rdfs:subClassOf robo:BehaviorConfig ;
+    rdfs:label "Detection Configuration" ;
+    rdfs:comment "Thresholds for state detection and inference rules" .
+
+robo:ActionConfig a owl:Class ;
+    rdfs:subClassOf robo:BehaviorConfig ;
+    rdfs:label "Action Configuration" ;
+    rdfs:comment "Parameters for action execution" .
+
+robo:InferenceRule a owl:Class ;
+    rdfs:label "Inference Rule" ;
+    rdfs:comment "A SWRL-style inference rule stored as data" .
+
+# -----------------------------------------------------------------------------
+# Configuration Properties
+# -----------------------------------------------------------------------------
+
+# Exploration properties
+robo:quadrantCrossingBonus a owl:DatatypeProperty ;
+    rdfs:domain robo:ExplorationConfig ;
+    rdfs:range xsd:float ;
+    rdfs:label "quadrant crossing bonus" ;
+    rdfs:comment "Score bonus for heading toward opposite quadrant" .
+
+robo:sameQuadrantPenalty a owl:DatatypeProperty ;
+    rdfs:domain robo:ExplorationConfig ;
+    rdfs:range xsd:float ;
+    rdfs:label "same quadrant penalty" ;
+    rdfs:comment "Score penalty for staying in same quadrant" .
+
+robo:centerApproachBonus a owl:DatatypeProperty ;
+    rdfs:domain robo:ExplorationConfig ;
+    rdfs:range xsd:float ;
+    rdfs:label "center approach bonus" ;
+    rdfs:comment "Score bonus for heading toward center when at edges" .
+
+robo:edgeDistanceThreshold a owl:DatatypeProperty ;
+    rdfs:domain robo:ExplorationConfig ;
+    rdfs:range xsd:float ;
+    rdfs:label "edge distance threshold" ;
+    rdfs:comment "Distance from center (as ratio) to consider at edge" .
+
+robo:unexploredTargetBonus a owl:DatatypeProperty ;
+    rdfs:domain robo:ExplorationConfig ;
+    rdfs:range xsd:float ;
+    rdfs:label "unexplored target bonus" ;
+    rdfs:comment "Score bonus for heading toward unexplored cell" .
+
+robo:unexploredPathBonus a owl:DatatypeProperty ;
+    rdfs:domain robo:ExplorationConfig ;
+    rdfs:range xsd:float ;
+    rdfs:label "unexplored path bonus" ;
+    rdfs:comment "Score bonus per unexplored cell along path" .
+
+robo:distanceBonusMultiplier a owl:DatatypeProperty ;
+    rdfs:domain robo:ExplorationConfig ;
+    rdfs:range xsd:float ;
+    rdfs:label "distance bonus multiplier" ;
+    rdfs:comment "Multiplier for distance bonus in exploration scoring" .
+
+robo:directionSampleCount a owl:DatatypeProperty ;
+    rdfs:domain robo:ExplorationConfig ;
+    rdfs:range xsd:integer ;
+    rdfs:label "direction sample count" ;
+    rdfs:comment "Number of random directions to sample for exploration" .
+
+robo:ventureDistanceFactor a owl:DatatypeProperty ;
+    rdfs:domain robo:ExplorationConfig ;
+    rdfs:range xsd:float ;
+    rdfs:label "venture distance factor" ;
+    rdfs:comment "Divisor for world size to get venture distance" .
+
+robo:gridMarginFactor a owl:DatatypeProperty ;
+    rdfs:domain robo:ExplorationConfig ;
+    rdfs:range xsd:float ;
+    rdfs:label "grid margin factor" ;
+    rdfs:comment "Margin from grid edges as ratio of grid size" .
+
+# Escape properties
+robo:escapeAngleVariance a owl:DatatypeProperty ;
+    rdfs:domain robo:EscapeConfig ;
+    rdfs:range xsd:float ;
+    rdfs:label "escape angle variance" ;
+    rdfs:comment "Random variance (± degrees) added to escape direction" .
+
+robo:escapeBaseAngleOffset a owl:DatatypeProperty ;
+    rdfs:domain robo:EscapeConfig ;
+    rdfs:range xsd:float ;
+    rdfs:label "escape base angle offset" ;
+    rdfs:comment "Base angle offset from current heading for escape (usually 180)" .
+
+robo:escapeTickDuration a owl:DatatypeProperty ;
+    rdfs:domain robo:EscapeConfig ;
+    rdfs:range xsd:integer ;
+    rdfs:label "escape tick duration" ;
+    rdfs:comment "Number of ticks to maintain escape behavior" .
+
+robo:escapeMinDistance a owl:DatatypeProperty ;
+    rdfs:domain robo:EscapeConfig ;
+    rdfs:range xsd:float ;
+    rdfs:label "escape min distance" ;
+    rdfs:comment "Minimum distance to travel during escape" .
+
+robo:escapeDistanceFactor a owl:DatatypeProperty ;
+    rdfs:domain robo:EscapeConfig ;
+    rdfs:range xsd:float ;
+    rdfs:label "escape distance factor" ;
+    rdfs:comment "Divisor for world size to calculate escape distance" .
+
+robo:escapeTargetReachedDistance a owl:DatatypeProperty ;
+    rdfs:domain robo:EscapeConfig ;
+    rdfs:range xsd:float ;
+    rdfs:label "escape target reached distance" ;
+    rdfs:comment "Distance to consider escape target reached" .
+
+robo:escapeClutterClearDistance a owl:DatatypeProperty ;
+    rdfs:domain robo:EscapeConfig ;
+    rdfs:range xsd:float ;
+    rdfs:label "escape clutter clear distance" ;
+    rdfs:comment "Distance from clutter to consider escape complete" .
+
+# Detection properties
+robo:lowBatteryThreshold a owl:DatatypeProperty ;
+    rdfs:domain robo:DetectionConfig ;
+    rdfs:range xsd:float ;
+    rdfs:label "low battery threshold" ;
+    rdfs:comment "Battery level below which LowBattery is inferred" .
+
+robo:batteryDrainRate a owl:DatatypeProperty ;
+    rdfs:domain robo:DetectionConfig ;
+    rdfs:range xsd:float ;
+    rdfs:label "battery drain rate" ;
+    rdfs:comment "Battery drain per tick" .
+
+robo:atObjectDistance a owl:DatatypeProperty ;
+    rdfs:domain robo:DetectionConfig ;
+    rdfs:range xsd:float ;
+    rdfs:label "at object distance" ;
+    rdfs:comment "Distance to consider robot at object for collection" .
+
+robo:nearObjectDistance a owl:DatatypeProperty ;
+    rdfs:domain robo:DetectionConfig ;
+    rdfs:range xsd:float ;
+    rdfs:label "near object distance" ;
+    rdfs:comment "Distance to consider robot near object" .
+
+robo:mustAvoidDistance a owl:DatatypeProperty ;
+    rdfs:domain robo:DetectionConfig ;
+    rdfs:range xsd:float ;
+    rdfs:label "must avoid distance" ;
+    rdfs:comment "Distance to obstacle triggering avoidance" .
+
+robo:emergencyAvoidDistance a owl:DatatypeProperty ;
+    rdfs:domain robo:DetectionConfig ;
+    rdfs:range xsd:float ;
+    rdfs:label "emergency avoid distance" ;
+    rdfs:comment "Distance to obstacle triggering emergency avoidance" .
+
+robo:smallCoverageThreshold a owl:DatatypeProperty ;
+    rdfs:domain robo:DetectionConfig ;
+    rdfs:range xsd:float ;
+    rdfs:label "small coverage threshold" ;
+    rdfs:comment "Coverage area below which SmallCoverage is inferred" .
+
+robo:severelyCoverageThreshold a owl:DatatypeProperty ;
+    rdfs:domain robo:DetectionConfig ;
+    rdfs:range xsd:float ;
+    rdfs:label "severely coverage threshold" ;
+    rdfs:comment "Coverage area below which SeverelyCircling is inferred" .
+
+robo:highKnottinessThreshold a owl:DatatypeProperty ;
+    rdfs:domain robo:DetectionConfig ;
+    rdfs:range xsd:float ;
+    rdfs:label "high knottiness threshold" ;
+    rdfs:comment "Path knottiness (radians) above which highKnottiness is inferred" .
+
+robo:veryHighKnottinessThreshold a owl:DatatypeProperty ;
+    rdfs:domain robo:DetectionConfig ;
+    rdfs:range xsd:float ;
+    rdfs:label "very high knottiness threshold" ;
+    rdfs:comment "Path knottiness (radians) above which veryHighKnottiness is inferred" .
+
+robo:minPositionsForDetection a owl:DatatypeProperty ;
+    rdfs:domain robo:DetectionConfig ;
+    rdfs:range xsd:integer ;
+    rdfs:label "min positions for detection" ;
+    rdfs:comment "Minimum recent positions required for loop detection" .
+
+robo:lowUniqueCellsRatio a owl:DatatypeProperty ;
+    rdfs:domain robo:DetectionConfig ;
+    rdfs:range xsd:float ;
+    rdfs:label "low unique cells ratio" ;
+    rdfs:comment "Unique cells ratio below which loop is suspected" .
+
+robo:repeatedVisitThreshold a owl:DatatypeProperty ;
+    rdfs:domain robo:DetectionConfig ;
+    rdfs:range xsd:integer ;
+    rdfs:label "repeated visit threshold" ;
+    rdfs:comment "Cell visits above which repeated visiting is detected" .
+
+# Action properties
+robo:defaultSpeed a owl:DatatypeProperty ;
+    rdfs:domain robo:ActionConfig ;
+    rdfs:range xsd:float ;
+    rdfs:label "default speed" ;
+    rdfs:comment "Default movement speed" .
+
+robo:turnRateExplore a owl:DatatypeProperty ;
+    rdfs:domain robo:ActionConfig ;
+    rdfs:range xsd:float ;
+    rdfs:label "turn rate explore" ;
+    rdfs:comment "Degrees per tick for gradual turning during exploration" .
+
+robo:turnRateDirect a owl:DatatypeProperty ;
+    rdfs:domain robo:ActionConfig ;
+    rdfs:range xsd:float ;
+    rdfs:label "turn rate direct" ;
+    rdfs:comment "Degrees per tick for direct turning toward target" .
+
+robo:avoidanceCheckDistance a owl:DatatypeProperty ;
+    rdfs:domain robo:ActionConfig ;
+    rdfs:range xsd:float ;
+    rdfs:label "avoidance check distance" ;
+    rdfs:comment "Distance to check ahead for obstacle avoidance" .
+
+robo:collisionBuffer a owl:DatatypeProperty ;
+    rdfs:domain robo:ActionConfig ;
+    rdfs:range xsd:float ;
+    rdfs:label "collision buffer" ;
+    rdfs:comment "Buffer distance for collision detection" .
+
+robo:obstacleBuffer a owl:DatatypeProperty ;
+    rdfs:domain robo:ActionConfig ;
+    rdfs:range xsd:float ;
+    rdfs:label "obstacle buffer" ;
+    rdfs:comment "Buffer distance for obstacle avoidance" .
+
+robo:avoidanceJitter a owl:DatatypeProperty ;
+    rdfs:domain robo:ActionConfig ;
+    rdfs:range xsd:float ;
+    rdfs:label "avoidance jitter" ;
+    rdfs:comment "Random jitter (± degrees) added to avoidance angles" .
+
+robo:turnAroundJitter a owl:DatatypeProperty ;
+    rdfs:domain robo:ActionConfig ;
+    rdfs:range xsd:float ;
+    rdfs:label "turn around jitter" ;
+    rdfs:comment "Random jitter (± degrees) for turn around when blocked" .
+
+robo:worldBoundaryMargin a owl:DatatypeProperty ;
+    rdfs:domain robo:ActionConfig ;
+    rdfs:range xsd:float ;
+    rdfs:label "world boundary margin" ;
+    rdfs:comment "Margin from world boundaries" .
+
+# Inference rule properties
+robo:ruleCondition a owl:DatatypeProperty ;
+    rdfs:domain robo:InferenceRule ;
+    rdfs:range xsd:string ;
+    rdfs:label "rule condition" ;
+    rdfs:comment "The condition expression for the rule" .
+
+robo:ruleConclusion a owl:DatatypeProperty ;
+    rdfs:domain robo:InferenceRule ;
+    rdfs:range xsd:string ;
+    rdfs:label "rule conclusion" ;
+    rdfs:comment "The conclusion/classification when condition is met" .
+
+robo:rulePriority a owl:DatatypeProperty ;
+    rdfs:domain robo:InferenceRule ;
+    rdfs:range xsd:integer ;
+    rdfs:label "rule priority" ;
+    rdfs:comment "Priority of the rule (lower = higher priority)" .
+
+# =============================================================================
+# DEFAULT CONFIGURATION INSTANCES (ABox)
+# =============================================================================
+
+robo:DefaultExplorationConfig a robo:ExplorationConfig ;
+    rdfs:label "Default Exploration Configuration" ;
+    robo:quadrantCrossingBonus "40.0"^^xsd:float ;
+    robo:sameQuadrantPenalty "20.0"^^xsd:float ;
+    robo:centerApproachBonus "30.0"^^xsd:float ;
+    robo:edgeDistanceThreshold "0.3"^^xsd:float ;
+    robo:unexploredTargetBonus "25.0"^^xsd:float ;
+    robo:unexploredPathBonus "10.0"^^xsd:float ;
+    robo:distanceBonusMultiplier "0.5"^^xsd:float ;
+    robo:directionSampleCount "24"^^xsd:integer ;
+    robo:ventureDistanceFactor "2.5"^^xsd:float ;
+    robo:gridMarginFactor "0.1"^^xsd:float .
+
+robo:DefaultEscapeConfig a robo:EscapeConfig ;
+    rdfs:label "Default Escape Configuration" ;
+    robo:escapeAngleVariance "90.0"^^xsd:float ;
+    robo:escapeBaseAngleOffset "180.0"^^xsd:float ;
+    robo:escapeTickDuration "25"^^xsd:integer ;
+    robo:escapeMinDistance "12.0"^^xsd:float ;
+    robo:escapeDistanceFactor "3.0"^^xsd:float ;
+    robo:escapeTargetReachedDistance "2.0"^^xsd:float ;
+    robo:escapeClutterClearDistance "12.0"^^xsd:float .
+
+robo:DefaultDetectionConfig a robo:DetectionConfig ;
+    rdfs:label "Default Detection Configuration" ;
+    robo:lowBatteryThreshold "20.0"^^xsd:float ;
+    robo:batteryDrainRate "0.05"^^xsd:float ;
+    robo:atObjectDistance "1.0"^^xsd:float ;
+    robo:nearObjectDistance "3.0"^^xsd:float ;
+    robo:mustAvoidDistance "1.5"^^xsd:float ;
+    robo:emergencyAvoidDistance "0.8"^^xsd:float ;
+    robo:smallCoverageThreshold "15.0"^^xsd:float ;
+    robo:severelyCoverageThreshold "8.0"^^xsd:float ;
+    robo:highKnottinessThreshold "9.42"^^xsd:float ;
+    robo:veryHighKnottinessThreshold "18.84"^^xsd:float ;
+    robo:minPositionsForDetection "10"^^xsd:integer ;
+    robo:lowUniqueCellsRatio "0.4"^^xsd:float ;
+    robo:repeatedVisitThreshold "3"^^xsd:integer .
+
+robo:DefaultActionConfig a robo:ActionConfig ;
+    rdfs:label "Default Action Configuration" ;
+    robo:defaultSpeed "1.0"^^xsd:float ;
+    robo:turnRateExplore "25.0"^^xsd:float ;
+    robo:turnRateDirect "90.0"^^xsd:float ;
+    robo:avoidanceCheckDistance "2.0"^^xsd:float ;
+    robo:collisionBuffer "0.3"^^xsd:float ;
+    robo:obstacleBuffer "0.5"^^xsd:float ;
+    robo:avoidanceJitter "20.0"^^xsd:float ;
+    robo:turnAroundJitter "90.0"^^xsd:float ;
+    robo:worldBoundaryMargin "3.0"^^xsd:float .
+
+# =============================================================================
+# INFERENCE RULES (stored as data)
+# =============================================================================
+
+robo:Rule_LowBattery a robo:InferenceRule ;
+    rdfs:label "Low Battery Rule" ;
+    robo:ruleCondition "batteryLevel < lowBatteryThreshold" ;
+    robo:ruleConclusion "LowBattery" ;
+    robo:rulePriority "1"^^xsd:integer .
+
+robo:Rule_AtObject a robo:InferenceRule ;
+    rdfs:label "At Object Rule" ;
+    robo:ruleCondition "distanceToNearest < atObjectDistance" ;
+    robo:ruleConclusion "AtObject" ;
+    robo:rulePriority "2"^^xsd:integer .
+
+robo:Rule_NearObject a robo:InferenceRule ;
+    rdfs:label "Near Object Rule" ;
+    robo:ruleCondition "distanceToNearest < nearObjectDistance" ;
+    robo:ruleConclusion "NearObject" ;
+    robo:rulePriority "3"^^xsd:integer .
+
+robo:Rule_MustAvoid a robo:InferenceRule ;
+    rdfs:label "Must Avoid Rule" ;
+    robo:ruleCondition "distanceToObstacle < mustAvoidDistance" ;
+    robo:ruleConclusion "MustAvoid" ;
+    robo:rulePriority "4"^^xsd:integer .
+
+robo:Rule_EmergencyAvoid a robo:InferenceRule ;
+    rdfs:label "Emergency Avoid Rule" ;
+    robo:ruleCondition "distanceToObstacle < emergencyAvoidDistance" ;
+    robo:ruleConclusion "EmergencyAvoid" ;
+    robo:rulePriority "5"^^xsd:integer .
+
+robo:Rule_SmallCoverage a robo:InferenceRule ;
+    rdfs:label "Small Coverage Rule" ;
+    robo:ruleCondition "coverageArea < smallCoverageThreshold AND recentPositionCount >= minPositionsForDetection" ;
+    robo:ruleConclusion "SmallCoverage" ;
+    robo:rulePriority "6"^^xsd:integer .
+
+robo:Rule_SeverelyCircling a robo:InferenceRule ;
+    rdfs:label "Severely Circling Rule" ;
+    robo:ruleCondition "coverageArea < severelyCoverageThreshold OR pathKnottiness > veryHighKnottinessThreshold" ;
+    robo:ruleConclusion "SeverelyCircling" ;
+    robo:rulePriority "7"^^xsd:integer .
+
+robo:Rule_ShouldVenture a robo:InferenceRule ;
+    rdfs:label "Should Venture Rule" ;
+    robo:ruleCondition "inLoop OR SmallCoverage OR (pathKnottiness > highKnottinessThreshold AND recentPositionCount >= minPositionsForDetection)" ;
+    robo:ruleConclusion "ShouldVenture" ;
+    robo:rulePriority "8"^^xsd:integer .
+
+# =============================================================================
+# MULTI-ROBOT COORDINATION - Spatial Blocking & Collision Avoidance
+# =============================================================================
+# These concepts enable PDDL planning to handle robot-to-robot collision
+# avoidance declaratively, eliminating procedural code in clients.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Spatial Location Classes
+# -----------------------------------------------------------------------------
+
+robo:GridCell a owl:Class ;
+    rdfs:subClassOf robo:Location ;
+    rdfs:label "Grid Cell" ;
+    rdfs:comment "A discrete cell in the planning grid, identified by gridX and gridY" .
+
+robo:BlockedCell a owl:Class ;
+    rdfs:subClassOf robo:GridCell ;
+    rdfs:label "Blocked Cell" ;
+    rdfs:comment "A grid cell that is currently blocked by a robot (inferred)" .
+
+robo:HomeCell a owl:Class ;
+    rdfs:subClassOf robo:GridCell ;
+    rdfs:label "Home Cell" ;
+    rdfs:comment "A designated home/charging cell for a specific robot" .
+
+# -----------------------------------------------------------------------------
+# Spatial Blocking Properties
+# -----------------------------------------------------------------------------
+
+robo:occupiesCell a owl:ObjectProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range robo:GridCell ;
+    rdfs:label "occupies cell" ;
+    rdfs:comment "The grid cell currently occupied by this robot" .
+
+robo:blockedByRobot a owl:ObjectProperty ;
+    rdfs:domain robo:GridCell ;
+    rdfs:range robo:Robot ;
+    rdfs:label "blocked by robot" ;
+    rdfs:comment "The robot currently blocking this cell (inferred from occupiesCell)" .
+
+robo:assignedHomeCell a owl:ObjectProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range robo:HomeCell ;
+    rdfs:label "assigned home cell" ;
+    rdfs:comment "The specific home cell assigned to this robot (offset from base)" .
+
+robo:homeOffsetIndex a owl:DatatypeProperty ;
+    rdfs:domain robo:Robot ;
+    rdfs:range xsd:integer ;
+    rdfs:label "home offset index" ;
+    rdfs:comment "Index used to calculate unique home position offset (0, 1, 2, ...)" .
+
+# -----------------------------------------------------------------------------
+# Multi-Robot Coordination State Classes
+# -----------------------------------------------------------------------------
+
+robo:WaitingForPath a owl:Class ;
+    rdfs:subClassOf robo:Robot ;
+    rdfs:label "Waiting For Path" ;
+    rdfs:comment "Robot is waiting because its path is blocked by another robot" .
+
+robo:ReturningHome a owl:Class ;
+    rdfs:subClassOf robo:Robot ;
+    rdfs:label "Returning Home" ;
+    rdfs:comment "Robot is returning to its assigned home cell" .
+
+robo:AtAssignedHome a owl:Class ;
+    rdfs:subClassOf robo:Robot ;
+    rdfs:label "At Assigned Home" ;
+    rdfs:comment "Robot has reached its assigned home cell" .
+
+# -----------------------------------------------------------------------------
+# Inference Rules for Robot Blocking (stored as data, executed by rule engine)
+# =============================================================================
+# These rules are queried by clients and converted to SPARQL CONSTRUCT
+# for materialization. The planning problem generator then queries the
+# materialized `blockedByRobot` facts.
+# -----------------------------------------------------------------------------
+
+robo:Rule_BlockedCell a robo:InferenceRule ;
+    rdfs:label "Blocked Cell Inference" ;
+    rdfs:comment """
+        IF robot occupies cell at (x,y)
+        THEN that cell is blocked by robot.
+
+        SPARQL equivalent:
+        CONSTRUCT { ?cell robo:blockedByRobot ?robot }
+        WHERE {
+            ?robot a robo:Robot ; robo:occupiesCell ?cell .
+            ?robot robo:isActive true .
+        }
+    """ ;
+    robo:ruleCondition "robot.occupiesCell = cell AND robot.isActive = true" ;
+    robo:ruleConclusion "cell.blockedByRobot = robot" ;
+    robo:rulePriority "1"^^xsd:integer .
+
+robo:Rule_AssignHomeCell a robo:InferenceRule ;
+    rdfs:label "Assign Home Cell" ;
+    rdfs:comment """
+        Each robot gets a unique home cell based on its offset index.
+        This prevents all robots from targeting the same home position.
+
+        Home positions form a ring around the base:
+        offset 0: base position
+        offset 1-8: adjacent cells in a circle
+    """ ;
+    robo:ruleCondition "robot.homeOffsetIndex >= 0" ;
+    robo:ruleConclusion "robot.assignedHomeCell = computeHomeOffset(base, robot.homeOffsetIndex)" ;
+    robo:rulePriority "2"^^xsd:integer .
+
+robo:Rule_WaitingForPath a robo:InferenceRule ;
+    rdfs:label "Waiting For Path Detection" ;
+    rdfs:comment """
+        IF robot's next planned cell is blocked by another robot
+        THEN robot is in WaitingForPath state.
+    """ ;
+    robo:ruleCondition "robot.nextCell.blockedByRobot != null AND robot.nextCell.blockedByRobot != robot" ;
+    robo:ruleConclusion "WaitingForPath" ;
+    robo:rulePriority "3"^^xsd:integer .
+
+# -----------------------------------------------------------------------------
+# Home Offset Configuration
+# -----------------------------------------------------------------------------
+
+robo:HomeOffsetConfig a owl:Class ;
+    rdfs:subClassOf robo:BehaviorConfig ;
+    rdfs:label "Home Offset Configuration" ;
+    rdfs:comment "Configuration for calculating robot home position offsets" .
+
+robo:homeOffsetRadius a owl:DatatypeProperty ;
+    rdfs:domain robo:HomeOffsetConfig ;
+    rdfs:range xsd:float ;
+    rdfs:label "home offset radius" ;
+    rdfs:comment "Radius from base center for offset positions (grid cells)" .
+
+robo:maxHomeSlots a owl:DatatypeProperty ;
+    rdfs:domain robo:HomeOffsetConfig ;
+    rdfs:range xsd:integer ;
+    rdfs:label "max home slots" ;
+    rdfs:comment "Maximum number of unique home slots around base" .
+
+robo:DefaultHomeOffsetConfig a robo:HomeOffsetConfig ;
+    rdfs:label "Default Home Offset Configuration" ;
+    robo:homeOffsetRadius "2.0"^^xsd:float ;
+    robo:maxHomeSlots "8"^^xsd:integer .

@@ -1,0 +1,256 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix tesserai: <http://tesserai.io/ontology/core#> .
+@prefix health: <http://tesserai.io/ontology/healthcare#> .
+
+# =============================================================================
+# TesserAI Healthcare Domain Ontology
+# =============================================================================
+
+<http://tesserai.io/ontology/healthcare> a owl:Ontology ;
+    rdfs:label "TesserAI Healthcare Ontology" ;
+    rdfs:comment "Ontology for healthcare digital twins including medical devices, facilities, and equipment." ;
+    owl:imports <http://tesserai.io/ontology/core> ;
+    owl:versionInfo "1.0.0" .
+
+# =============================================================================
+# Classes
+# =============================================================================
+
+health:MedicalDevice a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Medical Device" ;
+    rdfs:comment "A device used for medical diagnosis, treatment, or monitoring." .
+
+health:ImagingDevice a owl:Class ;
+    rdfs:subClassOf health:MedicalDevice ;
+    rdfs:label "Imaging Device" ;
+    rdfs:comment "Medical imaging equipment like MRI, CT, X-ray machines." .
+
+health:MRIMachine a owl:Class ;
+    rdfs:subClassOf health:ImagingDevice ;
+    rdfs:label "MRI Machine" ;
+    rdfs:comment "Magnetic Resonance Imaging scanner." .
+
+health:CTScanner a owl:Class ;
+    rdfs:subClassOf health:ImagingDevice ;
+    rdfs:label "CT Scanner" ;
+    rdfs:comment "Computed Tomography scanner." .
+
+health:PatientMonitor a owl:Class ;
+    rdfs:subClassOf health:MedicalDevice ;
+    rdfs:label "Patient Monitor" ;
+    rdfs:comment "Device for continuous patient vital signs monitoring." .
+
+health:InfusionPump a owl:Class ;
+    rdfs:subClassOf health:MedicalDevice ;
+    rdfs:label "Infusion Pump" ;
+    rdfs:comment "Device for controlled delivery of fluids or medications." .
+
+health:Ventilator a owl:Class ;
+    rdfs:subClassOf health:MedicalDevice ;
+    rdfs:label "Ventilator" ;
+    rdfs:comment "Mechanical ventilation device for respiratory support." .
+
+health:SurgicalRobot a owl:Class ;
+    rdfs:subClassOf health:MedicalDevice ;
+    rdfs:label "Surgical Robot" ;
+    rdfs:comment "Robot-assisted surgical system." .
+
+health:HealthcareFacility a owl:Class ;
+    rdfs:subClassOf tesserai:System ;
+    rdfs:label "Healthcare Facility" ;
+    rdfs:comment "A facility providing healthcare services." .
+
+health:Hospital a owl:Class ;
+    rdfs:subClassOf health:HealthcareFacility ;
+    rdfs:label "Hospital" ;
+    rdfs:comment "A large healthcare facility with multiple departments." .
+
+health:OperatingRoom a owl:Class ;
+    rdfs:subClassOf tesserai:Component ;
+    rdfs:label "Operating Room" ;
+    rdfs:comment "A specialized room for surgical procedures." .
+
+health:ICU a owl:Class ;
+    rdfs:subClassOf tesserai:Component ;
+    rdfs:label "ICU" ;
+    rdfs:comment "Intensive Care Unit for critical patients." .
+
+health:VitalSignsSensor a owl:Class ;
+    rdfs:subClassOf tesserai:Sensor ;
+    rdfs:label "Vital Signs Sensor" ;
+    rdfs:comment "Sensor for measuring patient vital signs." .
+
+# =============================================================================
+# Properties
+# =============================================================================
+
+health:deviceClass a owl:DatatypeProperty ;
+    rdfs:label "device class" ;
+    rdfs:comment "FDA device classification (I, II, III)." ;
+    rdfs:domain health:MedicalDevice ;
+    rdfs:range xsd:string .
+
+health:serialNumber a owl:DatatypeProperty ;
+    rdfs:label "serial number" ;
+    rdfs:comment "Unique serial number of the medical device." ;
+    rdfs:domain health:MedicalDevice ;
+    rdfs:range xsd:string .
+
+health:lastCalibration a owl:DatatypeProperty ;
+    rdfs:label "last calibration" ;
+    rdfs:comment "Date of last calibration." ;
+    rdfs:domain health:MedicalDevice ;
+    rdfs:range xsd:dateTime .
+
+health:nextMaintenanceDue a owl:DatatypeProperty ;
+    rdfs:label "next maintenance due" ;
+    rdfs:comment "Date when next maintenance is due." ;
+    rdfs:domain health:MedicalDevice ;
+    rdfs:range xsd:dateTime .
+
+health:operationalHours a owl:DatatypeProperty ;
+    rdfs:label "operational hours" ;
+    rdfs:comment "Total hours of operation." ;
+    rdfs:domain health:MedicalDevice ;
+    rdfs:range xsd:decimal .
+
+health:fieldStrength a owl:DatatypeProperty ;
+    rdfs:label "field strength" ;
+    rdfs:comment "Magnetic field strength in Tesla (for MRI)." ;
+    rdfs:domain health:MRIMachine ;
+    rdfs:range xsd:decimal .
+
+health:sliceCount a owl:DatatypeProperty ;
+    rdfs:label "slice count" ;
+    rdfs:comment "Number of detector slices (for CT scanners)." ;
+    rdfs:domain health:CTScanner ;
+    rdfs:range xsd:integer .
+
+health:bedCapacity a owl:DatatypeProperty ;
+    rdfs:label "bed capacity" ;
+    rdfs:comment "Number of patient beds in the facility." ;
+    rdfs:domain health:HealthcareFacility ;
+    rdfs:range xsd:integer .
+
+health:isCompliant a owl:DatatypeProperty ;
+    rdfs:label "is compliant" ;
+    rdfs:comment "Whether the device meets regulatory compliance." ;
+    rdfs:domain health:MedicalDevice ;
+    rdfs:range xsd:boolean .
+
+health:locatedIn a owl:ObjectProperty ;
+    rdfs:label "located in" ;
+    rdfs:comment "The facility or room where this device is located." ;
+    rdfs:domain health:MedicalDevice ;
+    rdfs:range health:HealthcareFacility .
+
+health:hasDevice a owl:ObjectProperty ;
+    rdfs:label "has device" ;
+    rdfs:comment "Medical device contained in this facility." ;
+    owl:inverseOf health:locatedIn ;
+    rdfs:domain health:HealthcareFacility ;
+    rdfs:range health:MedicalDevice .
+
+health:hasOperatingRoom a owl:ObjectProperty ;
+    rdfs:subPropertyOf tesserai:hasComponent ;
+    rdfs:label "has operating room" ;
+    rdfs:domain health:Hospital ;
+    rdfs:range health:OperatingRoom .
+
+health:hasICU a owl:ObjectProperty ;
+    rdfs:subPropertyOf tesserai:hasComponent ;
+    rdfs:label "has ICU" ;
+    rdfs:domain health:Hospital ;
+    rdfs:range health:ICU .
+
+# =============================================================================
+# SHACL Shapes
+# =============================================================================
+
+health:MedicalDeviceShape a sh:NodeShape ;
+    sh:targetClass health:MedicalDevice ;
+    rdfs:label "Medical Device Shape" ;
+    sh:property [
+        sh:path tesserai:name ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "A medical device must have a name." ;
+    ] ;
+    sh:property [
+        sh:path health:serialNumber ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "Medical devices must have exactly one serial number." ;
+    ] ;
+    sh:property [
+        sh:path health:deviceClass ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:in ("I" "II" "III") ;
+        sh:message "Device class must be I, II, or III per FDA classification." ;
+    ] ;
+    sh:property [
+        sh:path health:operationalHours ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:message "Operational hours must be a non-negative value." ;
+    ] .
+
+health:MRIMachineShape a sh:NodeShape ;
+    sh:targetClass health:MRIMachine ;
+    rdfs:label "MRI Machine Shape" ;
+    sh:property [
+        sh:path health:fieldStrength ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minExclusive 0 ;
+        sh:maxInclusive 10 ;
+        sh:message "MRI field strength must be between 0 and 10 Tesla." ;
+    ] .
+
+health:CTScannerShape a sh:NodeShape ;
+    sh:targetClass health:CTScanner ;
+    rdfs:label "CT Scanner Shape" ;
+    sh:property [
+        sh:path health:sliceCount ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 1 ;
+        sh:message "CT scanner must have at least 1 slice." ;
+    ] .
+
+health:HospitalShape a sh:NodeShape ;
+    sh:targetClass health:Hospital ;
+    rdfs:label "Hospital Shape" ;
+    sh:property [
+        sh:path tesserai:name ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "A hospital must have a name." ;
+    ] ;
+    sh:property [
+        sh:path health:bedCapacity ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 1 ;
+        sh:message "Hospital bed capacity must be at least 1." ;
+    ] .
+
+health:OperatingRoomShape a sh:NodeShape ;
+    sh:targetClass health:OperatingRoom ;
+    rdfs:label "Operating Room Shape" ;
+    sh:property [
+        sh:path tesserai:name ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "An operating room must have a name/identifier." ;
+    ] .

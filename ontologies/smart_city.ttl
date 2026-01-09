@@ -1,0 +1,266 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix tesserai: <http://tesserai.io/ontology/core#> .
+@prefix city: <http://tesserai.io/ontology/smart_city#> .
+
+# =============================================================================
+# TesserAI Smart City Domain Ontology
+# =============================================================================
+
+<http://tesserai.io/ontology/smart_city> a owl:Ontology ;
+    rdfs:label "TesserAI Smart City Ontology" ;
+    rdfs:comment "Ontology for smart city digital twins including transportation, utilities, and public services." ;
+    owl:imports <http://tesserai.io/ontology/core> ;
+    owl:versionInfo "1.0.0" .
+
+# =============================================================================
+# Classes
+# =============================================================================
+
+city:City a owl:Class ;
+    rdfs:subClassOf tesserai:System ;
+    rdfs:label "City" ;
+    rdfs:comment "A municipal area with integrated smart systems." .
+
+city:District a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "District" ;
+    rdfs:comment "A subdivision of a city." .
+
+# Transportation
+city:Road a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Road" ;
+    rdfs:comment "A roadway for vehicular traffic." .
+
+city:TrafficIntersection a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Traffic Intersection" ;
+    rdfs:comment "A junction where roads meet." .
+
+city:TrafficSignal a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Traffic Signal" ;
+    rdfs:comment "A signal device for controlling traffic." .
+
+city:TrafficSensor a owl:Class ;
+    rdfs:subClassOf tesserai:Sensor ;
+    rdfs:label "Traffic Sensor" ;
+    rdfs:comment "A sensor for monitoring traffic flow." .
+
+city:MetroLine a owl:Class ;
+    rdfs:subClassOf tesserai:System ;
+    rdfs:label "Metro Line" ;
+    rdfs:comment "A rapid transit railway line." .
+
+city:MetroStation a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Metro Station" ;
+    rdfs:comment "A station on a metro line." .
+
+city:BusRoute a owl:Class ;
+    rdfs:subClassOf tesserai:System ;
+    rdfs:label "Bus Route" ;
+    rdfs:comment "A scheduled bus service route." .
+
+city:Bus a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Bus" ;
+    rdfs:comment "A public transit bus." .
+
+city:ParkingFacility a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Parking Facility" ;
+    rdfs:comment "A facility for parking vehicles." .
+
+# Utilities
+city:PowerGrid a owl:Class ;
+    rdfs:subClassOf tesserai:System ;
+    rdfs:label "Power Grid" ;
+    rdfs:comment "The electrical distribution network." .
+
+city:ElectricalSubstation a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Electrical Substation" ;
+    rdfs:comment "A facility that transforms voltage levels." .
+
+city:SmartMeter a owl:Class ;
+    rdfs:subClassOf tesserai:Sensor ;
+    rdfs:label "Smart Meter" ;
+    rdfs:comment "A digital utility meter with remote reading." .
+
+city:WaterSystem a owl:Class ;
+    rdfs:subClassOf tesserai:System ;
+    rdfs:label "Water System" ;
+    rdfs:comment "The municipal water supply system." .
+
+city:WaterTreatmentPlant a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Water Treatment Plant" ;
+    rdfs:comment "A facility for treating water." .
+
+city:WaterTank a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Water Tank" ;
+    rdfs:comment "A water storage tank." .
+
+# Environmental
+city:AirQualityStation a owl:Class ;
+    rdfs:subClassOf tesserai:Sensor ;
+    rdfs:label "Air Quality Station" ;
+    rdfs:comment "A station monitoring air quality parameters." .
+
+city:NoiseSensor a owl:Class ;
+    rdfs:subClassOf tesserai:Sensor ;
+    rdfs:label "Noise Sensor" ;
+    rdfs:comment "A sensor for monitoring noise levels." .
+
+city:WeatherStation a owl:Class ;
+    rdfs:subClassOf tesserai:System ;
+    rdfs:label "Weather Station" ;
+    rdfs:comment "A station monitoring weather conditions." .
+
+# Public Safety
+city:PoliceStation a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Police Station" ;
+    rdfs:comment "A law enforcement facility." .
+
+city:FireStation a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Fire Station" ;
+    rdfs:comment "A fire and rescue services facility." .
+
+city:SurveillanceCamera a owl:Class ;
+    rdfs:subClassOf tesserai:Sensor ;
+    rdfs:label "Surveillance Camera" ;
+    rdfs:comment "A security camera for public safety monitoring." .
+
+# Lighting
+city:StreetLightingController a owl:Class ;
+    rdfs:subClassOf tesserai:System ;
+    rdfs:label "Street Lighting Controller" ;
+    rdfs:comment "A system controlling street lighting." .
+
+city:SmartStreetlight a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Smart Streetlight" ;
+    rdfs:comment "An intelligent street light with sensors and connectivity." .
+
+# =============================================================================
+# Properties
+# =============================================================================
+
+city:population a owl:DatatypeProperty ;
+    rdfs:label "population" ;
+    rdfs:comment "The population of the area." ;
+    rdfs:domain city:District ;
+    rdfs:range xsd:integer .
+
+city:area a owl:DatatypeProperty ;
+    rdfs:label "area" ;
+    rdfs:comment "The area in square kilometers." ;
+    rdfs:domain city:District ;
+    rdfs:range xsd:decimal .
+
+city:districtType a owl:DatatypeProperty ;
+    rdfs:label "district type" ;
+    rdfs:comment "The type of district (residential, commercial, industrial, etc.)." ;
+    rdfs:domain city:District ;
+    rdfs:range xsd:string .
+
+city:lanes a owl:DatatypeProperty ;
+    rdfs:label "lanes" ;
+    rdfs:comment "Number of traffic lanes." ;
+    rdfs:domain city:Road ;
+    rdfs:range xsd:integer .
+
+city:trafficFlow a owl:DatatypeProperty ;
+    rdfs:label "traffic flow" ;
+    rdfs:comment "Current traffic flow in vehicles per hour." ;
+    rdfs:domain city:TrafficSensor ;
+    rdfs:range xsd:integer .
+
+city:signalPhase a owl:DatatypeProperty ;
+    rdfs:label "signal phase" ;
+    rdfs:comment "Current signal phase (red, yellow, green)." ;
+    rdfs:domain city:TrafficSignal ;
+    rdfs:range xsd:string .
+
+city:hasDistrict a owl:ObjectProperty ;
+    rdfs:label "has district" ;
+    rdfs:domain city:City ;
+    rdfs:range city:District .
+
+city:connectsTo a owl:ObjectProperty ;
+    rdfs:label "connects to" ;
+    rdfs:domain city:Road ;
+    rdfs:range city:TrafficIntersection .
+
+city:servesDistrict a owl:ObjectProperty ;
+    rdfs:label "serves district" ;
+    rdfs:domain city:MetroStation ;
+    rdfs:range city:District .
+
+# =============================================================================
+# SHACL Shapes
+# =============================================================================
+
+city:CityShape a sh:NodeShape ;
+    sh:targetClass city:City ;
+    rdfs:label "City Shape" ;
+    sh:property [
+        sh:path tesserai:name ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "A city must have a name." ;
+    ] .
+
+city:DistrictShape a sh:NodeShape ;
+    sh:targetClass city:District ;
+    rdfs:label "District Shape" ;
+    sh:property [
+        sh:path tesserai:name ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "A district must have a name." ;
+    ] ;
+    sh:property [
+        sh:path city:districtType ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:in ("residential" "commercial" "industrial" "business" "educational" "historic" "transportation") ;
+        sh:message "District type must be one of the allowed values." ;
+    ] ;
+    sh:property [
+        sh:path city:population ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 0 ;
+        sh:message "Population must be a non-negative integer." ;
+    ] .
+
+city:RoadShape a sh:NodeShape ;
+    sh:targetClass city:Road ;
+    rdfs:label "Road Shape" ;
+    sh:property [
+        sh:path city:lanes ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 1 ;
+        sh:message "A road must have at least one lane." ;
+    ] .
+
+city:TrafficSignalShape a sh:NodeShape ;
+    sh:targetClass city:TrafficSignal ;
+    rdfs:label "Traffic Signal Shape" ;
+    sh:property [
+        sh:path city:signalPhase ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:in ("red" "yellow" "green") ;
+        sh:message "Signal phase must be red, yellow, or green." ;
+    ] .

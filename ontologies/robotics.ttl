@@ -1,0 +1,249 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix tesserai: <http://tesserai.io/ontology/core#> .
+@prefix robo: <http://tesserai.io/ontology/robotics#> .
+
+# =============================================================================
+# TesserAI Robotics Domain Ontology
+# =============================================================================
+
+<http://tesserai.io/ontology/robotics> a owl:Ontology ;
+    rdfs:label "TesserAI Robotics Ontology" ;
+    rdfs:comment "Ontology for robotics digital twins including robots, arms, AMRs, and sensors." ;
+    owl:imports <http://tesserai.io/ontology/core> ;
+    owl:versionInfo "1.0.0" .
+
+# =============================================================================
+# Classes
+# =============================================================================
+
+robo:Robot a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Robot" ;
+    rdfs:comment "An autonomous or semi-autonomous machine capable of performing tasks." .
+
+robo:AMR a owl:Class ;
+    rdfs:subClassOf robo:Robot ;
+    rdfs:label "Autonomous Mobile Robot" ;
+    rdfs:comment "A robot capable of autonomous navigation and movement." .
+
+robo:IndustrialRobot a owl:Class ;
+    rdfs:subClassOf robo:Robot ;
+    rdfs:label "Industrial Robot" ;
+    rdfs:comment "A robot designed for manufacturing and industrial applications." .
+
+robo:CollaborativeRobot a owl:Class ;
+    rdfs:subClassOf robo:IndustrialRobot ;
+    rdfs:label "Collaborative Robot" ;
+    rdfs:comment "A robot designed to work safely alongside humans (cobot)." .
+
+robo:RobotArm a owl:Class ;
+    rdfs:subClassOf tesserai:Component ;
+    rdfs:label "Robot Arm" ;
+    rdfs:comment "An articulated arm component of a robot." .
+
+robo:Gripper a owl:Class ;
+    rdfs:subClassOf tesserai:Component ;
+    rdfs:label "Gripper" ;
+    rdfs:comment "An end effector for grasping objects." .
+
+robo:LiDARSensor a owl:Class ;
+    rdfs:subClassOf tesserai:Sensor ;
+    rdfs:label "LiDAR Sensor" ;
+    rdfs:comment "A sensor that uses laser light to measure distances." .
+
+robo:CameraSensor a owl:Class ;
+    rdfs:subClassOf tesserai:Sensor ;
+    rdfs:label "Camera Sensor" ;
+    rdfs:comment "An imaging sensor for visual perception." .
+
+robo:ProximitySensor a owl:Class ;
+    rdfs:subClassOf tesserai:Sensor ;
+    rdfs:label "Proximity Sensor" ;
+    rdfs:comment "A sensor that detects nearby objects without physical contact." .
+
+robo:Workstation a owl:Class ;
+    rdfs:subClassOf tesserai:System ;
+    rdfs:label "Workstation" ;
+    rdfs:comment "A designated area where robots perform specific tasks." .
+
+# =============================================================================
+# Properties
+# =============================================================================
+
+robo:serialNumber a owl:DatatypeProperty ;
+    rdfs:label "serial number" ;
+    rdfs:comment "Unique serial number of the robot." ;
+    rdfs:domain robo:Robot ;
+    rdfs:range xsd:string .
+
+robo:manufacturer a owl:DatatypeProperty ;
+    rdfs:label "manufacturer" ;
+    rdfs:comment "The company that manufactured the robot." ;
+    rdfs:domain robo:Robot ;
+    rdfs:range xsd:string .
+
+robo:payload a owl:DatatypeProperty ;
+    rdfs:label "payload" ;
+    rdfs:comment "Maximum payload capacity in kilograms." ;
+    rdfs:domain robo:Robot ;
+    rdfs:range xsd:decimal .
+
+robo:reach a owl:DatatypeProperty ;
+    rdfs:label "reach" ;
+    rdfs:comment "Maximum reach distance in meters." ;
+    rdfs:domain robo:RobotArm ;
+    rdfs:range xsd:decimal .
+
+robo:degreesOfFreedom a owl:DatatypeProperty ;
+    rdfs:label "degrees of freedom" ;
+    rdfs:comment "Number of independent axes of movement." ;
+    rdfs:domain robo:RobotArm ;
+    rdfs:range xsd:integer .
+
+robo:operationalStatus a owl:DatatypeProperty ;
+    rdfs:label "operational status" ;
+    rdfs:comment "Current operational status: idle, working, charging, error, maintenance." ;
+    rdfs:domain robo:Robot ;
+    rdfs:range xsd:string .
+
+robo:batteryLevel a owl:DatatypeProperty ;
+    rdfs:label "battery level" ;
+    rdfs:comment "Current battery charge level as a percentage (0-100)." ;
+    rdfs:domain robo:AMR ;
+    rdfs:range xsd:decimal .
+
+robo:currentSpeed a owl:DatatypeProperty ;
+    rdfs:label "current speed" ;
+    rdfs:comment "Current movement speed in meters per second." ;
+    rdfs:domain robo:AMR ;
+    rdfs:range xsd:decimal .
+
+robo:maxSpeed a owl:DatatypeProperty ;
+    rdfs:label "max speed" ;
+    rdfs:comment "Maximum movement speed in meters per second." ;
+    rdfs:domain robo:AMR ;
+    rdfs:range xsd:decimal .
+
+robo:cycleTime a owl:DatatypeProperty ;
+    rdfs:label "cycle time" ;
+    rdfs:comment "Average time to complete one operational cycle in seconds." ;
+    rdfs:domain robo:Robot ;
+    rdfs:range xsd:decimal .
+
+robo:hasArm a owl:ObjectProperty ;
+    rdfs:subPropertyOf tesserai:hasComponent ;
+    rdfs:label "has arm" ;
+    rdfs:domain robo:Robot ;
+    rdfs:range robo:RobotArm .
+
+robo:hasGripper a owl:ObjectProperty ;
+    rdfs:subPropertyOf tesserai:hasComponent ;
+    rdfs:label "has gripper" ;
+    rdfs:domain robo:RobotArm ;
+    rdfs:range robo:Gripper .
+
+robo:hasLiDAR a owl:ObjectProperty ;
+    rdfs:subPropertyOf tesserai:hasSensor ;
+    rdfs:label "has LiDAR" ;
+    rdfs:domain robo:Robot ;
+    rdfs:range robo:LiDARSensor .
+
+robo:operatesAt a owl:ObjectProperty ;
+    rdfs:label "operates at" ;
+    rdfs:comment "The workstation where this robot operates." ;
+    rdfs:domain robo:Robot ;
+    rdfs:range robo:Workstation .
+
+# =============================================================================
+# SHACL Shapes
+# =============================================================================
+
+robo:RobotShape a sh:NodeShape ;
+    sh:targetClass robo:Robot, robo:AMR, robo:IndustrialRobot, robo:CollaborativeRobot ;
+    rdfs:label "Robot Shape" ;
+    sh:property [
+        sh:path tesserai:name ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "A robot must have a name." ;
+    ] ;
+    sh:property [
+        sh:path robo:serialNumber ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "Serial number must be a unique string." ;
+    ] ;
+    sh:property [
+        sh:path robo:payload ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:message "Payload must be a non-negative decimal value in kg." ;
+    ] ;
+    sh:property [
+        sh:path robo:operationalStatus ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:in ("idle" "working" "charging" "error" "maintenance") ;
+        sh:message "Operational status must be one of: idle, working, charging, error, maintenance." ;
+    ] .
+
+robo:AMRShape a sh:NodeShape ;
+    sh:targetClass robo:AMR ;
+    rdfs:label "AMR Shape" ;
+    sh:property [
+        sh:path robo:batteryLevel ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 100 ;
+        sh:message "Battery level must be between 0 and 100 percent." ;
+    ] ;
+    sh:property [
+        sh:path robo:currentSpeed ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:message "Current speed must be a non-negative decimal value in m/s." ;
+    ] ;
+    sh:property [
+        sh:path robo:maxSpeed ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minExclusive 0 ;
+        sh:message "Max speed must be a positive decimal value in m/s." ;
+    ] .
+
+robo:RobotArmShape a sh:NodeShape ;
+    sh:targetClass robo:RobotArm ;
+    rdfs:label "Robot Arm Shape" ;
+    sh:property [
+        sh:path robo:reach ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minExclusive 0 ;
+        sh:message "Reach must be a positive decimal value in meters." ;
+    ] ;
+    sh:property [
+        sh:path robo:degreesOfFreedom ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 12 ;
+        sh:message "Degrees of freedom must be an integer between 1 and 12." ;
+    ] .
+
+robo:CollaborativeRobotShape a sh:NodeShape ;
+    sh:targetClass robo:CollaborativeRobot ;
+    rdfs:label "Collaborative Robot Shape" ;
+    sh:property [
+        sh:path robo:payload ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:maxInclusive 35 ;
+        sh:message "Collaborative robots typically have payload capacity under 35kg for safety." ;
+    ] .

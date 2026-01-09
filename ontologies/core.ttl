@@ -1,0 +1,200 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix tesserai: <http://tesserai.io/ontology/core#> .
+
+# =============================================================================
+# TesserAI Core Ontology
+# =============================================================================
+# This ontology defines the foundational concepts for Digital Twins as a Service.
+# All domain-specific ontologies should extend these core classes.
+
+<http://tesserai.io/ontology/core> a owl:Ontology ;
+    rdfs:label "TesserAI Core Ontology" ;
+    rdfs:comment "Core ontology for TesserAI Digital Twins, defining base classes and properties for digital twin representation." ;
+    owl:versionInfo "1.0.0" .
+
+# =============================================================================
+# Core Classes
+# =============================================================================
+
+tesserai:DigitalTwin a owl:Class ;
+    rdfs:label "Digital Twin" ;
+    rdfs:comment "The base class for all digital twins. A digital twin is a virtual representation of a physical entity, system, or process." .
+
+tesserai:Asset a owl:Class ;
+    rdfs:subClassOf tesserai:DigitalTwin ;
+    rdfs:label "Asset" ;
+    rdfs:comment "A physical asset that can be represented as a digital twin (e.g., machines, vehicles, buildings)." .
+
+tesserai:Sensor a owl:Class ;
+    rdfs:subClassOf tesserai:DigitalTwin ;
+    rdfs:label "Sensor" ;
+    rdfs:comment "A device that detects and measures physical properties and reports the data." .
+
+tesserai:Component a owl:Class ;
+    rdfs:subClassOf tesserai:DigitalTwin ;
+    rdfs:label "Component" ;
+    rdfs:comment "A part or element of a larger system or asset." .
+
+tesserai:System a owl:Class ;
+    rdfs:subClassOf tesserai:DigitalTwin ;
+    rdfs:label "System" ;
+    rdfs:comment "An integrated set of components that work together to perform a function." .
+
+tesserai:Process a owl:Class ;
+    rdfs:subClassOf tesserai:DigitalTwin ;
+    rdfs:label "Process" ;
+    rdfs:comment "A series of actions or operations that transforms inputs into outputs." .
+
+# =============================================================================
+# Core Properties
+# =============================================================================
+
+# Identification
+tesserai:identifier a owl:DatatypeProperty ;
+    rdfs:label "identifier" ;
+    rdfs:comment "A unique identifier for the digital twin." ;
+    rdfs:domain tesserai:DigitalTwin ;
+    rdfs:range xsd:string .
+
+tesserai:name a owl:DatatypeProperty ;
+    rdfs:label "name" ;
+    rdfs:comment "Human-readable name of the digital twin." ;
+    rdfs:domain tesserai:DigitalTwin ;
+    rdfs:range xsd:string .
+
+tesserai:description a owl:DatatypeProperty ;
+    rdfs:label "description" ;
+    rdfs:comment "A description of the digital twin." ;
+    rdfs:domain tesserai:DigitalTwin ;
+    rdfs:range xsd:string .
+
+# Temporal properties
+tesserai:createdAt a owl:DatatypeProperty ;
+    rdfs:label "created at" ;
+    rdfs:comment "Timestamp when the digital twin was created." ;
+    rdfs:domain tesserai:DigitalTwin ;
+    rdfs:range xsd:dateTime .
+
+tesserai:updatedAt a owl:DatatypeProperty ;
+    rdfs:label "updated at" ;
+    rdfs:comment "Timestamp when the digital twin was last updated." ;
+    rdfs:domain tesserai:DigitalTwin ;
+    rdfs:range xsd:dateTime .
+
+# Status
+tesserai:status a owl:DatatypeProperty ;
+    rdfs:label "status" ;
+    rdfs:comment "Current operational status of the entity." ;
+    rdfs:domain tesserai:DigitalTwin ;
+    rdfs:range xsd:string .
+
+# Relationships
+tesserai:hasComponent a owl:ObjectProperty ;
+    rdfs:label "has component" ;
+    rdfs:comment "Indicates that this entity contains or owns the specified component." ;
+    rdfs:domain tesserai:DigitalTwin ;
+    rdfs:range tesserai:Component .
+
+tesserai:isComponentOf a owl:ObjectProperty ;
+    rdfs:label "is component of" ;
+    rdfs:comment "Indicates that this entity is a component of a larger entity." ;
+    owl:inverseOf tesserai:hasComponent ;
+    rdfs:domain tesserai:Component ;
+    rdfs:range tesserai:DigitalTwin .
+
+tesserai:hasSensor a owl:ObjectProperty ;
+    rdfs:label "has sensor" ;
+    rdfs:comment "Links an entity to its sensors." ;
+    rdfs:domain tesserai:DigitalTwin ;
+    rdfs:range tesserai:Sensor .
+
+tesserai:monitors a owl:ObjectProperty ;
+    rdfs:label "monitors" ;
+    rdfs:comment "Indicates what entity a sensor monitors." ;
+    rdfs:domain tesserai:Sensor ;
+    rdfs:range tesserai:DigitalTwin .
+
+tesserai:connectedTo a owl:ObjectProperty ;
+    rdfs:label "connected to" ;
+    rdfs:comment "Indicates a connection or relationship between entities." ;
+    rdfs:domain tesserai:DigitalTwin ;
+    rdfs:range tesserai:DigitalTwin .
+
+# Location
+tesserai:location a owl:DatatypeProperty ;
+    rdfs:label "location" ;
+    rdfs:comment "Physical or logical location of the entity." ;
+    rdfs:domain tesserai:DigitalTwin ;
+    rdfs:range xsd:string .
+
+tesserai:latitude a owl:DatatypeProperty ;
+    rdfs:label "latitude" ;
+    rdfs:comment "Geographic latitude coordinate." ;
+    rdfs:domain tesserai:DigitalTwin ;
+    rdfs:range xsd:decimal .
+
+tesserai:longitude a owl:DatatypeProperty ;
+    rdfs:label "longitude" ;
+    rdfs:comment "Geographic longitude coordinate." ;
+    rdfs:domain tesserai:DigitalTwin ;
+    rdfs:range xsd:decimal .
+
+# =============================================================================
+# SHACL Shapes for Validation
+# =============================================================================
+
+tesserai:DigitalTwinShape a sh:NodeShape ;
+    sh:targetClass tesserai:DigitalTwin ;
+    rdfs:label "Digital Twin Shape" ;
+    rdfs:comment "SHACL shape for validating DigitalTwin instances." ;
+    sh:property [
+        sh:path tesserai:name ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:minLength 1 ;
+        sh:message "A digital twin must have exactly one non-empty name." ;
+    ] ;
+    sh:property [
+        sh:path tesserai:identifier ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "Identifier must be a string if provided." ;
+    ] ;
+    sh:property [
+        sh:path tesserai:status ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "Status must be a single string value." ;
+    ] .
+
+tesserai:SensorShape a sh:NodeShape ;
+    sh:targetClass tesserai:Sensor ;
+    rdfs:label "Sensor Shape" ;
+    rdfs:comment "SHACL shape for validating Sensor instances." ;
+    sh:property [
+        sh:path tesserai:name ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "A sensor must have a name." ;
+    ] ;
+    sh:property [
+        sh:path tesserai:monitors ;
+        sh:class tesserai:DigitalTwin ;
+        sh:message "Sensors can only monitor DigitalTwin instances." ;
+    ] .
+
+tesserai:AssetShape a sh:NodeShape ;
+    sh:targetClass tesserai:Asset ;
+    rdfs:label "Asset Shape" ;
+    rdfs:comment "SHACL shape for validating Asset instances." ;
+    sh:property [
+        sh:path tesserai:name ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "An asset must have a name." ;
+    ] .

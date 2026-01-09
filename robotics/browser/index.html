@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ontology-Driven Robot Simulation | TesseraiDB</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #1a1a2e;
+            color: #eee;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        h1 { font-size: 1.4rem; font-weight: 300; margin-bottom: 15px; color: #888; }
+        .badge { background: #2ecc71; color: #fff; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; margin-left: 10px; }
+        .container { display: flex; gap: 20px; align-items: flex-start; justify-content: center; }
+        .side-panel { width: 320px; flex-shrink: 0; }
+        canvas {
+            background: #16213e;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .panel {
+            background: #16213e;
+            border-radius: 8px;
+            padding: 15px;
+            width: 100%;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .panel h2 { font-size: 0.8rem; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+        .stat { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #252545; font-size: 0.85rem; }
+        .stat:last-child { border-bottom: none; }
+        .stat-value { color: #4ecdc4; font-weight: 500; }
+        .controls { display: flex; gap: 8px; margin-top: 12px; }
+        button {
+            flex: 1; padding: 8px 12px; border: none; border-radius: 6px;
+            cursor: pointer; font-size: 0.8rem; font-weight: 500; transition: all 0.2s;
+        }
+        .btn-start { background: #2ecc71; color: #fff; }
+        .btn-start:hover { background: #27ae60; }
+        .btn-pause { background: #e74c3c; color: #fff; }
+        .btn-pause:hover { background: #c0392b; }
+        .btn-reset { background: #3498db; color: #fff; }
+        .btn-reset:hover { background: #2980b9; }
+        .robot-list { margin-top: 12px; }
+        .robot-item {
+            display: flex; align-items: center; gap: 8px; padding: 6px 8px;
+            background: #1a1a2e; border-radius: 4px; margin-bottom: 4px; font-size: 0.8rem;
+            min-height: 52px; width: 100%;
+        }
+        .robot-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+        .robot-info { flex: 1; min-width: 0; overflow: hidden; }
+        .robot-stats { color: #888; font-size: 0.7rem; white-space: nowrap; }
+        .robot-action { color: #4ecdc4; font-size: 0.65rem; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px; }
+        .status { text-align: center; padding: 6px; border-radius: 4px; margin-bottom: 10px; font-size: 0.8rem; }
+        .status-running { background: #27ae60; }
+        .status-paused { background: #f39c12; }
+        .status-ended { background: #9b59b6; }
+        .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 8px; }
+        .config-item { display: flex; flex-direction: column; gap: 2px; }
+        .config-item label { font-size: 0.65rem; color: #666; text-transform: uppercase; }
+        .config-item input {
+            width: 100%; padding: 5px 6px; border: 1px solid #252545; border-radius: 4px;
+            background: #1a1a2e; color: #eee; font-size: 0.8rem;
+        }
+        .config-item input:focus { outline: none; border-color: #4ecdc4; }
+        .btn-apply { background: #9b59b6; color: #fff; margin-top: 8px; width: 100%; }
+        .btn-apply:hover { background: #8e44ad; }
+        .legend { margin-top: 12px; font-size: 0.7rem; color: #666; }
+        .legend-item { display: flex; align-items: center; gap: 6px; margin: 4px 0; }
+        .legend-dot { width: 12px; height: 12px; border-radius: 2px; }
+
+        /* Planning config */
+        .planning-config { margin-top: 8px; }
+        .planning-config .config-item input { width: 100%; }
+        .planning-stats { margin-top: 10px; padding: 8px; background: #1a1a2e; border-radius: 4px; border-left: 3px solid #9b59b6; }
+        .planning-stats .stat-value.connected { color: #2ecc71; }
+        .planning-stats .stat-value.disconnected { color: #e74c3c; }
+
+        /* Tab system */
+        .tabs { display: flex; gap: 0; margin-bottom: 0; border-bottom: 2px solid #252545; }
+        .tab-btn {
+            padding: 8px 16px; background: transparent; border: none; color: #666;
+            cursor: pointer; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px;
+            transition: all 0.2s; border-bottom: 2px solid transparent; margin-bottom: -2px;
+            flex: none;
+        }
+        .tab-btn:hover { color: #aaa; }
+        .tab-btn.active { color: #4ecdc4; border-bottom-color: #4ecdc4; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* PDDL panel */
+        .pddl-panel {
+            background: #16213e; border-radius: 8px; padding: 12px;
+            width: 100%; max-height: 70vh; overflow-y: auto;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .pddl-section { margin-bottom: 15px; }
+        .pddl-section h3 { font-size: 0.75rem; color: #4ecdc4; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; border-bottom: 1px solid #252545; padding-bottom: 4px; }
+        .pddl-code {
+            background: #0d1117; border-radius: 4px; padding: 12px; font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.65rem; line-height: 1.5; overflow-x: auto; white-space: pre; color: #c9d1d9;
+        }
+        .pddl-code .comment { color: #8b949e; }
+        .pddl-code .keyword { color: #ff7b72; }
+        .pddl-code .type { color: #79c0ff; }
+        .pddl-code .predicate { color: #7ee787; }
+        .pddl-code .action { color: #d2a8ff; }
+        .pddl-info { display: flex; gap: 15px; margin-bottom: 12px; font-size: 0.7rem; }
+        .pddl-info-item { background: #1a1a2e; padding: 8px 12px; border-radius: 4px; }
+        .pddl-info-label { color: #888; font-size: 0.6rem; text-transform: uppercase; }
+        .pddl-info-value { color: #4ecdc4; font-weight: 500; margin-top: 2px; }
+
+        /* Ontology panel */
+        .ontology-panel {
+            background: #16213e; border-radius: 8px; padding: 12px;
+            width: 100%; max-height: 70vh; overflow-y: auto;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .onto-section { margin-bottom: 15px; }
+        .onto-section h3 { font-size: 0.75rem; color: #4ecdc4; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; border-bottom: 1px solid #252545; padding-bottom: 4px; }
+        .onto-table { width: 100%; border-collapse: collapse; font-size: 0.7rem; }
+        .onto-table th { text-align: left; color: #888; font-weight: 500; padding: 4px 8px; background: #1a1a2e; }
+        .onto-table td { padding: 4px 8px; border-bottom: 1px solid #252545; color: #ccc; }
+        .onto-table tr:hover td { background: #1a1a2e; }
+        .rule-card { background: #1a1a2e; border-radius: 4px; padding: 8px; margin-bottom: 6px; }
+        .rule-id { color: #f39c12; font-weight: 500; font-size: 0.7rem; }
+        .rule-name { color: #eee; font-size: 0.75rem; margin: 2px 0; }
+        .rule-desc { color: #888; font-size: 0.65rem; }
+        .rule-condition { color: #9b59b6; font-size: 0.65rem; font-family: monospace; margin-top: 4px; }
+        .axiom-item { padding: 3px 6px; background: #1a1a2e; border-radius: 3px; font-size: 0.6rem; display: inline-block; }
+        .axiom-class { color: #3498db; }
+        .axiom-prop { color: #2ecc71; }
+        .axiom-type { color: #888; font-style: italic; }
+        .refresh-btn { background: #3498db; color: #fff; border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.7rem; margin-left: 10px; flex: none; }
+        .refresh-btn:hover { background: #2980b9; }
+        .twin-count { color: #4ecdc4; font-size: 0.7rem; margin-left: 8px; }
+    </style>
+</head>
+<body>
+    <h1>Ontology-Driven Robot Simulation <span class="badge">TesseraiDB</span></h1>
+    <div class="container">
+        <canvas id="canvas"></canvas>
+
+        <!-- Side Panel with Tabs -->
+        <div class="side-panel">
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="simulation">Simulation</button>
+                <button class="tab-btn" data-tab="ontology">Ontology</button>
+                <button class="tab-btn" data-tab="pddl">PDDL</button>
+            </div>
+
+            <!-- Simulation Tab -->
+            <div class="tab-content active" id="tab-simulation">
+                <div class="panel" style="border-top-left-radius: 0;">
+                    <div id="status" class="status status-paused">Loading WASM...</div>
+                    <h2>Statistics</h2>
+                    <div class="stat"><span>Tick</span><span class="stat-value" id="tick">0</span></div>
+                    <div class="stat"><span>Objects</span><span class="stat-value" id="objects">0 / 0</span></div>
+                    <div class="stat"><span>Collisions</span><span class="stat-value" id="collisions">0</span></div>
+                    <div class="controls">
+                        <button class="btn-start" id="startBtn">Start</button>
+                        <button class="btn-pause" id="pauseBtn">Pause</button>
+                        <button class="btn-reset" id="resetBtn">Reset</button>
+                    </div>
+                    <div class="robot-list" id="robotList"></div>
+
+                    <h2 style="margin-top: 15px;">Configuration</h2>
+                    <div class="config-grid">
+                        <div class="config-item"><label>Width</label><input type="number" id="cfgWidth" value="40" min="10" max="200"></div>
+                        <div class="config-item"><label>Height</label><input type="number" id="cfgHeight" value="25" min="10" max="150"></div>
+                        <div class="config-item"><label>Robots</label><input type="number" id="cfgRobots" value="5" min="1" max="20"></div>
+                        <div class="config-item"><label>Objects</label><input type="number" id="cfgObjects" value="15" min="1" max="100"></div>
+                        <div class="config-item"><label>Obstacles</label><input type="number" id="cfgObstacles" value="20" min="0" max="100"></div>
+                        <div class="config-item"><label>Battery</label><input type="number" id="cfgBattery" value="100" min="10" max="1000"></div>
+                    </div>
+                    <button class="btn-apply" id="applyBtn">Apply & Reset</button>
+
+                    <div class="legend">
+                        <div class="legend-item"><div class="legend-dot" style="background: #f1c40f;"></div> Object (collectible)</div>
+                        <div class="legend-item"><div class="legend-dot" style="background: #555;"></div> Obstacle</div>
+                        <div class="legend-item"><div class="legend-dot" style="background: #4ecdc455; border: 1px solid #4ecdc4;"></div> Sensor range</div>
+                    </div>
+
+                    <h2 style="margin-top: 15px;">PDDL Planning API</h2>
+                    <div class="planning-config">
+                        <div class="config-item">
+                            <label>Server URL</label>
+                            <input type="text" id="planningApiUrl" value="http://localhost:8080" placeholder="http://localhost:8080">
+                        </div>
+                    </div>
+                    <div id="planningStats" class="planning-stats">
+                        <div class="stat"><span>Status</span><span class="stat-value" id="planningStatus">Connecting...</span></div>
+                        <div class="stat"><span>Planning Time</span><span class="stat-value" id="planningTime">-</span></div>
+                        <div class="stat"><span>States Explored</span><span class="stat-value" id="planningStates">-</span></div>
+                        <div class="stat"><span>Plan Length</span><span class="stat-value" id="planningLength">-</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ontology Tab -->
+            <div class="tab-content" id="tab-ontology">
+                <div class="ontology-panel" style="border-top-left-radius: 0;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <h2 style="margin: 0;">Ontology State</h2>
+                        <button class="refresh-btn" id="refreshOntology">↻ Refresh</button>
+                    </div>
+
+                    <!-- Twins Section -->
+                    <div class="onto-section">
+                        <h3>Digital Twins (ABox Individuals) <span class="twin-count" id="twinCount"></span></h3>
+                        <div id="twinsContent">
+                            <table class="onto-table">
+                                <thead><tr><th>Type</th><th>ID</th><th>Key Properties</th></tr></thead>
+                                <tbody id="twinsTable"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Rules Section -->
+                    <div class="onto-section">
+                        <h3>SWRL Reasoning Rules <span class="twin-count" id="ruleCount"></span></h3>
+                        <div id="rulesContent"></div>
+                    </div>
+
+                    <!-- Behavior Configuration Section -->
+                    <div class="onto-section">
+                        <h3>Behavior Configuration (from Ontology)</h3>
+                        <div id="configContent" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.6rem;"></div>
+                    </div>
+
+                    <!-- TBox Section -->
+                    <div class="onto-section">
+                        <h3>TBox (Schema & Axioms)</h3>
+                        <div>
+                            <h4 style="font-size: 0.65rem; color: #888; margin-bottom: 4px;">Classes</h4>
+                            <div id="classesContent" style="display: flex; flex-wrap: wrap; gap: 3px;"></div>
+                        </div>
+                        <div style="margin-top: 8px;">
+                            <h4 style="font-size: 0.65rem; color: #888; margin-bottom: 4px;">Properties</h4>
+                            <div id="propertiesContent" style="max-height: 150px; overflow-y: auto;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PDDL Tab -->
+            <div class="tab-content" id="tab-pddl">
+                <div class="pddl-panel" style="border-top-left-radius: 0;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <h2 style="margin: 0;">PDDL Planning Domain</h2>
+                    </div>
+
+                    <!-- Domain Info -->
+                    <div class="pddl-info" id="pddlInfo">
+                        <div class="pddl-info-item">
+                            <div class="pddl-info-label">Domain</div>
+                            <div class="pddl-info-value" id="pddlDomainName">robot-exploration</div>
+                        </div>
+                        <div class="pddl-info-item">
+                            <div class="pddl-info-label">Requirements</div>
+                            <div class="pddl-info-value" id="pddlRequirements">:strips :typing</div>
+                        </div>
+                        <div class="pddl-info-item">
+                            <div class="pddl-info-label">Actions</div>
+                            <div class="pddl-info-value" id="pddlActionCount">4</div>
+                        </div>
+                    </div>
+
+                    <!-- Types Section -->
+                    <div class="pddl-section">
+                        <h3>Types</h3>
+                        <div class="pddl-code" id="pddlTypes"></div>
+                    </div>
+
+                    <!-- Predicates Section -->
+                    <div class="pddl-section">
+                        <h3>Predicates</h3>
+                        <div class="pddl-code" id="pddlPredicates"></div>
+                    </div>
+
+                    <!-- Actions Section -->
+                    <div class="pddl-section">
+                        <h3>Actions</h3>
+                        <div id="pddlActions"></div>
+                    </div>
+
+                    <!-- Full Domain -->
+                    <div class="pddl-section">
+                        <h3>Full Domain Definition</h3>
+                        <div class="pddl-code" id="pddlFullDomain" style="max-height: 300px; overflow-y: auto;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

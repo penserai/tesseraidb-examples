@@ -1,0 +1,371 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix tesserai: <http://tesserai.io/ontology/core#> .
+@prefix bldg: <http://tesserai.io/ontology/smart_building#> .
+
+# =============================================================================
+# TesserAI Smart Building Domain Ontology
+# =============================================================================
+
+<http://tesserai.io/ontology/smart_building> a owl:Ontology ;
+    rdfs:label "TesserAI Smart Building Ontology" ;
+    rdfs:comment "Ontology for smart building digital twins including HVAC, lighting, and building systems." ;
+    owl:imports <http://tesserai.io/ontology/core> ;
+    owl:versionInfo "1.0.0" .
+
+# =============================================================================
+# Classes
+# =============================================================================
+
+bldg:Building a owl:Class ;
+    rdfs:subClassOf tesserai:System ;
+    rdfs:label "Building" ;
+    rdfs:comment "A smart building with integrated systems." .
+
+bldg:Floor a owl:Class ;
+    rdfs:subClassOf tesserai:Component ;
+    rdfs:label "Floor" ;
+    rdfs:comment "A floor or level within a building." .
+
+bldg:Room a owl:Class ;
+    rdfs:subClassOf tesserai:Component ;
+    rdfs:label "Room" ;
+    rdfs:comment "An enclosed space within a building." .
+
+bldg:Zone a owl:Class ;
+    rdfs:subClassOf tesserai:Component ;
+    rdfs:label "Zone" ;
+    rdfs:comment "A logical grouping of spaces for climate control." .
+
+bldg:HVACSystem a owl:Class ;
+    rdfs:subClassOf tesserai:System ;
+    rdfs:label "HVAC System" ;
+    rdfs:comment "Heating, Ventilation, and Air Conditioning system." .
+
+bldg:AHU a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Air Handling Unit" ;
+    rdfs:comment "A device for regulating and circulating air." .
+
+bldg:Chiller a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Chiller" ;
+    rdfs:comment "A machine that removes heat from a liquid." .
+
+bldg:Boiler a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Boiler" ;
+    rdfs:comment "A device for heating water or generating steam." .
+
+bldg:LightingSystem a owl:Class ;
+    rdfs:subClassOf tesserai:System ;
+    rdfs:label "Lighting System" ;
+    rdfs:comment "A system controlling building illumination." .
+
+bldg:LightFixture a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Light Fixture" ;
+    rdfs:comment "An individual lighting unit." .
+
+bldg:Elevator a owl:Class ;
+    rdfs:subClassOf tesserai:Asset ;
+    rdfs:label "Elevator" ;
+    rdfs:comment "A vertical transportation device." .
+
+bldg:AccessControlSystem a owl:Class ;
+    rdfs:subClassOf tesserai:System ;
+    rdfs:label "Access Control System" ;
+    rdfs:comment "A system for controlling entry to secured areas." .
+
+bldg:TemperatureSensor a owl:Class ;
+    rdfs:subClassOf tesserai:Sensor ;
+    rdfs:label "Temperature Sensor" ;
+    rdfs:comment "A sensor for measuring temperature." .
+
+bldg:OccupancySensor a owl:Class ;
+    rdfs:subClassOf tesserai:Sensor ;
+    rdfs:label "Occupancy Sensor" ;
+    rdfs:comment "A sensor for detecting presence of people." .
+
+bldg:CO2Sensor a owl:Class ;
+    rdfs:subClassOf tesserai:Sensor ;
+    rdfs:label "CO2 Sensor" ;
+    rdfs:comment "A sensor for measuring carbon dioxide levels." .
+
+bldg:EnergyMeter a owl:Class ;
+    rdfs:subClassOf tesserai:Sensor ;
+    rdfs:label "Energy Meter" ;
+    rdfs:comment "A device for measuring energy consumption." .
+
+# =============================================================================
+# Properties
+# =============================================================================
+
+bldg:totalArea a owl:DatatypeProperty ;
+    rdfs:label "total area" ;
+    rdfs:comment "Total floor area in square meters." ;
+    rdfs:domain bldg:Building ;
+    rdfs:range xsd:decimal .
+
+bldg:floorCount a owl:DatatypeProperty ;
+    rdfs:label "floor count" ;
+    rdfs:comment "Number of floors in the building." ;
+    rdfs:domain bldg:Building ;
+    rdfs:range xsd:integer .
+
+bldg:floorNumber a owl:DatatypeProperty ;
+    rdfs:label "floor number" ;
+    rdfs:comment "The floor number or level." ;
+    rdfs:domain bldg:Floor ;
+    rdfs:range xsd:integer .
+
+bldg:area a owl:DatatypeProperty ;
+    rdfs:label "area" ;
+    rdfs:comment "Area in square meters." ;
+    rdfs:domain bldg:Room ;
+    rdfs:range xsd:decimal .
+
+bldg:capacity a owl:DatatypeProperty ;
+    rdfs:label "capacity" ;
+    rdfs:comment "Maximum occupancy capacity." ;
+    rdfs:domain bldg:Room ;
+    rdfs:range xsd:integer .
+
+bldg:temperature a owl:DatatypeProperty ;
+    rdfs:label "temperature" ;
+    rdfs:comment "Current temperature in Celsius." ;
+    rdfs:domain bldg:Zone ;
+    rdfs:range xsd:decimal .
+
+bldg:setpoint a owl:DatatypeProperty ;
+    rdfs:label "setpoint" ;
+    rdfs:comment "Target temperature setpoint in Celsius." ;
+    rdfs:domain bldg:Zone ;
+    rdfs:range xsd:decimal .
+
+bldg:humidity a owl:DatatypeProperty ;
+    rdfs:label "humidity" ;
+    rdfs:comment "Relative humidity percentage (0-100)." ;
+    rdfs:domain bldg:Zone ;
+    rdfs:range xsd:decimal .
+
+bldg:co2Level a owl:DatatypeProperty ;
+    rdfs:label "CO2 level" ;
+    rdfs:comment "CO2 concentration in parts per million (ppm)." ;
+    rdfs:domain bldg:Zone ;
+    rdfs:range xsd:decimal .
+
+bldg:occupancy a owl:DatatypeProperty ;
+    rdfs:label "occupancy" ;
+    rdfs:comment "Current number of occupants." ;
+    rdfs:domain bldg:Room ;
+    rdfs:range xsd:integer .
+
+bldg:coolingCapacity a owl:DatatypeProperty ;
+    rdfs:label "cooling capacity" ;
+    rdfs:comment "Cooling capacity in kilowatts (kW)." ;
+    rdfs:domain bldg:Chiller ;
+    rdfs:range xsd:decimal .
+
+bldg:heatingCapacity a owl:DatatypeProperty ;
+    rdfs:label "heating capacity" ;
+    rdfs:comment "Heating capacity in kilowatts (kW)." ;
+    rdfs:domain bldg:Boiler ;
+    rdfs:range xsd:decimal .
+
+bldg:airflowRate a owl:DatatypeProperty ;
+    rdfs:label "airflow rate" ;
+    rdfs:comment "Airflow rate in cubic meters per hour." ;
+    rdfs:domain bldg:AHU ;
+    rdfs:range xsd:decimal .
+
+bldg:energyConsumption a owl:DatatypeProperty ;
+    rdfs:label "energy consumption" ;
+    rdfs:comment "Energy consumption in kWh." ;
+    rdfs:domain tesserai:Asset ;
+    rdfs:range xsd:decimal .
+
+bldg:lightLevel a owl:DatatypeProperty ;
+    rdfs:label "light level" ;
+    rdfs:comment "Light level in lux." ;
+    rdfs:domain bldg:Room ;
+    rdfs:range xsd:decimal .
+
+bldg:hasFloor a owl:ObjectProperty ;
+    rdfs:subPropertyOf tesserai:hasComponent ;
+    rdfs:label "has floor" ;
+    rdfs:domain bldg:Building ;
+    rdfs:range bldg:Floor .
+
+bldg:hasRoom a owl:ObjectProperty ;
+    rdfs:subPropertyOf tesserai:hasComponent ;
+    rdfs:label "has room" ;
+    rdfs:domain bldg:Floor ;
+    rdfs:range bldg:Room .
+
+bldg:hasZone a owl:ObjectProperty ;
+    rdfs:subPropertyOf tesserai:hasComponent ;
+    rdfs:label "has zone" ;
+    rdfs:domain bldg:Building ;
+    rdfs:range bldg:Zone .
+
+bldg:servesZone a owl:ObjectProperty ;
+    rdfs:label "serves zone" ;
+    rdfs:comment "The zone served by this HVAC equipment." ;
+    rdfs:domain tesserai:Asset ;
+    rdfs:range bldg:Zone .
+
+bldg:hasHVAC a owl:ObjectProperty ;
+    rdfs:subPropertyOf tesserai:hasComponent ;
+    rdfs:label "has HVAC" ;
+    rdfs:domain bldg:Building ;
+    rdfs:range bldg:HVACSystem .
+
+bldg:hasElevator a owl:ObjectProperty ;
+    rdfs:subPropertyOf tesserai:hasComponent ;
+    rdfs:label "has elevator" ;
+    rdfs:domain bldg:Building ;
+    rdfs:range bldg:Elevator .
+
+# =============================================================================
+# SHACL Shapes
+# =============================================================================
+
+bldg:BuildingShape a sh:NodeShape ;
+    sh:targetClass bldg:Building ;
+    rdfs:label "Building Shape" ;
+    sh:property [
+        sh:path tesserai:name ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "A building must have a name." ;
+    ] ;
+    sh:property [
+        sh:path bldg:totalArea ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minExclusive 0 ;
+        sh:message "Total area must be a positive decimal value in square meters." ;
+    ] ;
+    sh:property [
+        sh:path bldg:floorCount ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 1 ;
+        sh:message "Floor count must be at least 1." ;
+    ] .
+
+bldg:FloorShape a sh:NodeShape ;
+    sh:targetClass bldg:Floor ;
+    rdfs:label "Floor Shape" ;
+    sh:property [
+        sh:path bldg:floorNumber ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:integer ;
+        sh:message "A floor must have exactly one floor number." ;
+    ] .
+
+bldg:RoomShape a sh:NodeShape ;
+    sh:targetClass bldg:Room ;
+    rdfs:label "Room Shape" ;
+    sh:property [
+        sh:path tesserai:name ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "A room must have a name or identifier." ;
+    ] ;
+    sh:property [
+        sh:path bldg:area ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minExclusive 0 ;
+        sh:message "Room area must be a positive value in square meters." ;
+    ] ;
+    sh:property [
+        sh:path bldg:capacity ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 0 ;
+        sh:message "Room capacity must be a non-negative integer." ;
+    ] ;
+    sh:property [
+        sh:path bldg:occupancy ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 0 ;
+        sh:message "Occupancy must be a non-negative integer." ;
+    ] .
+
+bldg:ZoneShape a sh:NodeShape ;
+    sh:targetClass bldg:Zone ;
+    rdfs:label "Zone Shape" ;
+    sh:property [
+        sh:path bldg:temperature ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive -50 ;
+        sh:maxInclusive 60 ;
+        sh:message "Temperature must be between -50 and 60 Celsius." ;
+    ] ;
+    sh:property [
+        sh:path bldg:setpoint ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 10 ;
+        sh:maxInclusive 35 ;
+        sh:message "Temperature setpoint must be between 10 and 35 Celsius." ;
+    ] ;
+    sh:property [
+        sh:path bldg:humidity ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 100 ;
+        sh:message "Humidity must be between 0 and 100 percent." ;
+    ] ;
+    sh:property [
+        sh:path bldg:co2Level ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 10000 ;
+        sh:message "CO2 level must be between 0 and 10000 ppm." ;
+    ] .
+
+bldg:ChillerShape a sh:NodeShape ;
+    sh:targetClass bldg:Chiller ;
+    rdfs:label "Chiller Shape" ;
+    sh:property [
+        sh:path tesserai:name ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "A chiller must have a name." ;
+    ] ;
+    sh:property [
+        sh:path bldg:coolingCapacity ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minExclusive 0 ;
+        sh:message "Cooling capacity must be a positive value in kW." ;
+    ] .
+
+bldg:AHUShape a sh:NodeShape ;
+    sh:targetClass bldg:AHU ;
+    rdfs:label "Air Handling Unit Shape" ;
+    sh:property [
+        sh:path tesserai:name ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "An AHU must have a name." ;
+    ] ;
+    sh:property [
+        sh:path bldg:airflowRate ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:message "Airflow rate must be a non-negative value." ;
+    ] .
