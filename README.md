@@ -4,6 +4,12 @@ This repository contains comprehensive example digital twins and scenarios for [
 
 Each example demonstrates how to model complex real-world systems using TesseraiDB's ontology-based approach, including entities, relationships, semantic reasoning, and real-time streaming.
 
+## Demo Environment
+
+> **Note:** The `default` tenant on [tesserai.io](https://tesserai.io) includes pre-seeded data for all examples below. This is provided for demonstration purposes, allowing you to explore the digital twins, run SPARQL queries, and interact with the data immediately without running any seed scripts.
+
+To populate your own tenant with example data, use the seed scripts described below.
+
 ## Quick Start
 
 ### 1. Get Your API Key
