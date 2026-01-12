@@ -64,16 +64,19 @@ current_config = {"width": 40, "height": 25, "robots": 5, "objects": 15, "obstac
 ws_port = 8091  # WebSocket port for dynamic HTML generation
 BASE_URL = os.environ.get("DTAAS_URL", "http://localhost:8080")
 
-# Import login from common
+# Import authentication from common
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
-from common import DEFAULT_USERNAME, DEFAULT_PASSWORD, login
+from common import get_api_key
 
 
 def get_auth_token():
-    """Get authentication token via login."""
-    username = os.environ.get("DTAAS_USERNAME", DEFAULT_USERNAME)
-    password = os.environ.get("DTAAS_PASSWORD", DEFAULT_PASSWORD)
-    return login(BASE_URL, username, password)
+    """Get authentication token from API key."""
+    token = get_api_key()
+    if not token:
+        print("Error: No API key provided. Set TESSERAI_API_KEY environment variable.")
+        print("Get your API key from https://tesserai.io")
+        sys.exit(1)
+    return token
 
 
 def world_to_dict(world: SimulationWorld, tick: int) -> dict:

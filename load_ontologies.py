@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Load example ontologies into the DTaaS service.
+Load example ontologies into the TesseraiDB service.
 
 This script loads the core and domain-specific ontologies with their SHACL shapes
 into the service, making them available for twin validation.
@@ -8,10 +8,18 @@ into the service, making them available for twin validation.
 Uses parallel uploads for faster execution against remote APIs.
 
 Usage:
-    python load_ontologies.py [--base-url URL] [--username USER] [--password PASS]
+    python load_ontologies.py [--base-url URL] [--api-key KEY]
+
+Authentication:
+    Set the TESSERAI_API_KEY environment variable or use --api-key.
+    Get your API key from https://tesserai.io
 
 Example:
-    python load_ontologies.py --base-url http://localhost:8080
+    export TESSERAI_API_KEY="your-api-key"
+    python load_ontologies.py
+
+    # Or with explicit URL and key:
+    python load_ontologies.py --base-url http://localhost:8080 --api-key your-key
 """
 
 import os
@@ -24,7 +32,7 @@ import httpx
 # Add the SDK to the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'sdks', 'python'))
 
-from common import logger, DEFAULT_BASE_URL, DEFAULT_USERNAME, DEFAULT_PASSWORD, login, bulk_upload_ontologies
+from common import logger, DEFAULT_BASE_URL, get_api_key, bulk_upload_ontologies
 
 # Ontology definitions with their IDs and file paths
 ONTOLOGIES = [
@@ -72,28 +80,24 @@ def list_loaded_ontologies(base_url: str, token: str) -> list:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Load example ontologies into DTaaS")
-    parser.add_argument("--base-url", help="DTaaS service base URL", default=DEFAULT_BASE_URL)
-    parser.add_argument("--username", help="Username for authentication", default=DEFAULT_USERNAME)
-    parser.add_argument("--password", help="Password for authentication", default=DEFAULT_PASSWORD)
+    parser = argparse.ArgumentParser(description="Load example ontologies into TesseraiDB")
+    parser.add_argument("--base-url", help="TesseraiDB service base URL", default=DEFAULT_BASE_URL)
+    parser.add_argument("--api-key", help="API key for authentication (or set TESSERAI_API_KEY env var)")
     parser.add_argument("--list", action="store_true", help="List loaded ontologies only")
     parser.add_argument("--ontology", help="Load only a specific ontology by ID")
     parser.add_argument("--sequential", action="store_true", help="Load ontologies one at a time (slower)")
     args = parser.parse_args()
 
-    base_url = os.environ.get("DTAAS_URL", args.base_url)
-    username = os.environ.get("DTAAS_USERNAME", args.username)
-    password = os.environ.get("DTAAS_PASSWORD", args.password)
+    base_url = os.environ.get("TESSERAI_API_URL", args.base_url)
 
-    logger.info(f"Connecting to DTaaS at {base_url}")
+    logger.info(f"Connecting to TesseraiDB at {base_url}")
 
-    # Support token auth via DTAAS_TOKEN env var (for SSO deployments)
-    token = os.environ.get("DTAAS_TOKEN")
-    if token:
-        logger.info("Using token from DTAAS_TOKEN environment variable")
-    else:
-        logger.info(f"Logging in as {username}")
-        token = login(base_url, username, password)
+    # Get API key from argument or environment variable
+    token = args.api_key or get_api_key()
+    if not token:
+        print("Error: No API key provided. Set TESSERAI_API_KEY environment variable or use --api-key")
+        print("Get your API key from https://tesserai.io")
+        sys.exit(1)
 
     if args.list:
         # Just list existing ontologies

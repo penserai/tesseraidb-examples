@@ -19,7 +19,7 @@ import httpx
 # Add the SDK to the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'sdks', 'python'))
 
-from common import logger, DEFAULT_BASE_URL, DEFAULT_USERNAME, DEFAULT_PASSWORD, login
+from common import logger, DEFAULT_BASE_URL, get_api_key
 
 # Example data - Valid vehicle
 VALID_VEHICLE_TURTLE = """
@@ -182,11 +182,13 @@ def cleanup_twin(client: SimpleClient, twin_id: str):
 
 
 def main():
-    base_url = os.environ.get("DTAAS_URL", DEFAULT_BASE_URL)
-    username = os.environ.get("DTAAS_USERNAME", DEFAULT_USERNAME)
-    password = os.environ.get("DTAAS_PASSWORD", DEFAULT_PASSWORD)
-    logger.info(f"Logging in as {username}")
-    token = login(base_url, username, password)
+    base_url = os.environ.get("TESSERAI_API_URL", DEFAULT_BASE_URL)
+    token = get_api_key()
+    if not token:
+        print("Error: No API key provided. Set TESSERAI_API_KEY environment variable.")
+        print("Get your API key from https://tesserai.io")
+        sys.exit(1)
+    logger.info(f"Connecting to TesseraiDB at {base_url}")
     client = SimpleClient(base_url, token)
 
     print_section("DTaaS SHACL Validation Demo")

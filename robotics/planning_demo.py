@@ -30,17 +30,20 @@ from dtaas.exceptions import DTaaSError, NotFoundError, ValidationError
 
 # Add common module to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
-from common import DEFAULT_BASE_URL, DEFAULT_USERNAME, DEFAULT_PASSWORD, login
+from common import DEFAULT_BASE_URL, get_api_key
 
 # Configuration
-BASE_URL = os.environ.get("DTAAS_URL", DEFAULT_BASE_URL)
+BASE_URL = os.environ.get("TESSERAI_API_URL", DEFAULT_BASE_URL)
 
 
 def get_token():
-    """Get authentication token via login."""
-    username = os.environ.get("DTAAS_USERNAME", DEFAULT_USERNAME)
-    password = os.environ.get("DTAAS_PASSWORD", DEFAULT_PASSWORD)
-    return login(BASE_URL, username, password)
+    """Get authentication token from API key."""
+    token = get_api_key()
+    if not token:
+        print("Error: No API key provided. Set TESSERAI_API_KEY environment variable.")
+        print("Get your API key from https://tesserai.io")
+        sys.exit(1)
+    return token
 
 # PDDL domain for simple robot navigation (STRIPS-only)
 SIMPLE_DOMAIN = """

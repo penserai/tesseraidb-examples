@@ -21,16 +21,18 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'sdks', 'python
 from dtaas import DTaaSClient
 from dtaas.exceptions import DTaaSError
 
-from common import DEFAULT_BASE_URL, DEFAULT_USERNAME, DEFAULT_PASSWORD, login
+from common import DEFAULT_BASE_URL, get_api_key
 
-BASE_URL = os.environ.get("DTAAS_URL", DEFAULT_BASE_URL)
+BASE_URL = os.environ.get("TESSERAI_API_URL", DEFAULT_BASE_URL)
 
 
 def create_client() -> DTaaSClient:
-    """Create a DTaaS SDK client with authentication."""
-    username = os.environ.get("DTAAS_USERNAME", DEFAULT_USERNAME)
-    password = os.environ.get("DTAAS_PASSWORD", DEFAULT_PASSWORD)
-    token = login(BASE_URL, username, password)
+    """Create a TesseraiDB SDK client with authentication."""
+    token = get_api_key()
+    if not token:
+        print("Error: No API key provided. Set TESSERAI_API_KEY environment variable.")
+        print("Get your API key from https://tesserai.io")
+        sys.exit(1)
     return DTaaSClient(base_url=BASE_URL, token=token, timeout=60.0)
 
 
