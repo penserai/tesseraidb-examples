@@ -1,219 +1,134 @@
 # TesseraiDB Examples
 
-This repository contains comprehensive example digital twins and scenarios for [TesseraiDB](https://tesserai.io), a semantic knowledge graph database designed for AI agents.
+This directory contains example scripts demonstrating various capabilities of TesseraiDB.
 
-Each example demonstrates how to model complex real-world systems using TesseraiDB's ontology-based approach, including entities, relationships, semantic reasoning, and real-time streaming.
+## Domain Examples (15 Use Cases)
 
-## Demo Environment
+The following domain-specific examples demonstrate TesseraiDB's Digital Twin capabilities:
 
-> **Note:** The `default` tenant on [tesserai.io](https://tesserai.io) includes pre-seeded data for all examples below. You can explore the digital twins, run SPARQL queries, and interact with the data immediately.
+| # | Domain | Description | Script |
+|---|--------|-------------|--------|
+| 1 | **Aerospace** | Satellite constellation with LEO communications, ground stations, and mission control | `aerospace/` |
+| 2 | **Agriculture** | Precision farming with sensors, drones, and tractors | `agriculture/` |
+| 3 | **Alerting System** | Alert management and notification system | `alerting_system/` |
+| 4 | **Automotive** | Fleet management with EVs and telematics | `automotive/` |
+| 5 | **Cascading Failure** | System failure propagation and impact analysis | `cascading_failure/` |
+| 6 | **Energy Grid** | Power grid with renewables and distribution systems | `energy_grid/` |
+| 7 | **Finance** | Portfolio management, risk monitoring, and regulatory compliance | `finance/` |
+| 8 | **Healthcare** | Hospital systems with medical equipment and patient monitoring | `healthcare/` |
+| 9 | **Manufacturing** | Industry 4.0 factory with CNC machines, robots, and QC equipment | `manufacturing/` |
+| 10 | **Predictive Maintenance** | Equipment monitoring and failure prediction | `predictive_maintenance/` |
+| 11 | **Robotics** | Automated fulfillment center with AMRs and robotic arms | `robotics/` |
+| 12 | **Smart Building** | Multi-floor commercial building with HVAC, lighting, and sensors | `smart_building/` |
+| 13 | **Smart City** | Urban infrastructure, transit, and utilities management | `smart_city/` |
+| 14 | **Supply Chain** | Global logistics with warehouses, trucks, and ships | `supply_chain/` |
+| 15 | **Taxation** | Tax compliance and regulatory requirements | `taxation/` |
 
-## Quick Start
+## Semantic Memory Examples (AI Agent Memory)
 
-### 1. Sign Up
+The following examples demonstrate the Semantic Memory system for AI agents. Each example includes:
+- **seed.py** - Seeds example data into TesseraiDB
+- **web_ui.py** - Interactive web dashboard for visualization
+- **simulation.py** - Live simulation for demonstration
 
-Create an account at [tesserai.io](https://tesserai.io) to access the platform.
+| # | Domain | Description | Directory |
+|---|--------|-------------|-----------|
+| 16 | **Code Agent Context** | AI coding assistant memory with debugging sessions, patterns, and reasoning | `code_agent_context/` |
+| 17 | **Personal Assistant** | Context-aware mobile assistance with preferences, reminders, and location awareness | `personal_assistant/` |
+| 18 | **Process Evolution** | Business process management with bottleneck detection and automatic optimization | `process_evolution/` |
 
-### 2. Explore the Data
+### 16. Code Agent Context Management (`code_agent_context/`)
 
-Navigate to the `default` tenant to explore pre-seeded example data:
-- Use the **Twin Explorer** to browse digital twins
-- Use the **SPARQL Editor** to run queries
-- View the **Graph Visualization** to see relationships
+Demonstrates how an autonomous coding agent can use semantic memory to:
+- Maintain context across a coding session (Working Memory)
+- Store reasoning steps and decisions (Episodic Memory)
+- Retrieve relevant documentation or past solutions (Semantic Search)
+- Persist successful patterns for future use (Semantic Memory)
 
-### 3. Use the Python SDK (Optional)
+**Use Case:** AI coding assistants that need to remember past debugging sessions, successful patterns, and project-specific knowledge.
+
+**Quick Start:**
+```bash
+cd code_agent_context
+python seed.py              # Seed example data
+python web_ui.py --port 8122  # Launch dashboard at http://localhost:8122
+python simulation.py        # Run live simulation
+```
+
+### 17. Mobile Personal Assistant (`personal_assistant/`)
+
+Demonstrates context-aware mobile assistance:
+- Store user preferences (Semantic Memory)
+- Log location context and visits (Episodic Memory)
+- Set context-aware reminders with `valid_at` and `expires_at`
+- Query memories filtered by context (e.g., "reminders relevant to Grocery Store")
+
+**Use Case:** Personal AI assistants that learn user preferences, remember past interactions, and provide contextually relevant information.
+
+**Quick Start:**
+```bash
+cd personal_assistant
+python seed.py              # Seed example data
+python web_ui.py --port 8123  # Launch dashboard at http://localhost:8123
+python simulation.py        # Run day simulation
+```
+
+### 18. Business Process Evolution (`process_evolution/`)
+
+Demonstrates adaptive business systems:
+- Define process definitions (Semantic Memory with PROCEDURE type)
+- Log process execution steps and delays (Episodic Memory)
+- Detect patterns and bottlenecks through semantic queries
+- Evolve process definitions based on operational evidence
+
+**Use Case:** Business process management systems that automatically identify inefficiencies and suggest process improvements.
+
+**Quick Start:**
+```bash
+cd process_evolution
+python seed.py              # Seed example data
+python web_ui.py --port 8124  # Launch dashboard at http://localhost:8124
+python simulation.py        # Run process simulation
+```
+
+## Running Examples
+
+### Prerequisites
+
+- Python 3.8+
+- `dtaas` SDK installed (`pip install dtaas` or from `sdks/python`)
+- TesseraiDB server running at `http://localhost:8080`
+
+### Quick Start
 
 ```bash
+# Install SDK (dev mode)
+pip install -e ../sdks/python
+pip install websockets  # Required for web UIs
+
+# Set environment variables
+export TESSERAI_URL="http://localhost:8080"
 export TESSERAI_API_KEY="your-api-key"
-pip install tesserai
+
+# Run Semantic Memory examples
+cd code_agent_context && python seed.py && python web_ui.py
+cd personal_assistant && python seed.py && python web_ui.py
+cd process_evolution && python seed.py && python web_ui.py
+
+# Run Domain examples (seed data first)
+python load_ontologies.py
+python seed_all.py
 ```
 
-## Available Examples
+## Utility Scripts
 
-| Domain | Description | Key Features |
-|--------|-------------|--------------|
-| [Smart Building](smart_building/) | Office building with HVAC, sensors, access control | RSP streaming, real-time alerts |
-| [Manufacturing](manufacturing/) | Industry 4.0 factory with CNC, robots, QC | Production line monitoring |
-| [Healthcare](healthcare/) | Hospital with medical equipment, patient monitoring | Equipment tracking, OR status |
-| [Supply Chain](supply_chain/) | Global logistics with warehouses, trucks, ships | Shipment tracking, inventory |
-| [Smart City](smart_city/) | Urban infrastructure, transit, utilities | Traffic, air quality monitoring |
-| [Robotics](robotics/) | Automated fulfillment center with AMRs | Fleet management, path planning |
-| [Energy Grid](energy_grid/) | Power grid with renewables, storage, distribution | ASP-based grid optimization |
-| [Automotive](automotive/) | Fleet management with EVs, telematics | Battery monitoring, maintenance |
-| [Agriculture](agriculture/) | Precision farming with sensors, drones, tractors | Irrigation, crop health |
-| [Aerospace](aerospace/) | Satellite constellation with ground stations | Orbital mechanics, telemetry |
-| [Finance](finance/) | Trading systems with risk management | Portfolio analytics |
-| [Taxation](taxation/) | Transfer pricing and tax compliance | Entity relationships |
-
-## Advanced Examples
-
-These examples demonstrate production-grade features with realistic simulations and live dashboards:
-
-| Example | Description |
-|---------|-------------|
-| [Predictive Maintenance](predictive_maintenance/) | Industrial equipment health monitoring with Weibull failure modeling and RUL prediction |
-| [Cascading Failure](cascading_failure/) | Infrastructure dependency modeling with SPOF detection and blast radius analysis |
-| [Alerting System](alerting_system/) | Production alerting with configurable rules, escalation policies, and chaos engineering |
-
-## Project Structure
-
-```
-examples/
-├── common.py              # Shared utilities and client initialization
-├── ontologies/           # OWL/Turtle ontology definitions
-│   ├── core.ttl
-│   ├── smart_building.ttl
-│   └── ...
-├── smart_building/
-│   ├── web_ui.py         # Real-time dashboard
-│   └── README.md         # Domain-specific guide
-└── ... (other domains)
-```
-
-## Configuration
-
-### Environment Variables
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `TESSERAI_API_KEY` | (required) | Your TesseraiDB API key |
-| `TESSERAI_API_URL` | `https://api.tesserai.io` | TesseraiDB API endpoint |
-
-### Python Requirements
-
-- Python 3.10 or higher (3.11+ recommended)
-- Install dependencies: `pip install tesserai httpx`
-
-## Using the Examples
-
-### Web Dashboards
-
-Most examples include interactive web dashboards:
-
-```bash
-# Start a dashboard
-python energy_grid/web_ui.py
-
-# Dashboards are available at http://localhost:<port>
-# Check each domain's README for the specific port
-```
-
-### Python SDK Usage
-
-```python
-from common import get_client
-
-# Initialize the client (uses TESSERAI_API_KEY from environment)
-client = get_client()
-
-# List twins by domain
-twins = client.twins.list(domain="smart_building")
-
-# Get a specific twin
-twin = client.twins.get("urn:tesserai:twin:building-001")
-
-# Query with SPARQL
-results = client.query.select("""
-    SELECT ?sensor ?temp WHERE {
-        ?sensor a <http://tesserai.io/ontology/smart_building#TemperatureSensor> ;
-                <http://tesserai.io/ontology/core#currentValue> ?temp .
-        FILTER (?temp > 25)
-    }
-""")
-```
-
-## Ontology Structure
-
-Each domain uses semantic ontologies (OWL 2) to define:
-
-- **Classes**: Types of entities (e.g., `Sensor`, `Vehicle`, `Equipment`)
-- **Properties**: Attributes and relationships between entities
-- **SHACL Shapes**: Data validation constraints
-- **Reasoning Rules**: SWRL-style inference rules
-
-Example ontology hierarchy:
-```
-dtaas:Entity
-├── dtaas:Sensor
-│   ├── bldg:TemperatureSensor
-│   ├── bldg:HumiditySensor
-│   └── bldg:CO2Sensor
-├── dtaas:Equipment
-│   ├── mfg:CNCMachine
-│   └── mfg:Robot
-└── dtaas:Location
-    ├── bldg:Floor
-    └── bldg:Room
-```
-
-## Semantic Reasoning
-
-TesseraiDB supports OWL 2 RL reasoning for automatic inference:
-
-```python
-# Materialize inferences
-client.reasoning.materialize()
-
-# Execute custom rules
-client.reasoning.execute_rules("automotive")
-
-# Get explanations for inferred facts
-explanation = client.reasoning.explain("urn:tesserai:twin:vehicle-001", "LowBattery")
-```
-
-## RDF Stream Processing (RSP)
-
-Real-time monitoring with continuous SPARQL queries:
-
-```python
-from dtaas.models import ContinuousQueryCreate, WindowConfig, WindowType
-
-# Create a stream source
-source = client.rsp.create_source(
-    name="sensor-stream",
-    config={"type": "event_bus", "twin_id_patterns": ["sensor-*"]}
-)
-
-# Create a continuous query with sliding window
-query = client.rsp.create_query(
-    ContinuousQueryCreate(
-        name="High Temperature Alert",
-        sparql="SELECT ?s ?temp WHERE { ?s <temp> ?temp . FILTER(?temp > 28) }",
-        window=WindowConfig(
-            type=WindowType.TIME_BASED,
-            duration_seconds=300,
-            slide_seconds=60
-        ),
-        stream_sources=[source.id]
-    )
-)
-```
-
-## API Reference
-
-For complete API documentation, visit:
-- **API Docs**: [docs.tesserai.io](https://docs.tesserai.io)
-- **Interactive API**: Your TesseraiDB instance at `/swagger-ui/`
-
-## Contributing
-
-We welcome contributions! To add a new domain example:
-
-1. Create a new folder under `examples/`
-2. Create an ontology in `ontologies/`
-3. Add a `README.md` with domain-specific documentation
-4. Include example SPARQL queries demonstrating the domain
-
-## License
-
-This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
-
-## Support
-
-- **Documentation**: [docs.tesserai.io](https://docs.tesserai.io)
-- **Issues**: [GitHub Issues](https://github.com/penserai/tesseraidb-examples/issues)
-- **Community**: [Discord](https://discord.gg/tesserai)
-
----
-
-Copyright 2026 Penserai Inc.
+| Script | Description |
+|--------|-------------|
+| `common.py` | Shared utilities and helper functions |
+| `load_ontologies.py` | Load all domain ontologies |
+| `seed_all.py` | Seed all domain example data |
+| `queries.py` | Example SPARQL queries |
+| `reasoning_demo.py` | OWL 2 RL reasoning demonstration |
+| `domain_rules.py` | Custom domain rules examples |
+| `validation_demo.py` | SHACL validation demonstration |
+| `cross_domain_scenario.py` | Cross-domain relationship queries |
