@@ -1,0 +1,62 @@
+{
+  "id": "accessibility-session",
+  "version": "1",
+  "intent_instructions": "Select configure_accessible_session only for supported presentation accommodations in a registered event session; otherwise select unknown.",
+  "intents": {
+    "configure_accessible_session": {
+      "description": "Configure a bounded presentation accommodation without collecting diagnosis data",
+      "type_iri": "urn:agent-calculus:accessibility:AccessibilitySessionRequest",
+      "required_slots": ["accommodation", "duration", "participant", "room", "session"],
+      "action": "configure_accessible_session"
+    }
+  },
+  "slots": {
+    "accommodation": {"description": "a supported presentation accommodation profile", "predicate_iri": "urn:agent-calculus:accessibility:accommodation"},
+    "duration": {"description": "a bounded session configuration duration", "predicate_iri": "urn:agent-calculus:accessibility:duration"},
+    "participant": {"description": "a pseudonymous registered participant", "predicate_iri": "urn:agent-calculus:accessibility:participant"},
+    "room": {"description": "a registered event room", "predicate_iri": "urn:agent-calculus:accessibility:room"},
+    "session": {"description": "a registered event session", "predicate_iri": "urn:agent-calculus:accessibility:session"}
+  },
+  "actions": {
+    "configure_accessible_session": {
+      "description": "Produce a simulated bounded presentation configuration",
+      "action_iri": "urn:agent-calculus:accessibility:configure-accessible-session",
+      "capability_class_iri": "urn:agent-calculus:accessibility:SupportedAccommodationProfile"
+    }
+  },
+  "harvest_rules": [
+    {"kind": "reject", "id": "reject-medical-safety", "pattern": "(?i)\\b(?:diagnosis|medical records?|disable (?:the )?(?:room )?alarms?|disable fire alarms?)\\b", "code": "medical_or_safety_boundary"},
+    {
+      "kind": "closed_lookup",
+      "id": "session-registry",
+      "slot": "session",
+      "pattern": "(?i)\\b(?P<value>EVT-[0-9]{3,8})\\b",
+      "capture": "value",
+      "values": {"EVT-204": {"type": "iri", "value": "urn:agent-calculus:accessibility:event-session-evt-204"}},
+      "rejection_code": "unregistered_session"
+    },
+    {"kind": "alias", "id": "participant-jordan", "slot": "participant", "aliases": ["Jordan"], "value": {"type": "iri", "value": "urn:agent-calculus:accessibility:participant-jordan-42"}, "whole_word": true},
+    {"kind": "alias", "id": "room-a", "slot": "room", "aliases": ["room A"], "value": {"type": "iri", "value": "urn:agent-calculus:accessibility:room-a"}, "whole_word": true},
+    {"kind": "alias", "id": "profile-captions-contrast", "slot": "accommodation", "aliases": ["captions and high contrast", "high contrast and captions"], "value": {"type": "iri", "value": "urn:agent-calculus:accessibility:captions-high-contrast"}, "whole_word": true},
+    {"kind": "alias", "id": "duration-90m", "slot": "duration", "aliases": ["90 minutes"], "value": {"type": "iri", "value": "urn:agent-calculus:accessibility:duration-90m"}, "whole_word": true}
+  ],
+  "lexical_coverage": {
+    "rejection_code": "unmatched_lexical_input",
+    "allowlisted_ignores": [
+      {"id": "accessibility-connectives", "pattern": "(?i)\\b(?:configure|for|in|the|a|an|please|session|with)\\b"}
+    ]
+  },
+  "prompts": {
+    "initial": {"id": "accessibility.initial", "text": "Which registered session needs a supported presentation accommodation?"},
+    "ambiguous": {"id": "accessibility.ambiguous", "text": "Choose one registered participant, session, room, profile, and duration."},
+    "out_of_domain": {"id": "accessibility.out-of-domain", "text": "That request is outside supported presentation accommodations."},
+    "rejected": {"id": "accessibility.rejected", "text": "The request was rejected without changing a venue system."},
+    "missing_slots": {
+      "accommodation": {"id": "accessibility.profile.required", "text": "Choose the supported captions and high-contrast profile."},
+      "duration": {"id": "accessibility.duration.required", "text": "Choose the supported 90-minute duration."},
+      "participant": {"id": "accessibility.participant.required", "text": "Choose the pseudonymous registered participant."},
+      "room": {"id": "accessibility.room.required", "text": "Choose the registered event room."},
+      "session": {"id": "accessibility.session.required", "text": "Provide the registered event-session ID."}
+    }
+  }
+}

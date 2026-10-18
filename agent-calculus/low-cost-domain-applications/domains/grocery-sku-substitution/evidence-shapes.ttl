@@ -1,0 +1,28 @@
+@prefix : <urn:agent-calculus:grocery-sku-substitution:> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:SubstitutionEvidenceShape a sh:NodeShape ; sh:targetClass :SubstitutionEvidence ; sh:closed true ; sh:ignoredProperties ( rdf:type ) ;
+  sh:property [ sh:path :orderLine ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :line-73 ] ;
+  sh:property [ sh:path :requestedSku ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :sku-1001 ] ;
+  sh:property [ sh:path :substituteSku ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :sku-2007 ] ;
+  sh:property [ sh:path :preference ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :pref-77 ] ;
+  sh:property [ sh:path :packageUnit ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :carton ] ;
+  sh:property [ sh:path :consentActive ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:boolean ; sh:hasValue true ] ;
+  sh:property [ sh:path :preferenceCurrent ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:boolean ; sh:hasValue true ] ;
+  sh:property [ sh:path :veganCertified ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:boolean ; sh:hasValue true ] ;
+  sh:property [ sh:path :containsMilk ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:boolean ; sh:hasValue false ] ;
+  sh:property [ sh:path :containsPeanut ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:boolean ; sh:hasValue false ] ;
+  sh:property [ sh:path :sealed ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:boolean ; sh:hasValue true ] ;
+  sh:property [ sh:path :barcodeVerified ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:boolean ; sh:hasValue true ] ;
+  sh:property [ sh:path :stock ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 2 ] ;
+  sh:property [ sh:path :requestedPriceCents ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 0 ] ;
+  sh:property [ sh:path :substitutePriceCents ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 0 ] ;
+  sh:property [ sh:path :priceDeltaCents ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 0 ; sh:maxInclusive 100 ] ;
+  sh:property [ sh:path :requestedPackageSizeMl ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 1000 ; sh:maxInclusive 1000 ; sh:lessThanOrEquals :substitutePackageSizeMl ] ;
+  sh:property [ sh:path :substitutePackageSizeMl ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 1000 ; sh:maxInclusive 1000 ; sh:lessThanOrEquals :requestedPackageSizeMl ] ;
+  sh:property [ sh:path :freshnessDays ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 7 ] ;
+  sh:property [ sh:path :observedAt ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:dateTime ] ;
+  sh:property [ sh:path :catalogRevision ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 4 ] ;
+  sh:property [ sh:path :source ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :signed-store-catalog ] .

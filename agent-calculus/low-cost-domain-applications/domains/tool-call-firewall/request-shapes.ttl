@@ -1,0 +1,14 @@
+@prefix : <urn:agent-calculus:tool-call-firewall:> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+
+:ToolCallRequestShape
+    a sh:NodeShape ;
+    sh:targetClass :ToolCallRequest ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:message "firewall.request.closed" ;
+    sh:property [ sh:path :ticket ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :ticket-cs-884 ; sh:message "firewall.ticket.required" ] ;
+    sh:property [ sh:path :order ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :order-ord-1042 ; sh:message "firewall.order.required" ] ;
+    sh:property [ sh:path :operation ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :read-shipment-status ; sh:message "firewall.operation.required" ] ;
+    sh:property [ sh:path :duration ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :duration-60s ; sh:message "firewall.duration.required" ] .

@@ -1,0 +1,31 @@
+@prefix : <urn:agent-calculus:maintenance-work-permit:> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:PermitSafetyEvidenceShape a sh:NodeShape ; sh:targetClass :PermitSafetyEvidence ; sh:closed true ; sh:ignoredProperties ( rdf:type ) ;
+  sh:property [ sh:path :workOrder ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :wo-88219 ] ;
+  sh:property [ sh:path :asset ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :p-17 ] ;
+  sh:property [ sh:path :location ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :unit-3 ] ;
+  sh:property [ sh:path :permit ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :ptw-4412 ] ;
+  sh:property [ sh:path :task ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :mechanical-seal-replacement ] ;
+  sh:property [ sh:path :shift ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :day-shift ] ;
+  sh:property [ sh:path :durationHours ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 1 ; sh:maxInclusive 2 ] ;
+  sh:property [ sh:path :verifiedIsolationPoints ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 4 ; sh:maxInclusive 4 ] ;
+  sh:property [ sh:path :requiredIsolationPoints ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 4 ; sh:maxInclusive 4 ] ;
+  sh:property [ sh:path :isolationSignatures ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 2 ] ;
+  sh:property [ sh:path :residualVoltage ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:decimal ; sh:minInclusive "0"^^xsd:decimal ; sh:maxInclusive "0"^^xsd:decimal ] ;
+  sh:property [ sh:path :residualPressureBar ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:decimal ; sh:minInclusive "0"^^xsd:decimal ; sh:maxInclusive "0"^^xsd:decimal ] ;
+  sh:property [ sh:path :oxygenPercent ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:decimal ; sh:minInclusive "19.5"^^xsd:decimal ; sh:maxInclusive "23.5"^^xsd:decimal ] ;
+  sh:property [ sh:path :lelPercent ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:decimal ; sh:maxInclusive "0"^^xsd:decimal ] ;
+  sh:property [ sh:path :h2sPpm ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:decimal ; sh:maxInclusive "0"^^xsd:decimal ] ;
+  sh:property [ sh:path :gasDetectorCalibrated ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:boolean ; sh:hasValue true ] ;
+  sh:property [ sh:path :ppeVerified ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:boolean ; sh:hasValue true ] ;
+  sh:property [ sh:path :assetState ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :stopped ] ;
+  sh:property [ sh:path :operationsState ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :maintenance-ready ] ;
+  sh:property [ sh:path :concurrentWorkCount ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 0 ; sh:maxInclusive 0 ] ;
+  sh:property [ sh:path :conflictingPermitCount ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 0 ; sh:maxInclusive 0 ] ;
+  sh:property [ sh:path :permitRevision ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 3 ; sh:maxInclusive 3 ] ;
+  sh:property [ sh:path :observedAt ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:dateTime ] ;
+  sh:property [ sh:path :provenanceDigest ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:pattern "^sha256:[0-9a-f]{64}$" ] ;
+  sh:property [ sh:path :source ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :signed-maintenance-safety-snapshot ] .

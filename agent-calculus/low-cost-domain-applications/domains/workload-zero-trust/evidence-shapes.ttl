@@ -1,0 +1,25 @@
+@prefix : <urn:agent-calculus:workload-zero-trust:> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:AttestationEvidenceShape a sh:NodeShape ; sh:targetClass :AttestationEvidence ; sh:closed true ; sh:ignoredProperties ( rdf:type ) ;
+  sh:property [ sh:path :caller ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :inventory-api ] ;
+  sh:property [ sh:path :target ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :stock-api ] ;
+  sh:property [ sh:path :callerSpiffeId ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:pattern "^spiffe://example.test/" ] ;
+  sh:property [ sh:path :targetSpiffeId ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:pattern "^spiffe://example.test/" ] ;
+  sh:property [ sh:path :namespace ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:pattern "^inventory$" ] ;
+  sh:property [ sh:path :svidValid ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:boolean ; sh:hasValue true ] ;
+  sh:property [ sh:path :attestationDigest ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:pattern "^sha256:[0-9a-f]{64}$" ] ;
+  sh:property [ sh:path :deploymentDigest ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:pattern "^sha256:[0-9a-f]{64}$" ; sh:hasValue "sha256:ee8c468af77ab99178c3aeaa7508a9a3f658a1bf844848dc24b51a57b76d9239" ] ;
+  sh:property [ sh:path :policyDigest ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:pattern "^sha256:[0-9a-f]{64}$" ; sh:hasValue "sha256:b7ae5a1613dbfe114a765204c6b28e642566840b9816f3189cf296cd28b1f758" ] ;
+  sh:property [ sh:path :method ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :http-get ] ;
+  sh:property [ sh:path :endpoint ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :availability-endpoint ] ;
+  sh:property [ sh:path :issuerHealthy ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:boolean ; sh:hasValue true ] ;
+  sh:property [ sh:path :issuanceAllowed ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:boolean ; sh:hasValue true ] ;
+  sh:property [ sh:path :nonce ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 6 ] ;
+  sh:property [ sh:path :durationMinutes ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 1 ; sh:maxInclusive 10 ] ;
+  sh:property [ sh:path :observedAt ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:dateTime ] ;
+  sh:property [ sh:path :evaluatedAt ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:dateTime ; sh:lessThan :expiresAt ] ;
+  sh:property [ sh:path :expiresAt ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:dateTime ] ;
+  sh:property [ sh:path :source ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :signed-attestation-service ] .

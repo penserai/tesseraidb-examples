@@ -1,0 +1,7 @@
+@prefix : <urn:agent-calculus:secops-containment:> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:containment-evidence-inc-7741 a :ContainmentEvidence ;
+  :incident :inc-7741 ; :alert :alt-9007 ; :host :fin-lt-204 ; :incidentStatus :active ; :severity :critical ; :confidence "0.98"^^xsd:decimal ; :correlatedSignalCount 2 ;
+  :edrHealth :healthy ; :isolationSupported true ; :isolationException false ; :assetCriticality :medium ; :breakGlassActive false ; :durationMinutes 30 ;
+  :observedAt "2026-10-17T18:30:00Z"^^xsd:dateTime ; :sensorObservedAt "2026-10-17T18:29:15Z"^^xsd:dateTime ; :source :signed-siem-edr-snapshot .

@@ -1,0 +1,116 @@
+{
+  "id": "ci-cd-canary",
+  "version": "1",
+  "intent_instructions": "Select deploy_canary only for an explicit request to deploy the registered artifact through the bounded canary workflow; otherwise select unknown.",
+  "intents": {
+    "deploy_canary": {
+      "description": "Deploy a signed artifact through an approved bounded canary rollout",
+      "type_iri": "urn:agent-calculus:ci-cd-canary:CanaryDeploymentRequest",
+      "required_slots": ["artifact", "change", "controller", "environment", "ring", "rollout", "service"],
+      "action": "create_canary_deployment"
+    }
+  },
+  "slots": {
+    "artifact": { "description": "a registered immutable build artifact", "predicate_iri": "urn:agent-calculus:ci-cd-canary:artifact" },
+    "change": { "description": "an active change ticket", "predicate_iri": "urn:agent-calculus:ci-cd-canary:change" },
+    "controller": { "description": "an approved deployment controller", "predicate_iri": "urn:agent-calculus:ci-cd-canary:controller" },
+    "environment": { "description": "the protected target environment", "predicate_iri": "urn:agent-calculus:ci-cd-canary:environment" },
+    "ring": { "description": "a bounded initial traffic ring", "predicate_iri": "urn:agent-calculus:ci-cd-canary:ring" },
+    "rollout": { "description": "the approved canary rollout strategy", "predicate_iri": "urn:agent-calculus:ci-cd-canary:rollout" },
+    "service": { "description": "the registered service", "predicate_iri": "urn:agent-calculus:ci-cd-canary:service" }
+  },
+  "actions": {
+    "create_canary_deployment": {
+      "description": "Create a simulated proof-bound canary deployment",
+      "action_iri": "urn:agent-calculus:ci-cd-canary:create-canary-deployment",
+      "capability_class_iri": "urn:agent-calculus:ci-cd-canary:ApprovedCanaryRollout"
+    }
+  },
+  "harvest_rules": [
+    {
+      "kind": "reject",
+      "id": "reject-pipeline-bypass",
+      "pattern": "(?i)\\b(?:bypass tests|skip tests|unsigned artifact|full[- ]fleet deploy)\\b",
+      "code": "forbidden_pipeline_bypass"
+    },
+    {
+      "kind": "closed_lookup",
+      "id": "artifact-registry",
+      "slot": "artifact",
+      "pattern": "(?i)\\b(?P<value>BLD-[0-9]{4,8})\\b",
+      "capture": "value",
+      "values": { "BLD-8421": { "type": "iri", "value": "urn:agent-calculus:ci-cd-canary:build-bld-8421" } },
+      "rejection_code": "unregistered_artifact"
+    },
+    {
+      "kind": "closed_lookup",
+      "id": "change-registry",
+      "slot": "change",
+      "pattern": "(?i)\\b(?P<value>CHG-[0-9]{4,8})\\b",
+      "capture": "value",
+      "values": { "CHG-9917": { "type": "iri", "value": "urn:agent-calculus:ci-cd-canary:change-chg-9917" } },
+      "rejection_code": "unregistered_change"
+    },
+    {
+      "kind": "alias",
+      "id": "rollout-canary",
+      "slot": "rollout",
+      "aliases": ["canary deploy"],
+      "value": { "type": "iri", "value": "urn:agent-calculus:ci-cd-canary:canary-rollout" },
+      "whole_word": true
+    },
+    {
+      "kind": "alias",
+      "id": "service-checkout",
+      "slot": "service",
+      "aliases": ["checkout"],
+      "value": { "type": "iri", "value": "urn:agent-calculus:ci-cd-canary:checkout-api" },
+      "whole_word": true
+    },
+    {
+      "kind": "alias",
+      "id": "environment-production",
+      "slot": "environment",
+      "aliases": ["production"],
+      "value": { "type": "iri", "value": "urn:agent-calculus:ci-cd-canary:production" },
+      "whole_word": true
+    },
+    {
+      "kind": "alias",
+      "id": "controller-argo",
+      "slot": "controller",
+      "aliases": ["argo"],
+      "value": { "type": "iri", "value": "urn:agent-calculus:ci-cd-canary:argo-rollouts" },
+      "whole_word": true
+    },
+    {
+      "kind": "alias",
+      "id": "ring-one",
+      "slot": "ring",
+      "aliases": ["ring one"],
+      "value": { "type": "iri", "value": "urn:agent-calculus:ci-cd-canary:ring-one-five-percent" },
+      "whole_word": true
+    }
+  ],
+  "lexical_coverage": {
+    "rejection_code": "unmatched_release_language",
+    "allowlisted_ignores": [
+      { "id": "release-connectives", "pattern": "(?i)\\b(?:to|via|use|under|for|please|the|a|an)\\b" }
+    ]
+  },
+  "prompts": {
+    "initial": { "id": "ci-cd.initial", "text": "Which registered service and build should enter the bounded canary workflow?" },
+    "ambiguous": { "id": "ci-cd.ambiguous", "text": "Choose exactly one issued deployment candidate." },
+    "out_of_domain": { "id": "ci-cd.out-of-domain", "text": "That request is outside the installed canary-deployment domain." },
+    "rejected": { "id": "ci-cd.rejected", "text": "The deployment request was rejected without starting a rollout." },
+    "missing_slots": {
+      "artifact": { "id": "ci-cd.artifact.required", "text": "Provide the registered immutable build ID." },
+      "change": { "id": "ci-cd.change.required", "text": "Provide the active change-ticket ID." },
+      "controller": { "id": "ci-cd.controller.required", "text": "Choose the approved deployment controller." },
+      "environment": { "id": "ci-cd.environment.required", "text": "Choose the protected target environment." },
+      "ring": { "id": "ci-cd.ring.required", "text": "Choose the bounded initial canary ring." },
+      "rollout": { "id": "ci-cd.rollout.required", "text": "Confirm the supported rollout strategy: canary deploy." },
+      "service": { "id": "ci-cd.service.required", "text": "Choose the registered service." }
+    }
+  }
+}

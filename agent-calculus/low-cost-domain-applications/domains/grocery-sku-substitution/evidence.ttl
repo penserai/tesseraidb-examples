@@ -1,0 +1,9 @@
+@prefix : <urn:agent-calculus:grocery-sku-substitution:> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:substitution-evidence-line-73 a :SubstitutionEvidence ;
+  :orderLine :line-73 ; :requestedSku :sku-1001 ; :substituteSku :sku-2007 ; :preference :pref-77 ; :packageUnit :carton ;
+  :consentActive true ; :preferenceCurrent true ; :veganCertified true ;
+  :containsMilk false ; :containsPeanut false ; :sealed true ; :barcodeVerified true ; :stock 14 ; :requestedPriceCents 399 ; :substitutePriceCents 449 ; :priceDeltaCents 50 ;
+  :requestedPackageSizeMl 1000 ; :substitutePackageSizeMl 1000 ; :freshnessDays 42 ;
+  :observedAt "2026-10-17T18:36:15Z"^^xsd:dateTime ; :catalogRevision "rev-8441"^^xsd:string ; :source :signed-store-catalog .

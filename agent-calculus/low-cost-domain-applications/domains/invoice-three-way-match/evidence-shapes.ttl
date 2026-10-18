@@ -1,0 +1,27 @@
+@prefix : <urn:agent-calculus:invoice-three-way-match:> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:MatchEvidenceShape a sh:NodeShape ; sh:targetClass :MatchEvidence ; sh:closed true ; sh:ignoredProperties ( rdf:type ) ;
+  sh:property [ sh:path :invoice ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :inv-88231 ] ;
+  sh:property [ sh:path :purchaseOrder ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :po-7319 ] ;
+  sh:property [ sh:path :goodsReceipt ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :gr-5512 ] ;
+  sh:property [ sh:path :vendor ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :sup-0144 ] ;
+  sh:property [ sh:path :currency ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :usd ] ;
+  sh:property [ sh:path :orderedQuantity ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 100 ; sh:maxInclusive 100 ] ;
+  sh:property [ sh:path :invoicedQuantity ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 100 ; sh:maxInclusive 100 ] ;
+  sh:property [ sh:path :receivedQuantity ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 100 ; sh:maxInclusive 100 ] ;
+  sh:property [ sh:path :orderedUnitPriceCents ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 2450 ; sh:maxInclusive 2450 ] ;
+  sh:property [ sh:path :invoicedUnitPriceCents ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 2450 ; sh:maxInclusive 2450 ] ;
+  sh:property [ sh:path :subtotalCents ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 245000 ; sh:maxInclusive 245000 ] ;
+  sh:property [ sh:path :taxCents ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 19600 ; sh:maxInclusive 19600 ] ;
+  sh:property [ sh:path :totalCents ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 264600 ; sh:maxInclusive 264600 ] ;
+  sh:property [ sh:path :toleranceBasisPoints ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 0 ; sh:maxInclusive 50 ] ;
+  sh:property [ sh:path :duplicateCount ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 0 ; sh:maxInclusive 0 ] ;
+  sh:property [ sh:path :poStatus ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :approved ] ;
+  sh:property [ sh:path :receiptStatus ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :accepted ] ;
+  sh:property [ sh:path :invoiceStatus ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :pending-match ] ;
+  sh:property [ sh:path :vendorFingerprint ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:pattern "^sha256:[0-9a-f]{64}$" ] ;
+  sh:property [ sh:path :observedAt ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:dateTime ] ;
+  sh:property [ sh:path :source ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :signed-erp-snapshot ] .

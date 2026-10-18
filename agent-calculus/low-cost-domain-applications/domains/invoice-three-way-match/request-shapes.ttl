@@ -1,0 +1,11 @@
+@prefix : <urn:agent-calculus:invoice-three-way-match:> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+
+:MatchRequestShape a sh:NodeShape ; sh:targetClass :MatchRequest ; sh:closed true ; sh:ignoredProperties ( rdf:type ) ;
+  sh:property [ sh:path :invoice ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :inv-88231 ] ;
+  sh:property [ sh:path :purchaseOrder ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :po-7319 ] ;
+  sh:property [ sh:path :goodsReceipt ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :gr-5512 ] ;
+  sh:property [ sh:path :vendor ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :sup-0144 ] ;
+  sh:property [ sh:path :releaseOperation ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :payment-release-proposal ] ;
+  sh:property [ sh:path :approvalTier ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :ap-tier-one ] .

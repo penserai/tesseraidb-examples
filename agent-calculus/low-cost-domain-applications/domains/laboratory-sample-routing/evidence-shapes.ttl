@@ -1,0 +1,25 @@
+@prefix : <urn:agent-calculus:laboratory-sample-routing:> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:SampleRoutingEvidenceShape a sh:NodeShape ; sh:targetClass :SampleRoutingEvidence ; sh:closed true ; sh:ignoredProperties ( rdf:type ) ;
+  sh:property [ sh:path :accession ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :acc-2048 ] ;
+  sh:property [ sh:path :specimen ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :serum ] ;
+  sh:property [ sh:path :assay ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :potassium-assay ] ;
+  sh:property [ sh:path :laboratory ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :central-chemistry ] ;
+  sh:property [ sh:path :analyzer ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :chem-7 ] ;
+  sh:property [ sh:path :custody ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :coc-881 ] ;
+  sh:property [ sh:path :biosafety ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :biosafety-two ] ;
+  sh:property [ sh:path :labelVerified ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:boolean ; sh:hasValue true ] ;
+  sh:property [ sh:path :custodySigned ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:boolean ; sh:hasValue true ] ;
+  sh:property [ sh:path :qcCurrent ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:boolean ; sh:hasValue true ] ;
+  sh:property [ sh:path :biosafetyLevel ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 2 ; sh:maxInclusive 2 ] ;
+  sh:property [ sh:path :temperatureMillicelsius ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 2000 ; sh:maxInclusive 8000 ] ;
+  sh:property [ sh:path :queueCapacity ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 1 ] ;
+  sh:property [ sh:path :volumeMicroliters ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 1000 ] ;
+  sh:property [ sh:path :hemolysisIndex ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:maxInclusive 20 ] ;
+  sh:property [ sh:path :stabilityRemainingMinutes ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 45 ] ;
+  sh:property [ sh:path :observedAt ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:dateTime ] ;
+  sh:property [ sh:path :custodyDigest ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:pattern "^sha256:[0-9a-f]{64}$" ; sh:hasValue "sha256:8dd12a2be68a091fad5343df5f6efc932633a04397b40ba31770bc2cf40173e4" ] ;
+  sh:property [ sh:path :source ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :signed-lims-qc-snapshot ] .

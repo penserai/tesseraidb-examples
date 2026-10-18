@@ -1,0 +1,12 @@
+@prefix : <urn:agent-calculus:supplier-master-resolution:> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+
+:SupplierResolutionRequestShape
+    a sh:NodeShape ; sh:targetClass :SupplierResolutionRequest ; sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ; sh:message "supplier-resolution.request.closed" ;
+    sh:property [ sh:path :stagingRecord ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :staging-record-stg-9012 ; sh:message "supplier-resolution.staging-record.required" ] ;
+    sh:property [ sh:path :reportedName ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :name-northwind-components ; sh:message "supplier-resolution.reported-name.required" ] ;
+    sh:property [ sh:path :canonicalSupplier ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :supplier-sup-00417 ; sh:message "supplier-resolution.supplier.required" ] ;
+    sh:property [ sh:path :location ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :manchester ; sh:message "supplier-resolution.location.required" ] ;
+    sh:property [ sh:path :resolution ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :link-existing ; sh:message "supplier-resolution.operation.required" ] .

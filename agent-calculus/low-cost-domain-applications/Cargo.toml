@@ -1,0 +1,27 @@
+[package]
+name = "agent-calculus-example-low-cost-domain-applications"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+publish = false
+description = "Closed-domain Agent Calculus applications at micro-decision scale"
+
+[dependencies]
+agent-calculus.workspace = true
+agent-calculus-domain.workspace = true
+agent-calculus-ollama.workspace = true
+agent-calculus-shacl.workspace = true
+agent-calculus-sroiq.workspace = true
+async-trait.workspace = true
+clap.workspace = true
+oxigraph.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+time.workspace = true
+tokio.workspace = true
+
+[lints]
+workspace = true

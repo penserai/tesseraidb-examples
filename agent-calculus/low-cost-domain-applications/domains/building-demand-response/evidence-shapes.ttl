@@ -1,0 +1,25 @@
+@prefix : <urn:agent-calculus:building-demand-response:> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:DemandResponseEvidenceShape a sh:NodeShape ; sh:targetClass :DemandResponseEvidence ; sh:closed true ; sh:ignoredProperties ( rdf:type ) ;
+  sh:property [ sh:path :event ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :dr-778 ] ;
+  sh:property [ sh:path :building ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :hq-1 ] ;
+  sh:property [ sh:path :zone ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :zone-4e ] ;
+  sh:property [ sh:path :equipment ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :ahu-4e ] ;
+  sh:property [ sh:path :gridSignalVerified ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:boolean ; sh:hasValue true ] ;
+  sh:property [ sh:path :occupied ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:boolean ; sh:hasValue false ] ;
+  sh:property [ sh:path :temperatureCelsius ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:decimal ; sh:minInclusive "20.0"^^xsd:decimal ; sh:maxInclusive "24.5"^^xsd:decimal ] ;
+  sh:property [ sh:path :proposedSetpointCelsius ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:decimal ; sh:minInclusive "20.0"^^xsd:decimal ; sh:maxInclusive "24.5"^^xsd:decimal ; sh:lessThanOrEquals :comfortMaxCelsius ] ;
+  sh:property [ sh:path :comfortMinCelsius ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:decimal ; sh:minInclusive "20.0"^^xsd:decimal ; sh:maxInclusive "20.0"^^xsd:decimal ; sh:lessThanOrEquals :proposedSetpointCelsius ] ;
+  sh:property [ sh:path :comfortMaxCelsius ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:decimal ; sh:minInclusive "24.5"^^xsd:decimal ; sh:maxInclusive "24.5"^^xsd:decimal ] ;
+  sh:property [ sh:path :humidityPercent ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:decimal ; sh:minInclusive "30"^^xsd:decimal ; sh:maxInclusive "60"^^xsd:decimal ] ;
+  sh:property [ sh:path :co2Ppm ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:maxInclusive 1000 ] ;
+  sh:property [ sh:path :criticalLoadCount ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 0 ; sh:maxInclusive 0 ] ;
+  sh:property [ sh:path :lifeSafetyInterlockClear ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:boolean ; sh:hasValue true ] ;
+  sh:property [ sh:path :baselineKw ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:decimal ; sh:minInclusive "0"^^xsd:decimal ] ;
+  sh:property [ sh:path :projectedKw ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:decimal ; sh:minInclusive "0"^^xsd:decimal ; sh:maxInclusive "85"^^xsd:decimal ; sh:lessThanOrEquals :baselineKw ; sh:lessThanOrEquals :eventCapKw ] ;
+  sh:property [ sh:path :eventCapKw ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:decimal ; sh:minInclusive "85"^^xsd:decimal ; sh:maxInclusive "85"^^xsd:decimal ] ;
+  sh:property [ sh:path :observedAt ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:dateTime ] ;
+  sh:property [ sh:path :source ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :signed-bms-grid-snapshot ] .

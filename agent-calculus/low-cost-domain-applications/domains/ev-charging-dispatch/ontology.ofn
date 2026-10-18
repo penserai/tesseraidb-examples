@@ -1,0 +1,10 @@
+Prefix(:=<urn:agent-calculus:ev-charging-dispatch:>)
+Ontology(
+ Declaration(Class(:AuthorizedFleetOptimizer)) Declaration(Class(:ManagedFleetEv)) Declaration(Class(:AvailableDepotCharger)) Declaration(Class(:FleetDepot)) Declaration(Class(:Tariff)) Declaration(Class(:ChargeWindow)) Declaration(Class(:ScheduledChargeProposal)) Declaration(Class(:ApprovedChargeProposalOrchestrator))
+ Declaration(ObjectProperty(:authorizedFor)) Declaration(ObjectProperty(:assignedTo)) Declaration(ObjectProperty(:installedAt)) Declaration(ObjectProperty(:appliesDuring)) Declaration(ObjectProperty(:controls)) Declaration(ObjectProperty(:supportsOperation))
+ Declaration(NamedIndividual(:fleet-optimizer)) Declaration(NamedIndividual(:van-042)) Declaration(NamedIndividual(:evse-17)) Declaration(NamedIndividual(:depot-west)) Declaration(NamedIndividual(:t-low)) Declaration(NamedIndividual(:w-0200)) Declaration(NamedIndividual(:scheduled-charge)) Declaration(NamedIndividual(:charge-proposal-orchestrator)) Declaration(NamedIndividual(:propose-scheduled-charge))
+ ClassAssertion(:AuthorizedFleetOptimizer :fleet-optimizer) ClassAssertion(:ManagedFleetEv :van-042) ClassAssertion(:AvailableDepotCharger :evse-17) ClassAssertion(:FleetDepot :depot-west) ClassAssertion(:Tariff :t-low) ClassAssertion(:ChargeWindow :w-0200) ClassAssertion(:ApprovedChargeProposalOrchestrator :charge-proposal-orchestrator)
+ ClassAssertion(:ScheduledChargeProposal :scheduled-charge) ClassAssertion(:ScheduledChargeProposal :propose-scheduled-charge)
+ ObjectPropertyAssertion(:authorizedFor :fleet-optimizer :depot-west) ObjectPropertyAssertion(:assignedTo :van-042 :depot-west) ObjectPropertyAssertion(:installedAt :evse-17 :depot-west) ObjectPropertyAssertion(:appliesDuring :t-low :w-0200) ObjectPropertyAssertion(:controls :charge-proposal-orchestrator :evse-17)
+ ObjectPropertyAssertion(:supportsOperation :charge-proposal-orchestrator :scheduled-charge)
+)

@@ -1,0 +1,25 @@
+@prefix : <urn:agent-calculus:data-privacy:> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:DatasetCatalogEvidenceShape
+    a sh:NodeShape ;
+    sh:targetClass :DatasetCatalogEvidence ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:message "privacy.catalog.closed" ;
+    sh:property [ sh:path :dataset ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:in ( :customer-retention-v3 ) ; sh:message "privacy.catalog.dataset" ] ;
+    sh:property [ sh:path :classification ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:in ( :personal-data ) ; sh:message "privacy.catalog.classification" ] ;
+    sh:property [ sh:path :residency ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:in ( :eu ) ; sh:message "privacy.catalog.residency" ] ;
+    sh:property [ sh:path :allowedPurpose ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:in ( :quarterly-retention-planning ) ; sh:message "privacy.catalog.purpose" ] ;
+    sh:property [ sh:path :availableMeasure ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:in ( :churned-customer-count ) ; sh:message "privacy.catalog.measure" ] ;
+    sh:property [ sh:path :allowedDimension ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:in ( :country ) ; sh:message "privacy.catalog.dimension" ] ;
+    sh:property [ sh:path :reportingPeriod ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :2026-q3 ; sh:message "privacy.catalog.period" ] ;
+    sh:property [ sh:path :allowedAggregation ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :count ; sh:message "privacy.catalog.aggregation" ] ;
+    sh:property [ sh:path :requiredProtection ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :small-cell-suppression-k25 ; sh:message "privacy.catalog.protection" ] ;
+    sh:property [ sh:path :minimumGroupSize ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 25 ; sh:message "privacy.catalog.minimum-group" ] ;
+    sh:property [ sh:path :observedAtUnix ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 0 ; sh:message "privacy.catalog.observed-at" ] ;
+    sh:property [ sh:path :evaluatedAtUnix ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 1792278000 ; sh:maxInclusive 1792278300 ; sh:message "privacy.catalog.evaluated-at" ] ;
+    sh:property [ sh:path :snapshot ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:message "privacy.catalog.snapshot" ] ;
+    sh:property [ sh:path :source ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:in ( :data-catalog ) ; sh:message "privacy.catalog.source" ] .

@@ -1,0 +1,17 @@
+@prefix : <urn:agent-calculus:ci-cd-canary:> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+
+:CanaryDeploymentRequestShape
+    a sh:NodeShape ;
+    sh:targetClass :CanaryDeploymentRequest ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:message "ci-cd.request.closed" ;
+    sh:property [ sh:path :service ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :checkout-api ; sh:message "ci-cd.service.required" ] ;
+    sh:property [ sh:path :artifact ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :build-bld-8421 ; sh:message "ci-cd.artifact.required" ] ;
+    sh:property [ sh:path :environment ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :production ; sh:message "ci-cd.environment.required" ] ;
+    sh:property [ sh:path :rollout ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :canary-rollout ; sh:message "ci-cd.rollout.required" ] ;
+    sh:property [ sh:path :controller ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :argo-rollouts ; sh:message "ci-cd.controller.required" ] ;
+    sh:property [ sh:path :ring ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :ring-one-five-percent ; sh:message "ci-cd.ring.required" ] ;
+    sh:property [ sh:path :change ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :change-chg-9917 ; sh:message "ci-cd.change.required" ] .

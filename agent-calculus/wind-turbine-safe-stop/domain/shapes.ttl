@@ -1,0 +1,31 @@
+@prefix : <urn:agent-calculus:wind-safe-stop:> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:TelemetryObservationShape
+    a sh:NodeShape ;
+    sh:targetClass :TelemetryObservation ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:message "wind.node.closed" ;
+    sh:property [ sh:path :sensor ; sh:minCount 1 ; sh:maxCount 1 ; sh:hasValue :wt-204-bearing-vibration ; sh:message "wind.telemetry.invalid" ] ;
+    sh:property [ sh:path :asset ; sh:minCount 1 ; sh:maxCount 1 ; sh:hasValue :wt-204 ; sh:message "wind.telemetry.invalid" ] ;
+    sh:property [ sh:path :metric ; sh:minCount 1 ; sh:maxCount 1 ; sh:hasValue :main-bearing-vibration ; sh:message "wind.telemetry.invalid" ] ;
+    sh:property [ sh:path :supportsReason ; sh:minCount 1 ; sh:maxCount 1 ; sh:hasValue :excess-vibration ; sh:message "wind.telemetry.invalid" ] ;
+    sh:property [ sh:path :numericValue ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:decimal ; sh:message "wind.telemetry.invalid" ] ;
+    sh:property [ sh:path :unit ; sh:minCount 1 ; sh:maxCount 1 ; sh:hasValue :millimeter-per-second ; sh:message "wind.telemetry.invalid" ] ;
+    sh:property [ sh:path :observedAt ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:dateTime ; sh:message "wind.telemetry.invalid" ] ;
+    sh:property [ sh:path :source ; sh:minCount 1 ; sh:maxCount 1 ; sh:hasValue :scada ; sh:message "wind.telemetry.invalid" ] ;
+    sh:property [ sh:path :calibration ; sh:minCount 1 ; sh:maxCount 1 ; sh:class :CurrentCalibration ; sh:message "wind.telemetry.invalid" ] .
+
+:StopRequestShape
+    a sh:NodeShape ;
+    sh:targetClass :StopRequest ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:message "wind.node.closed" ;
+    sh:property [ sh:path :asset ; sh:minCount 1 ; sh:maxCount 1 ; sh:in ( :wt-204 ) ; sh:message "wind.asset.required" ] ;
+    sh:property [ sh:path :action ; sh:minCount 1 ; sh:maxCount 1 ; sh:hasValue :controlled-stop ; sh:message "wind.action.required" ] ;
+    sh:property [ sh:path :workOrder ; sh:minCount 1 ; sh:maxCount 1 ; sh:in ( :work-order-wo-7712 ) ; sh:message "wind.work-order.required" ] ;
+    sh:property [ sh:path :reason ; sh:minCount 1 ; sh:maxCount 1 ; sh:hasValue :excess-vibration ; sh:message "wind.symptom.required" ] .

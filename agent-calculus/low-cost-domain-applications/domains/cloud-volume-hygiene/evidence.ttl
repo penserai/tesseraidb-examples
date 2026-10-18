@@ -1,0 +1,7 @@
+@prefix : <urn:agent-calculus:cloud-volume-hygiene:> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:volume-evidence-0abc a :VolumeHygieneEvidence ;
+  :account :account-123456789012 ; :volume :vol-0abc1234def567890 ; :snapshot :snap-0123456789abcdef0 ; :attachmentCount 0 ; :ownerTagPresent true ; :ownerApproved true ; :ageDays 120 ; :monthlyCostCents 9240 ;
+  :snapshotState :completed ; :snapshotEncrypted true ; :snapshotVerified true ; :restorePassed true ; :replicationComplete true ; :kmsHealth :healthy ; :legalHold false ; :complianceHold false ; :deletionProtection false ;
+  :observedAt "2026-10-17T18:34:45Z"^^xsd:dateTime ; :inventoryDigest "sha256:98e14472af1ab5b23515c02c89afc055bad65b7c98d55267259d18dbf5c64395"^^xsd:string ; :source :signed-cloud-inventory .

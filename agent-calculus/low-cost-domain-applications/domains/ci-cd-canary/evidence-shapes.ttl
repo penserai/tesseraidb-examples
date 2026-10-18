@@ -1,0 +1,24 @@
+@prefix : <urn:agent-calculus:ci-cd-canary:> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:ReleaseEvidenceShape
+    a sh:NodeShape ;
+    sh:targetClass :ReleaseEvidence ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:message "ci-cd.evidence.closed" ;
+    sh:property [ sh:path :artifact ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :build-bld-8421 ] ;
+    sh:property [ sh:path :sourceCommit ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:pattern "^[0-9a-f]{40}$" ] ;
+    sh:property [ sh:path :signatureVerified ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:boolean ; sh:hasValue true ] ;
+    sh:property [ sh:path :signatureVerifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :sigstore-policy-controller ] ;
+    sh:property [ sh:path :artifactDigest ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:pattern "^sha256:[0-9a-f]{64}$" ; sh:hasValue "sha256:991ad89c3f3f7145fa1dc0f45cd13cffb368e69df12cbb6d27740cc57a14f4e2" ] ;
+    sh:property [ sh:path :requiredTestsPassed ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:boolean ; sh:hasValue true ] ;
+    sh:property [ sh:path :testCoveragePercent ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 90 ; sh:maxInclusive 100 ] ;
+    sh:property [ sh:path :requiredTestCoveragePercent ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 90 ; sh:maxInclusive 90 ; sh:lessThanOrEquals :testCoveragePercent ] ;
+    sh:property [ sh:path :blockingVulnerabilityCount ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 0 ; sh:maxInclusive 0 ] ;
+    sh:property [ sh:path :initialTrafficPercent ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 1 ; sh:maxInclusive 5 ] ;
+    sh:property [ sh:path :change ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :change-chg-9917 ] ;
+    sh:property [ sh:path :controller ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :argo-rollouts ] ;
+    sh:property [ sh:path :generatedAt ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:dateTime ] .

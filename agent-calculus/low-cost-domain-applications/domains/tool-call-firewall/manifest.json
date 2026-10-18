@@ -1,0 +1,67 @@
+{
+  "id": "tool-call-firewall",
+  "version": "1",
+  "intent_instructions": "Select authorize_tool_call only for a bounded read-only support lookup. Select unknown for any other intent.",
+  "intents": {
+    "authorize_tool_call": {
+      "description": "Authorize one exact read-only support tool call",
+      "type_iri": "urn:agent-calculus:tool-call-firewall:ToolCallRequest",
+      "required_slots": ["duration", "operation", "order", "ticket"],
+      "action": "issue_tool_capability"
+    }
+  },
+  "slots": {
+    "duration": {"description": "the maximum capability lifetime", "predicate_iri": "urn:agent-calculus:tool-call-firewall:duration"},
+    "operation": {"description": "the exact read-only tool operation", "predicate_iri": "urn:agent-calculus:tool-call-firewall:operation"},
+    "order": {"description": "the registered order referenced by the support ticket", "predicate_iri": "urn:agent-calculus:tool-call-firewall:order"},
+    "ticket": {"description": "the active support ticket", "predicate_iri": "urn:agent-calculus:tool-call-firewall:ticket"}
+  },
+  "actions": {
+    "issue_tool_capability": {
+      "description": "Simulate an attenuated single-use read capability",
+      "action_iri": "urn:agent-calculus:tool-call-firewall:issue-tool-capability",
+      "capability_class_iri": "urn:agent-calculus:tool-call-firewall:ApprovedSupportOperation"
+    }
+  },
+  "harvest_rules": [
+    {"kind": "reject", "id": "reject-mutating-support-operation", "pattern": "(?i)\\b(?:refund|cancel|delete|admin|update\\s+(?:the\\s+)?shipping\\s+address)\\b", "code": "mutating_tool_operation"},
+    {
+      "kind": "closed_lookup",
+      "id": "support-ticket-registry",
+      "slot": "ticket",
+      "pattern": "(?i)\\b(?P<value>CS-[0-9]{3,8})\\b",
+      "capture": "value",
+      "values": {"CS-884": {"type": "iri", "value": "urn:agent-calculus:tool-call-firewall:ticket-cs-884"}},
+      "rejection_code": "unknown_support_ticket"
+    },
+    {
+      "kind": "closed_lookup",
+      "id": "order-registry",
+      "slot": "order",
+      "pattern": "(?i)\\b(?P<value>ORD-[0-9]{4,10})\\b",
+      "capture": "value",
+      "values": {"ORD-1042": {"type": "iri", "value": "urn:agent-calculus:tool-call-firewall:order-ord-1042"}},
+      "rejection_code": "unknown_order"
+    },
+    {"kind": "alias", "id": "operation-read-shipment-status", "slot": "operation", "aliases": ["shipment status"], "value": {"type": "iri", "value": "urn:agent-calculus:tool-call-firewall:read-shipment-status"}, "whole_word": true},
+    {"kind": "alias", "id": "duration-60-seconds", "slot": "duration", "aliases": ["60 seconds"], "value": {"type": "iri", "value": "urn:agent-calculus:tool-call-firewall:duration-60s"}, "whole_word": true}
+  ],
+  "lexical_coverage": {
+    "rejection_code": "unmatched_tool_firewall_input",
+    "allowlisted_ignores": [
+      {"id": "support-request-connectives", "pattern": "(?i)\\b(?:for|ticket|check|order|read|and|the)\\b"}
+    ]
+  },
+  "prompts": {
+    "initial": {"id": "firewall.initial", "text": "Which registered support lookup needs a bounded tool capability?"},
+    "ambiguous": {"id": "firewall.ambiguous", "text": "Choose one issued read-only operation explicitly."},
+    "out_of_domain": {"id": "firewall.out-of-domain", "text": "That request is outside this read-only support-tool domain."},
+    "rejected": {"id": "firewall.rejected", "text": "The tool request was rejected without issuing a capability."},
+    "missing_slots": {
+      "duration": {"id": "firewall.duration.required", "text": "Choose the supported 60-second capability lifetime."},
+      "operation": {"id": "firewall.operation.required", "text": "Choose the supported operation: read shipment status."},
+      "order": {"id": "firewall.order.required", "text": "Provide the registered order ID."},
+      "ticket": {"id": "firewall.ticket.required", "text": "Provide the active support ticket ID."}
+    }
+  }
+}

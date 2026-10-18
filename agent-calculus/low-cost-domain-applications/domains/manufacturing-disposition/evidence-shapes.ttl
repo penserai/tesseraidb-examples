@@ -1,0 +1,28 @@
+@prefix : <urn:agent-calculus:manufacturing-disposition:> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:InspectionEvidenceShape
+    a sh:NodeShape ;
+    sh:targetClass :InspectionEvidence ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:message "manufacturing.evidence.closed" ;
+    sh:property [ sh:path :inspection ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :ir-8842 ; sh:message "manufacturing.evidence.inspection" ] ;
+    sh:property [ sh:path :part ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :hm42-00981 ; sh:message "manufacturing.evidence.part" ] ;
+    sh:property [ sh:path :lot ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :lot-24018 ; sh:message "manufacturing.evidence.lot" ] ;
+    sh:property [ sh:path :device ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :cmm-07 ; sh:message "manufacturing.evidence.device" ] ;
+    sh:property [ sh:path :calibration ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:class :CurrentCalibration ; sh:message "manufacturing.evidence.calibration" ] ;
+    sh:property [ sh:path :boreDiameter ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:decimal ; sh:minInclusive "10.000"^^xsd:decimal ; sh:maxInclusive "10.020"^^xsd:decimal ; sh:message "manufacturing.evidence.bore" ] ;
+    sh:property [ sh:path :boreUnit ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :millimetre ; sh:message "manufacturing.evidence.bore-unit" ] ;
+    sh:property [ sh:path :surfaceRoughnessRa ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:decimal ; sh:minInclusive "0.0"^^xsd:decimal ; sh:maxInclusive "1.6"^^xsd:decimal ; sh:message "manufacturing.evidence.roughness" ] ;
+    sh:property [ sh:path :roughnessUnit ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :micrometre ; sh:message "manufacturing.evidence.roughness-unit" ] ;
+    sh:property [ sh:path :measuredAt ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:dateTime ; sh:message "manufacturing.evidence.measured-at" ] ;
+    sh:property [ sh:path :evaluatedAt ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:dateTime ; sh:minInclusive "2026-10-17T15:00:00Z"^^xsd:dateTime ; sh:maxInclusive "2026-10-18T15:00:00Z"^^xsd:dateTime ; sh:message "manufacturing.evidence.evaluated-at" ] ;
+    sh:property [ sh:path :calibrationValidFrom ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:dateTime ; sh:maxInclusive "2026-10-17T15:00:00Z"^^xsd:dateTime ; sh:message "manufacturing.evidence.calibration-from" ] ;
+    sh:property [ sh:path :calibrationValidUntil ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:dateTime ; sh:minInclusive "2026-10-17T15:00:00Z"^^xsd:dateTime ; sh:message "manufacturing.evidence.calibration-until" ] ;
+    sh:property [ sh:path :revision ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 7 ; sh:maxInclusive 7 ; sh:message "manufacturing.evidence.revision" ] ;
+    sh:property [ sh:path :openNonconformanceCount ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 0 ; sh:maxInclusive 0 ; sh:message "manufacturing.evidence.nonconformance" ] ;
+    sh:property [ sh:path :reportDigest ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:pattern "^sha256:[0-9a-f]{64}$" ; sh:message "manufacturing.evidence.digest" ] ;
+    sh:property [ sh:path :source ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :mes-qms ; sh:message "manufacturing.evidence.source" ] .

@@ -1,0 +1,7 @@
+@prefix : <urn:agent-calculus:ev-charging-dispatch:> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:charge-evidence-van-042 a :ChargeEvidence ;
+  :vehicle :van-042 ; :charger :evse-17 ; :window :w-0200 ; :socPercent 31 ; :targetSocPercent 80 ; :batteryKwh 72 ; :requestedKwh 35 ; :chargerKw 22 ; :gridHeadroomKw 48 ;
+  :tariffCentsPerKwh 9 ; :windowMinutes 120 ; :routeMarginKwh 8 ; :connector :ccs2 ; :chargerAvailable true ; :interlockHealthy true ;
+  :observedAt "2026-10-17T18:35:25Z"^^xsd:dateTime ; :source :signed-fleet-grid-snapshot .

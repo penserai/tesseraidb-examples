@@ -1,0 +1,31 @@
+@prefix : <urn:agent-calculus:cold-chain-release:> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+:ColdChainEvidenceShape a sh:NodeShape ; sh:targetClass :ColdChainEvidence ; sh:closed true ; sh:ignoredProperties ( rdf:type ) ; sh:message "cold-chain.evidence.closed" ;
+ sh:property [ sh:path :pallet ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :plt-88031 ] ;
+ sh:property [ sh:path :shipment ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :shp-24091 ] ;
+ sh:property [ sh:path :lot ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :bio-26a17 ] ;
+ sh:property [ sh:path :site ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :oak-dc-1 ] ;
+ sh:property [ sh:path :logger ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :tl-9904 ] ;
+ sh:property [ sh:path :calibrationStatus ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :current ] ;
+ sh:property [ sh:path :observedMinimumTemperature ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:decimal ; sh:minInclusive "2.0"^^xsd:decimal ; sh:lessThanOrEquals :observedMaximumTemperature ] ;
+ sh:property [ sh:path :observedMaximumTemperature ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:decimal ; sh:maxInclusive "8.0"^^xsd:decimal ] ;
+ sh:property [ sh:path :temperatureUnit ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :degree-celsius ] ;
+ sh:property [ sh:path :sampleCount ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 300 ] ;
+ sh:property [ sh:path :missingSampleCount ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 0 ; sh:maxInclusive 0 ] ;
+ sh:property [ sh:path :maximumGapSeconds ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:maxInclusive 600 ] ;
+ sh:property [ sh:path :transitStartedAt ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:dateTime ; sh:lessThanOrEquals :seriesStart ] ;
+ sh:property [ sh:path :seriesStart ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:dateTime ; sh:lessThanOrEquals :seriesEnd ] ;
+ sh:property [ sh:path :seriesEnd ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:dateTime ] ;
+ sh:property [ sh:path :receivedAt ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:dateTime ; sh:lessThanOrEquals :evaluatedAt ] ;
+ sh:property [ sh:path :evaluatedAt ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:dateTime ; sh:lessThan :lotExpiresAt ] ;
+ sh:property [ sh:path :calibrationValidFrom ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:dateTime ; sh:lessThanOrEquals :seriesStart ] ;
+ sh:property [ sh:path :calibrationValidUntil ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:dateTime ] ;
+ sh:property [ sh:path :lotExpiresAt ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:dateTime ] ;
+ sh:property [ sh:path :sealStatus ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :intact ] ;
+ sh:property [ sh:path :recallStatus ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :clear ] ;
+ sh:property [ sh:path :custodyEventCount ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 4 ; sh:maxInclusive 4 ] ;
+ sh:property [ sh:path :verifiedCustodySignatureCount ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 4 ; sh:maxInclusive 4 ] ;
+ sh:property [ sh:path :rawSeriesDigest ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:pattern "^sha256:[0-9a-f]{64}$" ] ;
+ sh:property [ sh:path :source ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :signed-logger-export ] .

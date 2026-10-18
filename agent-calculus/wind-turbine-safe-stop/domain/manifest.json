@@ -1,0 +1,67 @@
+{
+  "id": "wind-turbine-safe-stop",
+  "version": "1",
+  "intent_instructions": "Select request_safe_stop only for a request to stop a registered turbine; otherwise select unknown.",
+  "intents": {
+    "request_safe_stop": {
+      "description": "Request a safety-governed turbine stop",
+      "type_iri": "urn:agent-calculus:wind-safe-stop:StopRequest",
+      "required_slots": ["action", "asset", "symptom", "work_order"],
+      "action": "execute_controlled_stop"
+    }
+  },
+  "slots": {
+    "action": {"description": "an explicit stop mode", "predicate_iri": "urn:agent-calculus:wind-safe-stop:action"},
+    "asset": {"description": "a registered turbine", "predicate_iri": "urn:agent-calculus:wind-safe-stop:asset"},
+    "symptom": {"description": "a supported stop reason", "predicate_iri": "urn:agent-calculus:wind-safe-stop:reason"},
+    "work_order": {"description": "an active maintenance work order", "predicate_iri": "urn:agent-calculus:wind-safe-stop:workOrder"}
+  },
+  "actions": {
+    "execute_controlled_stop": {
+      "description": "Issue a simulated, policy-gated controlled stop",
+      "action_iri": "urn:agent-calculus:wind-safe-stop:execute-controlled-stop",
+      "capability_class_iri": "urn:agent-calculus:wind-safe-stop:SafetyPreservingTool"
+    }
+  },
+  "harvest_rules": [
+    {
+      "kind": "closed_lookup",
+      "id": "asset-registry",
+      "slot": "asset",
+      "pattern": "(?i)\\b(?P<value>WT-[0-9]{3,6})\\b",
+      "capture": "value",
+      "values": {"WT-204": {"type": "iri", "value": "urn:agent-calculus:wind-safe-stop:wt-204"}},
+      "rejection_code": "unsupported_asset"
+    },
+    {
+      "kind": "closed_lookup",
+      "id": "work-order-registry",
+      "slot": "work_order",
+      "pattern": "(?i)\\b(?P<value>WO-[0-9]{4,8})\\b",
+      "capture": "value",
+      "values": {"WO-7712": {"type": "iri", "value": "urn:agent-calculus:wind-safe-stop:work-order-wo-7712"}},
+      "rejection_code": "unsupported_work_order"
+    },
+    {"kind": "reject", "id": "reject-emergency-stop", "pattern": "(?i)\\bemergency stop\\b", "code": "unsupported_action"},
+    {"kind": "alias", "id": "action-controlled-stop", "slot": "action", "aliases": ["controlled stop"], "value": {"type": "iri", "value": "urn:agent-calculus:wind-safe-stop:controlled-stop"}, "whole_word": true},
+    {"kind": "alias", "id": "symptom-vibration", "slot": "symptom", "aliases": ["shaking", "excess vibration", "high vibration"], "value": {"type": "iri", "value": "urn:agent-calculus:wind-safe-stop:excess-vibration"}, "whole_word": true}
+  ],
+  "lexical_coverage": {
+    "rejection_code": "unmatched_lexical_input",
+    "allowlisted_ignores": [
+      {"id": "request-connectives", "pattern": "(?i)\\b(?:is|hard|shut|it|down|under|for|the|a|an|please|because|and|needs|need|due|to|now)\\b"}
+    ]
+  },
+  "prompts": {
+    "initial": {"id": "wind.initial", "text": "Which registered turbine needs attention?"},
+    "ambiguous": {"id": "wind.ambiguous", "text": "Choose one supported asset, action, and reason explicitly."},
+    "out_of_domain": {"id": "wind.out-of-domain", "text": "That request is outside this agent's registered turbine domain."},
+    "rejected": {"id": "wind.rejected", "text": "The safe-stop request was rejected without sending a command."},
+    "missing_slots": {
+      "action": {"id": "wind.action.required", "text": "Confirm the supported stop mode: controlled stop."},
+      "asset": {"id": "wind.asset.required", "text": "Provide the registered turbine ID."},
+      "symptom": {"id": "wind.symptom.required", "text": "Confirm the supported reason: excess vibration."},
+      "work_order": {"id": "wind.work-order.required", "text": "Provide the active maintenance work-order ID."}
+    }
+  }
+}

@@ -1,0 +1,17 @@
+@prefix : <urn:agent-calculus:healthcare-referral-submit:> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+
+:ReferralRequestShape a sh:NodeShape ; sh:targetClass :ReferralRequest ; sh:closed true ; sh:ignoredProperties ( rdf:type ) ;
+  sh:property [ sh:path :patient ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :pat-204 ] ;
+  sh:property [ sh:path :encounter ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :enc-778 ] ;
+  sh:property [ sh:path :referral ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :ref-551 ] ;
+  sh:property [ sh:path :order ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :ord-912 ] ;
+  sh:property [ sh:path :urgency ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :routine ] ;
+  sh:property [ sh:path :specialty ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :cardiology ] ;
+  sh:property [ sh:path :facility ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :fac-21 ] ;
+  sh:property [ sh:path :payer ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :payer-8 ] ;
+  sh:property [ sh:path :consent ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :consent-88 ] ;
+  sh:property [ sh:path :coverage ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :cov-2026 ] ;
+  sh:property [ sh:path :authorization ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :auth-440 ] ;
+  sh:property [ sh:path :networkStatus ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :in-network ] .

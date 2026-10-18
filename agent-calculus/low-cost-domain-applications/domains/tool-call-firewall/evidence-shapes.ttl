@@ -1,0 +1,23 @@
+@prefix : <urn:agent-calculus:tool-call-firewall:> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:SupportTicketEvidenceShape
+    a sh:NodeShape ;
+    sh:targetClass :SupportTicketEvidence ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:message "firewall.evidence.closed" ;
+    sh:property [ sh:path :ticket ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :ticket-cs-884 ; sh:message "firewall.evidence.ticket" ] ;
+    sh:property [ sh:path :tenant ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :tenant-acme-retail ; sh:message "firewall.evidence.tenant" ] ;
+    sh:property [ sh:path :ticketStatus ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :active ; sh:message "firewall.evidence.status" ] ;
+    sh:property [ sh:path :referencedOrder ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :order-ord-1042 ; sh:message "firewall.evidence.order" ] ;
+    sh:property [ sh:path :allowedOperation ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :read-shipment-status ; sh:message "firewall.evidence.operation" ] ;
+    sh:property [ sh:path :allowedMethod ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:hasValue "GET" ; sh:message "firewall.evidence.method" ] ;
+    sh:property [ sh:path :allowedPath ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:hasValue "/orders/ORD-1042/shipment-status" ; sh:pattern "^/orders/ORD-1042/shipment-status$" ; sh:message "firewall.evidence.path" ] ;
+    sh:property [ sh:path :ttlSeconds ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 1 ; sh:maxInclusive 60 ; sh:message "firewall.evidence.ttl" ] ;
+    sh:property [ sh:path :maxUses ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 1 ; sh:maxInclusive 1 ; sh:message "firewall.evidence.max-uses" ] ;
+    sh:property [ sh:path :purpose ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :resolve-delivery-status ; sh:message "firewall.evidence.purpose" ] ;
+    sh:property [ sh:path :source ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :support-registry ; sh:message "firewall.evidence.source" ] ;
+    sh:property [ sh:path :observedAt ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:dateTime ; sh:message "firewall.evidence.observed-at" ] .

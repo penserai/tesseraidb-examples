@@ -1,0 +1,21 @@
+{
+  "id":"building-demand-response","version":"1","intent_instructions":"Select stage_setback only for the installed bounded HVAC demand-response proposal; otherwise unknown.",
+  "intents":{"stage_setback":{"description":"Propose a comfort- and safety-bounded HVAC setback","type_iri":"urn:agent-calculus:building-demand-response:SetbackRequest","required_slots":["building","duration_minutes","equipment","event","setback_celsius","zone"],"action":"propose_hvac_setback"}},
+  "slots":{
+    "building":{"description":"managed building","predicate_iri":"urn:agent-calculus:building-demand-response:building"},"duration_minutes":{"description":"bounded event duration","predicate_iri":"urn:agent-calculus:building-demand-response:durationMinutes"},"equipment":{"description":"registered air handler","predicate_iri":"urn:agent-calculus:building-demand-response:equipment"},"event":{"description":"verified grid event","predicate_iri":"urn:agent-calculus:building-demand-response:event"},"setback_celsius":{"description":"temperature setback in Celsius","predicate_iri":"urn:agent-calculus:building-demand-response:setbackCelsius"},"zone":{"description":"managed thermal zone","predicate_iri":"urn:agent-calculus:building-demand-response:zone"}
+  },
+  "actions":{"propose_hvac_setback":{"description":"Propose, but do not command, a bounded setback","action_iri":"urn:agent-calculus:building-demand-response:propose-hvac-setback","capability_class_iri":"urn:agent-calculus:building-demand-response:DemandResponseSetbackProposal"}},
+  "harvest_rules":[
+    {"kind":"reject","id":"reject-safety-bypass","pattern":"(?i)\\b(?:bypass|disable|ignore)\\s+(?:the\\s+)?(?:ventilation|comfort|fire safety|life safety|interlock)\\b","code":"life_safety_bypass_forbidden"},
+    {"kind":"closed_lookup","id":"event-registry","slot":"event","pattern":"(?i)\\b(?P<value>DR-[0-9]{3})\\b","capture":"value","values":{"DR-778":{"type":"iri","value":"urn:agent-calculus:building-demand-response:dr-778"}},"rejection_code":"unsupported_event"},
+    {"kind":"closed_lookup","id":"zone-registry","slot":"zone","pattern":"(?i)\\b(?P<value>ZONE-[0-9][A-Z])\\b","capture":"value","values":{"ZONE-4E":{"type":"iri","value":"urn:agent-calculus:building-demand-response:zone-4e"}},"rejection_code":"unsupported_zone"},
+    {"kind":"closed_lookup","id":"building-registry","slot":"building","pattern":"(?i)\\b(?P<value>HQ-[0-9])\\b","capture":"value","values":{"HQ-1":{"type":"iri","value":"urn:agent-calculus:building-demand-response:hq-1"}},"rejection_code":"unsupported_building"},
+    {"kind":"closed_lookup","id":"equipment-registry","slot":"equipment","pattern":"(?i)\\b(?P<value>AHU-[0-9][A-Z])\\b","capture":"value","values":{"AHU-4E":{"type":"iri","value":"urn:agent-calculus:building-demand-response:ahu-4e"}},"rejection_code":"unsupported_equipment"},
+    {"kind":"alias","id":"setback-one","slot":"setback_celsius","aliases":["one-degree setback"],"value":{"type":"integer","value":1},"whole_word":true},
+    {"kind":"alias","id":"duration-thirty","slot":"duration_minutes","aliases":["30 minutes"],"value":{"type":"integer","value":30},"whole_word":true}
+  ],
+  "lexical_coverage":{"rejection_code":"unmatched_lexical_input","allowlisted_ignores":[{"id":"building-connectives","pattern":"(?i)\\b(?:stage|demand|response|for|zone|in|use|with|a)\\b"}]},
+  "prompts":{"initial":{"id":"building.initial","text":"Which demand-response event and zone?"},"ambiguous":{"id":"building.ambiguous","text":"Choose one registered candidate."},"out_of_domain":{"id":"building.out","text":"That request is outside building demand response."},"rejected":{"id":"building.rejected","text":"The request was rejected without a BMS command."},"missing_slots":{
+    "building":{"id":"building.building.required","text":"Provide the building."},"duration_minutes":{"id":"building.duration.required","text":"Choose the duration."},"equipment":{"id":"building.equipment.required","text":"Provide the air handler."},"event":{"id":"building.event.required","text":"Provide the event."},"setback_celsius":{"id":"building.setback.required","text":"Choose the setback."},"zone":{"id":"building.zone.required","text":"Provide the zone."}
+  }}
+}

@@ -1,0 +1,77 @@
+{
+  "id": "manufacturing-disposition",
+  "version": "1",
+  "intent_instructions": "Select evaluate_disposition only for a request to evaluate a registered inspection for a registered manufactured part and lot; otherwise select unknown.",
+  "intents": {
+    "evaluate_disposition": {
+      "description": "Evaluate a registered dimensional inspection against the controlled quality plan",
+      "type_iri": "urn:agent-calculus:manufacturing-disposition:DispositionRequest",
+      "required_slots": ["inspection", "lot", "part"],
+      "action": "evaluate_quality_disposition"
+    }
+  },
+  "slots": {
+    "inspection": { "description": "a registered immutable inspection report", "predicate_iri": "urn:agent-calculus:manufacturing-disposition:inspection" },
+    "lot": { "description": "the registered production lot", "predicate_iri": "urn:agent-calculus:manufacturing-disposition:lot" },
+    "part": { "description": "the registered serialized part", "predicate_iri": "urn:agent-calculus:manufacturing-disposition:part" }
+  },
+  "actions": {
+    "evaluate_quality_disposition": {
+      "description": "Evaluate evidence and simulate a quality disposition record",
+      "action_iri": "urn:agent-calculus:manufacturing-disposition:evaluate-quality-disposition",
+      "capability_class_iri": "urn:agent-calculus:manufacturing-disposition:ApprovedQualityDispositionTool"
+    }
+  },
+  "harvest_rules": [
+    {
+      "kind": "reject",
+      "id": "reject-quality-override",
+      "pattern": "(?i)\\b(?:waive\\s+(?:the\\s+)?tolerance|override\\s+(?:the\\s+)?inspection|ship\\s+.*\\s+anyway)\\b",
+      "code": "quality_override_forbidden"
+    },
+    {
+      "kind": "closed_lookup",
+      "id": "part-registry",
+      "slot": "part",
+      "pattern": "(?i)\\b(?P<value>HM42-[0-9]{5})\\b",
+      "capture": "value",
+      "values": { "HM42-00981": { "type": "iri", "value": "urn:agent-calculus:manufacturing-disposition:hm42-00981" } },
+      "rejection_code": "unsupported_part"
+    },
+    {
+      "kind": "closed_lookup",
+      "id": "lot-registry",
+      "slot": "lot",
+      "pattern": "(?i)\\b(?P<value>LOT-[0-9]{5})\\b",
+      "capture": "value",
+      "values": { "LOT-24018": { "type": "iri", "value": "urn:agent-calculus:manufacturing-disposition:lot-24018" } },
+      "rejection_code": "unsupported_lot"
+    },
+    {
+      "kind": "closed_lookup",
+      "id": "inspection-registry",
+      "slot": "inspection",
+      "pattern": "(?i)\\b(?P<value>IR-[0-9]{4,8})\\b",
+      "capture": "value",
+      "values": { "IR-8842": { "type": "iri", "value": "urn:agent-calculus:manufacturing-disposition:ir-8842" } },
+      "rejection_code": "unsupported_inspection"
+    }
+  ],
+  "lexical_coverage": {
+    "rejection_code": "unmatched_lexical_input",
+    "allowlisted_ignores": [
+      { "id": "quality-request-connectives", "pattern": "(?i)\\b(?:review|from|use|inspection|for|release|evaluation|record|the|please|and)\\b" }
+    ]
+  },
+  "prompts": {
+    "initial": { "id": "manufacturing.initial", "text": "Which registered part, lot, and inspection should be evaluated?" },
+    "ambiguous": { "id": "manufacturing.ambiguous", "text": "Choose one registered part, lot, and inspection explicitly." },
+    "out_of_domain": { "id": "manufacturing.out-of-domain", "text": "That request is outside this quality-disposition domain." },
+    "rejected": { "id": "manufacturing.rejected", "text": "The quality request was rejected without recording a disposition." },
+    "missing_slots": {
+      "inspection": { "id": "manufacturing.inspection.required", "text": "Provide the registered inspection report ID." },
+      "lot": { "id": "manufacturing.lot.required", "text": "Provide the registered production lot ID." },
+      "part": { "id": "manufacturing.part.required", "text": "Provide the registered serialized part ID." }
+    }
+  }
+}

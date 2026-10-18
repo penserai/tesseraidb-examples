@@ -1,0 +1,18 @@
+@prefix : <urn:agent-calculus:data-privacy:> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+
+:GovernedQueryRequestShape
+    a sh:NodeShape ;
+    sh:targetClass :GovernedQueryRequest ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:message "privacy.request.closed" ;
+    sh:property [ sh:path :dataset ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:in ( :customer-retention-v3 ) ; sh:message "privacy.dataset.required" ] ;
+    sh:property [ sh:path :purpose ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:in ( :quarterly-retention-planning ) ; sh:message "privacy.purpose.required" ] ;
+    sh:property [ sh:path :jurisdiction ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:in ( :eu-residents ) ; sh:message "privacy.jurisdiction.required" ] ;
+    sh:property [ sh:path :period ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:in ( :2026-q3 ) ; sh:message "privacy.period.required" ] ;
+    sh:property [ sh:path :measure ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:in ( :churned-customer-count ) ; sh:message "privacy.measure.required" ] ;
+    sh:property [ sh:path :aggregation ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:in ( :count ) ; sh:message "privacy.aggregation.required" ] ;
+    sh:property [ sh:path :dimension ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:in ( :country ) ; sh:message "privacy.dimension.required" ] ;
+    sh:property [ sh:path :protection ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:in ( :small-cell-suppression-k25 ) ; sh:message "privacy.protection.required" ] .
