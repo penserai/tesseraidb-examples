@@ -1,0 +1,71 @@
+{
+  "id": "data-privacy-query",
+  "version": "1",
+  "intent_instructions": "Select request_governed_query only for a bounded aggregate over the registered retention dataset; otherwise select unknown.",
+  "intents": {
+    "request_governed_query": {
+      "description": "Request a privacy-preserving aggregate query capability",
+      "type_iri": "urn:agent-calculus:data-privacy:GovernedQueryRequest",
+      "required_slots": ["aggregation", "dataset", "dimension", "jurisdiction", "measure", "period", "protection", "purpose"],
+      "action": "issue_governed_query_capability"
+    }
+  },
+  "slots": {
+    "aggregation": {"description": "an approved aggregate operation", "predicate_iri": "urn:agent-calculus:data-privacy:aggregation"},
+    "dataset": {"description": "a registered protected dataset", "predicate_iri": "urn:agent-calculus:data-privacy:dataset"},
+    "dimension": {"description": "an approved grouping dimension", "predicate_iri": "urn:agent-calculus:data-privacy:dimension"},
+    "jurisdiction": {"description": "a registered data-subject jurisdiction", "predicate_iri": "urn:agent-calculus:data-privacy:jurisdiction"},
+    "measure": {"description": "an approved aggregate measure", "predicate_iri": "urn:agent-calculus:data-privacy:measure"},
+    "period": {"description": "an approved reporting period", "predicate_iri": "urn:agent-calculus:data-privacy:period"},
+    "protection": {"description": "a required output protection", "predicate_iri": "urn:agent-calculus:data-privacy:protection"},
+    "purpose": {"description": "a registered processing purpose", "predicate_iri": "urn:agent-calculus:data-privacy:purpose"}
+  },
+  "actions": {
+    "issue_governed_query_capability": {
+      "description": "Issue a simulated capability for a fixed aggregate plan",
+      "action_iri": "urn:agent-calculus:data-privacy:issue-governed-query-capability",
+      "capability_class_iri": "urn:agent-calculus:data-privacy:ApprovedAggregateOperation"
+    }
+  },
+  "harvest_rules": [
+    {"kind": "reject", "id": "reject-identifiers", "pattern": "(?i)\\b(?:customer names?|email addresses?|raw records?|export identities)\\b", "code": "direct_identifier_request"},
+    {
+      "kind": "closed_lookup",
+      "id": "dataset-catalog",
+      "slot": "dataset",
+      "pattern": "(?i)\\b(?P<value>customer-retention-v[0-9]+)\\b",
+      "capture": "value",
+      "values": {"customer-retention-v3": {"type": "iri", "value": "urn:agent-calculus:data-privacy:customer-retention-v3"}},
+      "rejection_code": "unregistered_dataset"
+    },
+    {"kind": "alias", "id": "jurisdiction-eu", "slot": "jurisdiction", "aliases": ["EU", "EU residents"], "value": {"type": "iri", "value": "urn:agent-calculus:data-privacy:eu-residents"}, "whole_word": true},
+    {"kind": "alias", "id": "measure-churn", "slot": "measure", "aliases": ["churn", "churned customer count"], "value": {"type": "iri", "value": "urn:agent-calculus:data-privacy:churned-customer-count"}, "whole_word": true},
+    {"kind": "alias", "id": "dimension-country", "slot": "dimension", "aliases": ["country"], "value": {"type": "iri", "value": "urn:agent-calculus:data-privacy:country"}, "whole_word": true},
+    {"kind": "alias", "id": "purpose-retention", "slot": "purpose", "aliases": ["retention planning"], "value": {"type": "iri", "value": "urn:agent-calculus:data-privacy:quarterly-retention-planning"}, "whole_word": true},
+    {"kind": "alias", "id": "aggregation-count", "slot": "aggregation", "aliases": ["count"], "value": {"type": "iri", "value": "urn:agent-calculus:data-privacy:count"}, "whole_word": true},
+    {"kind": "alias", "id": "period-q3", "slot": "period", "aliases": ["2026 Q3", "Q3 2026"], "value": {"type": "iri", "value": "urn:agent-calculus:data-privacy:2026-q3"}, "whole_word": true},
+    {"kind": "alias", "id": "protection-k25", "slot": "protection", "aliases": ["suppression k25", "suppress groups under 25"], "value": {"type": "iri", "value": "urn:agent-calculus:data-privacy:small-cell-suppression-k25"}, "whole_word": true}
+  ],
+  "lexical_coverage": {
+    "rejection_code": "unmatched_lexical_input",
+    "allowlisted_ignores": [
+      {"id": "query-connectives", "pattern": "(?i)\\b(?:show|by|for|use|quarterly|and|with|the|a|an|please|of)\\b"}
+    ]
+  },
+  "prompts": {
+    "initial": {"id": "privacy.initial", "text": "Describe the supported aggregate you need."},
+    "ambiguous": {"id": "privacy.ambiguous", "text": "Choose one issued dataset, purpose, measure, dimension, period, and protection."},
+    "out_of_domain": {"id": "privacy.out-of-domain", "text": "That request is outside the installed governed-query domain."},
+    "rejected": {"id": "privacy.rejected", "text": "The query request was rejected without accessing data."},
+    "missing_slots": {
+      "aggregation": {"id": "privacy.aggregation.required", "text": "Choose the supported aggregation: count."},
+      "dataset": {"id": "privacy.dataset.required", "text": "Provide the registered retention dataset ID."},
+      "dimension": {"id": "privacy.dimension.required", "text": "Choose the supported grouping dimension: country."},
+      "jurisdiction": {"id": "privacy.jurisdiction.required", "text": "Choose the registered EU-resident scope."},
+      "measure": {"id": "privacy.measure.required", "text": "Choose the supported churn-count measure."},
+      "period": {"id": "privacy.period.required", "text": "Choose the exact supported reporting period."},
+      "protection": {"id": "privacy.protection.required", "text": "Choose small-cell suppression k25."},
+      "purpose": {"id": "privacy.purpose.required", "text": "Choose the registered retention-planning purpose."}
+    }
+  }
+}

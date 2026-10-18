@@ -1,0 +1,26 @@
+{
+  "id":"invoice-three-way-match","version":"1","intent_instructions":"Select match_invoice when the utterance asks to match or reconcile a registered invoice with its purchase order or goods receipt. Later turns may supply missing vendor, operation, or tier slots; incompleteness alone is not unknown. Otherwise select unknown.",
+  "intents":{"match_invoice":{"description":"Match a registered invoice against its purchase order and goods receipt","type_iri":"urn:agent-calculus:invoice-three-way-match:MatchRequest","required_slots":["approval_tier","goods_receipt","invoice","purchase_order","release_operation","vendor"],"action":"propose_payment_release"}},
+  "slots":{
+    "approval_tier":{"description":"registered AP approval tier","predicate_iri":"urn:agent-calculus:invoice-three-way-match:approvalTier"},
+    "goods_receipt":{"description":"accepted goods receipt","predicate_iri":"urn:agent-calculus:invoice-three-way-match:goodsReceipt"},
+    "invoice":{"description":"registered invoice","predicate_iri":"urn:agent-calculus:invoice-three-way-match:invoice"},
+    "purchase_order":{"description":"approved purchase order","predicate_iri":"urn:agent-calculus:invoice-three-way-match:purchaseOrder"},
+    "release_operation":{"description":"proposal-only payment operation","predicate_iri":"urn:agent-calculus:invoice-three-way-match:releaseOperation"},
+    "vendor":{"description":"registered vendor","predicate_iri":"urn:agent-calculus:invoice-three-way-match:vendor"}
+  },
+  "actions":{"propose_payment_release":{"description":"Create a non-executing payment-release proposal","action_iri":"urn:agent-calculus:invoice-three-way-match:propose-payment-release","capability_class_iri":"urn:agent-calculus:invoice-three-way-match:PaymentReleaseProposal"}},
+  "harvest_rules":[
+    {"kind":"reject","id":"reject-payment-bypass","pattern":"(?i)\\b(?:pay\\s+.*\\s+directly|change\\s+(?:the\\s+)?bank|override\\s+(?:the\\s+)?tolerance|without\\s+(?:a\\s+)?receipt)\\b","code":"payment_control_bypass"},
+    {"kind":"closed_lookup","id":"invoice-registry","slot":"invoice","pattern":"(?i)\\b(?P<value>INV-[0-9]{5})\\b","capture":"value","values":{"INV-88231":{"type":"iri","value":"urn:agent-calculus:invoice-three-way-match:inv-88231"}},"rejection_code":"unsupported_invoice"},
+    {"kind":"closed_lookup","id":"po-registry","slot":"purchase_order","pattern":"(?i)\\b(?P<value>PO-[0-9]{4})\\b","capture":"value","values":{"PO-7319":{"type":"iri","value":"urn:agent-calculus:invoice-three-way-match:po-7319"}},"rejection_code":"unsupported_purchase_order"},
+    {"kind":"closed_lookup","id":"receipt-registry","slot":"goods_receipt","pattern":"(?i)\\b(?P<value>GR-[0-9]{4})\\b","capture":"value","values":{"GR-5512":{"type":"iri","value":"urn:agent-calculus:invoice-three-way-match:gr-5512"}},"rejection_code":"unsupported_goods_receipt"},
+    {"kind":"closed_lookup","id":"vendor-registry","slot":"vendor","pattern":"(?i)\\b(?P<value>SUP-[0-9]{4})\\b","capture":"value","values":{"SUP-0144":{"type":"iri","value":"urn:agent-calculus:invoice-three-way-match:sup-0144"}},"rejection_code":"unsupported_vendor"},
+    {"kind":"alias","id":"release-proposal","slot":"release_operation","aliases":["propose payment release"],"value":{"type":"iri","value":"urn:agent-calculus:invoice-three-way-match:payment-release-proposal"},"whole_word":true},
+    {"kind":"alias","id":"tier-one","slot":"approval_tier","aliases":["AP tier one"],"value":{"type":"iri","value":"urn:agent-calculus:invoice-three-way-match:ap-tier-one"},"whole_word":true}
+  ],
+  "lexical_coverage":{"rejection_code":"unmatched_lexical_input","allowlisted_ignores":[{"id":"invoice-connectives","pattern":"(?i)\\b(?:match|invoice|with|and|receipt|use|vendor|at)\\b"}]},
+  "prompts":{"initial":{"id":"invoice.initial","text":"Which registered invoice should be matched?"},"ambiguous":{"id":"invoice.ambiguous","text":"Choose one registered candidate."},"out_of_domain":{"id":"invoice.out","text":"That request is outside invoice matching."},"rejected":{"id":"invoice.rejected","text":"The request was rejected without payment or ERP mutation."},"missing_slots":{
+    "approval_tier":{"id":"invoice.tier.required","text":"Provide the approval tier."},"goods_receipt":{"id":"invoice.receipt.required","text":"Provide the goods receipt."},"invoice":{"id":"invoice.invoice.required","text":"Provide the invoice."},"purchase_order":{"id":"invoice.po.required","text":"Provide the purchase order."},"release_operation":{"id":"invoice.operation.required","text":"Choose proposal-only release."},"vendor":{"id":"invoice.vendor.required","text":"Provide the vendor."}
+  }}
+}

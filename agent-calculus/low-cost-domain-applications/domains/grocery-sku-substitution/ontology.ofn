@@ -1,0 +1,10 @@
+Prefix(:=<urn:agent-calculus:grocery-sku-substitution:>)
+Ontology(
+ Declaration(Class(:AuthorizedStorePicker)) Declaration(Class(:ActiveOrderLine)) Declaration(Class(:RequestedSku)) Declaration(Class(:ApprovedSubstituteSku)) Declaration(Class(:RegisteredStore)) Declaration(Class(:ActiveCustomerPreference)) Declaration(Class(:VeganCertification)) Declaration(Class(:PackageUnit)) Declaration(Class(:SubstitutionProposal)) Declaration(Class(:ApprovedFulfillmentPlanner))
+ Declaration(ObjectProperty(:assignedTo)) Declaration(ObjectProperty(:requestsSku)) Declaration(ObjectProperty(:substituteFor)) Declaration(ObjectProperty(:governedBy)) Declaration(ObjectProperty(:certifiedBy)) Declaration(ObjectProperty(:packagedAs)) Declaration(ObjectProperty(:plansFor))
+ Declaration(NamedIndividual(:picker-jordan)) Declaration(NamedIndividual(:line-73)) Declaration(NamedIndividual(:sku-1001)) Declaration(NamedIndividual(:sku-2007)) Declaration(NamedIndividual(:store-12)) Declaration(NamedIndividual(:pref-77)) Declaration(NamedIndividual(:vegan-certified)) Declaration(NamedIndividual(:carton)) Declaration(NamedIndividual(:fulfillment-proposal-planner)) Declaration(NamedIndividual(:propose-sku-substitution))
+ ClassAssertion(:AuthorizedStorePicker :picker-jordan) ClassAssertion(:ActiveOrderLine :line-73) ClassAssertion(:RequestedSku :sku-1001) ClassAssertion(:ApprovedSubstituteSku :sku-2007) ClassAssertion(:RegisteredStore :store-12) ClassAssertion(:ActiveCustomerPreference :pref-77) ClassAssertion(:VeganCertification :vegan-certified) ClassAssertion(:ApprovedFulfillmentPlanner :fulfillment-proposal-planner)
+ ClassAssertion(:PackageUnit :carton) ClassAssertion(:SubstitutionProposal :propose-sku-substitution)
+ ObjectPropertyAssertion(:assignedTo :picker-jordan :store-12) ObjectPropertyAssertion(:requestsSku :line-73 :sku-1001) ObjectPropertyAssertion(:substituteFor :sku-2007 :sku-1001) ObjectPropertyAssertion(:governedBy :line-73 :pref-77) ObjectPropertyAssertion(:certifiedBy :sku-2007 :vegan-certified) ObjectPropertyAssertion(:plansFor :fulfillment-proposal-planner :line-73)
+ ObjectPropertyAssertion(:packagedAs :sku-2007 :carton)
+)

@@ -1,0 +1,12 @@
+@prefix : <urn:agent-calculus:building-demand-response:> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:SetbackRequestShape a sh:NodeShape ; sh:targetClass :SetbackRequest ; sh:closed true ; sh:ignoredProperties ( rdf:type ) ;
+  sh:property [ sh:path :building ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :hq-1 ] ;
+  sh:property [ sh:path :zone ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :zone-4e ] ;
+  sh:property [ sh:path :equipment ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :ahu-4e ] ;
+  sh:property [ sh:path :event ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :dr-778 ] ;
+  sh:property [ sh:path :setbackCelsius ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:hasValue 1 ] ;
+  sh:property [ sh:path :durationMinutes ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:hasValue 30 ] .

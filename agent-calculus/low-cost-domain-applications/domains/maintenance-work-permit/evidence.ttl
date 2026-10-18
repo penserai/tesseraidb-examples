@@ -1,0 +1,10 @@
+@prefix : <urn:agent-calculus:maintenance-work-permit:> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:permit-evidence-4412 a :PermitSafetyEvidence ;
+  :workOrder :wo-88219 ; :asset :p-17 ; :location :unit-3 ; :permit :ptw-4412 ;
+  :task :mechanical-seal-replacement ; :shift :day-shift ; :durationHours 2 ;
+  :verifiedIsolationPoints 4 ; :requiredIsolationPoints 4 ; :isolationSignatures 2 ;
+  :residualVoltage "0"^^xsd:decimal ; :residualPressureBar "0"^^xsd:decimal ; :oxygenPercent "20.9"^^xsd:decimal ; :lelPercent "0"^^xsd:decimal ; :h2sPpm "0"^^xsd:decimal ;
+  :gasDetectorCalibrated true ; :ppeVerified true ; :assetState :stopped ; :operationsState :maintenance-ready ; :concurrentWorkCount 0 ; :conflictingPermitCount 0 ; :permitRevision 3 ;
+  :observedAt "2026-10-17T18:31:00Z"^^xsd:dateTime ; :provenanceDigest "sha256:2313f590ddba549176b616914f40e7adf68e33417f46c172842271794d65d09a"^^xsd:string ; :source :signed-maintenance-safety-snapshot .

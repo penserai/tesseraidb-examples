@@ -1,0 +1,13 @@
+@prefix : <urn:agent-calculus:cloud-volume-hygiene:> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:QuarantineRequestShape a sh:NodeShape ; sh:targetClass :QuarantineRequest ; sh:closed true ; sh:ignoredProperties ( rdf:type ) ;
+  sh:property [ sh:path :account ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :account-123456789012 ] ;
+  sh:property [ sh:path :environment ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :production ] ;
+  sh:property [ sh:path :region ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :us-west-2 ] ;
+  sh:property [ sh:path :volume ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :vol-0abc1234def567890 ] ;
+  sh:property [ sh:path :snapshot ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :snap-0123456789abcdef0 ] ;
+  sh:property [ sh:path :operation ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :quarantine-for-deletion ] ;
+  sh:property [ sh:path :retentionDays ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:hasValue 30 ] .

@@ -1,0 +1,13 @@
+@prefix : <urn:agent-calculus:manufacturing-disposition:> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+
+:DispositionRequestShape
+    a sh:NodeShape ;
+    sh:targetClass :DispositionRequest ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:message "manufacturing.request.closed" ;
+    sh:property [ sh:path :part ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :hm42-00981 ; sh:message "manufacturing.part.required" ] ;
+    sh:property [ sh:path :lot ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :lot-24018 ; sh:message "manufacturing.lot.required" ] ;
+    sh:property [ sh:path :inspection ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :ir-8842 ; sh:message "manufacturing.inspection.required" ] .

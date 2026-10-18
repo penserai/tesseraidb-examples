@@ -1,0 +1,22 @@
+{
+  "id":"laboratory-sample-routing","version":"1","intent_instructions":"Select route_sample only for a registered custody-preserving assay route; otherwise unknown.",
+  "intents":{"route_sample":{"description":"Propose sample routing under custody and quality controls","type_iri":"urn:agent-calculus:laboratory-sample-routing:RoutingRequest","required_slots":["accession","analyzer","assay","biosafety","custody","laboratory","specimen"],"action":"propose_sample_route"}},
+  "slots":{
+    "accession":{"description":"registered sample accession","predicate_iri":"urn:agent-calculus:laboratory-sample-routing:accession"},"analyzer":{"description":"qualified analyzer","predicate_iri":"urn:agent-calculus:laboratory-sample-routing:analyzer"},"assay":{"description":"ordered assay","predicate_iri":"urn:agent-calculus:laboratory-sample-routing:assay"},"biosafety":{"description":"required biosafety level","predicate_iri":"urn:agent-calculus:laboratory-sample-routing:biosafety"},"custody":{"description":"signed custody record","predicate_iri":"urn:agent-calculus:laboratory-sample-routing:custody"},"laboratory":{"description":"destination laboratory","predicate_iri":"urn:agent-calculus:laboratory-sample-routing:laboratory"},"specimen":{"description":"specimen type","predicate_iri":"urn:agent-calculus:laboratory-sample-routing:specimen"}
+  },
+  "actions":{"propose_sample_route":{"description":"Propose a LIMS route without modifying the queue","action_iri":"urn:agent-calculus:laboratory-sample-routing:propose-sample-route","capability_class_iri":"urn:agent-calculus:laboratory-sample-routing:SampleRouteProposal"}},
+  "harvest_rules":[
+    {"kind":"reject","id":"reject-lab-bypass","pattern":"(?i)\\b(?:skip\\s+custody|discard|alter\\s+(?:the\\s+)?result|bypass\\s+biosafety)\\b","code":"laboratory_safety_bypass_forbidden"},
+    {"kind":"closed_lookup","id":"accession-registry","slot":"accession","pattern":"(?i)\\b(?P<value>ACC-[0-9]{4})\\b","capture":"value","values":{"ACC-2048":{"type":"iri","value":"urn:agent-calculus:laboratory-sample-routing:acc-2048"}},"rejection_code":"unsupported_accession"},
+    {"kind":"closed_lookup","id":"analyzer-registry","slot":"analyzer","pattern":"(?i)\\b(?P<value>CHEM-[0-9])\\b","capture":"value","values":{"CHEM-7":{"type":"iri","value":"urn:agent-calculus:laboratory-sample-routing:chem-7"}},"rejection_code":"unsupported_analyzer"},
+    {"kind":"closed_lookup","id":"custody-registry","slot":"custody","pattern":"(?i)\\b(?P<value>COC-[0-9]{3})\\b","capture":"value","values":{"COC-881":{"type":"iri","value":"urn:agent-calculus:laboratory-sample-routing:coc-881"}},"rejection_code":"unsupported_custody"},
+    {"kind":"alias","id":"specimen-serum","slot":"specimen","aliases":["serum"],"value":{"type":"iri","value":"urn:agent-calculus:laboratory-sample-routing:serum"},"whole_word":true},
+    {"kind":"alias","id":"assay-potassium","slot":"assay","aliases":["potassium assay"],"value":{"type":"iri","value":"urn:agent-calculus:laboratory-sample-routing:potassium-assay"},"whole_word":true},
+    {"kind":"alias","id":"lab-chemistry","slot":"laboratory","aliases":["central chemistry"],"value":{"type":"iri","value":"urn:agent-calculus:laboratory-sample-routing:central-chemistry"},"whole_word":true},
+    {"kind":"alias","id":"biosafety-two","slot":"biosafety","aliases":["biosafety two"],"value":{"type":"iri","value":"urn:agent-calculus:laboratory-sample-routing:biosafety-two"},"whole_word":true}
+  ],
+  "lexical_coverage":{"rejection_code":"unmatched_lexical_input","allowlisted_ignores":[{"id":"lab-connectives","pattern":"(?i)\\b(?:route|accession|for|to|use|analyzer|with|custody|under)\\b"}]},
+  "prompts":{"initial":{"id":"lab.initial","text":"Which accession and assay?"},"ambiguous":{"id":"lab.ambiguous","text":"Choose one registered candidate."},"out_of_domain":{"id":"lab.out","text":"That request is outside sample routing."},"rejected":{"id":"lab.rejected","text":"The request was rejected without a LIMS mutation."},"missing_slots":{
+    "accession":{"id":"lab.accession.required","text":"Provide accession."},"analyzer":{"id":"lab.analyzer.required","text":"Provide analyzer."},"assay":{"id":"lab.assay.required","text":"Provide assay."},"biosafety":{"id":"lab.biosafety.required","text":"Provide biosafety level."},"custody":{"id":"lab.custody.required","text":"Provide custody record."},"laboratory":{"id":"lab.laboratory.required","text":"Provide laboratory."},"specimen":{"id":"lab.specimen.required","text":"Provide specimen."}
+  }}
+}

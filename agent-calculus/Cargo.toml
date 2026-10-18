@@ -1,0 +1,42 @@
+[workspace]
+resolver = "3"
+members = [
+    "checkout-incident",
+    "jit-production-access",
+    "low-cost-domain-applications",
+    "wind-turbine-safe-stop",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.88"
+license = "Apache-2.0"
+repository = "https://github.com/penserai/tesseraidb-examples"
+authors = ["Tesserai"]
+
+# Customer installations resolve these packages from the Tesserai distribution
+# configured for their environment. Runtime and reasoner implementations are
+# deliberately not vendored into this public examples repository.
+[workspace.dependencies]
+agent-calculus = "=0.1.0"
+agent-calculus-domain = "=0.1.0"
+agent-calculus-jev = "=0.1.0"
+agent-calculus-llm = "=0.1.0"
+agent-calculus-ollama = "=0.1.0"
+agent-calculus-shacl = "=0.1.0"
+agent-calculus-sroiq = "=0.1.0"
+async-trait = "0.1"
+clap = { version = "4", features = ["derive"] }
+oxigraph = { version = "=0.5.4", default-features = false }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+time = { version = "0.3", features = ["parsing"] }
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "time"] }
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+missing_debug_implementations = "warn"
+
+[workspace.lints.clippy]
+all = { level = "warn", priority = -1 }

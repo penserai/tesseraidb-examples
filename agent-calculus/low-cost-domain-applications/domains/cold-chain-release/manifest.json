@@ -1,0 +1,35 @@
+{
+  "id": "cold-chain-release", "version": "1",
+  "intent_instructions": "Select evaluate_release only for a request to evaluate a registered cold-chain pallet, shipment, vaccine lot, receiving site, and calibrated logger; otherwise select unknown.",
+  "intents": { "evaluate_release": { "description": "Evaluate signed logger and custody evidence", "type_iri": "urn:agent-calculus:cold-chain-release:ReleaseRequest", "required_slots": ["logger", "lot", "pallet", "shipment", "site"], "action": "evaluate_cold_chain_release" } },
+  "slots": {
+    "logger": { "description": "registered calibrated temperature logger", "predicate_iri": "urn:agent-calculus:cold-chain-release:logger" },
+    "lot": { "description": "registered refrigerated vaccine lot", "predicate_iri": "urn:agent-calculus:cold-chain-release:lot" },
+    "pallet": { "description": "registered cold-chain pallet", "predicate_iri": "urn:agent-calculus:cold-chain-release:pallet" },
+    "shipment": { "description": "registered active shipment", "predicate_iri": "urn:agent-calculus:cold-chain-release:shipment" },
+    "site": { "description": "registered receiving site", "predicate_iri": "urn:agent-calculus:cold-chain-release:site" }
+  },
+  "actions": { "evaluate_cold_chain_release": { "description": "Simulate release into usable inventory", "action_iri": "urn:agent-calculus:cold-chain-release:evaluate-cold-chain-release", "capability_class_iri": "urn:agent-calculus:cold-chain-release:ApprovedInventoryReleaseTool" } },
+  "harvest_rules": [
+    { "kind": "reject", "id": "reject-cold-chain-bypass", "pattern": "(?i)\\b(?:ignore\\s+(?:the\\s+)?logger|bypass\\s+(?:the\\s+)?cold[- ]chain|release\\s+.*\\s+anyway)\\b", "code": "cold_chain_bypass_forbidden" },
+    { "kind": "closed_lookup", "id": "pallet-registry", "slot": "pallet", "pattern": "(?i)\\b(?P<value>PLT-[0-9]{5})\\b", "capture": "value", "values": { "PLT-88031": { "type": "iri", "value": "urn:agent-calculus:cold-chain-release:plt-88031" } }, "rejection_code": "unsupported_pallet" },
+    { "kind": "closed_lookup", "id": "shipment-registry", "slot": "shipment", "pattern": "(?i)\\b(?P<value>SHP-[0-9]{5})\\b", "capture": "value", "values": { "SHP-24091": { "type": "iri", "value": "urn:agent-calculus:cold-chain-release:shp-24091" } }, "rejection_code": "unsupported_shipment" },
+    { "kind": "closed_lookup", "id": "lot-registry", "slot": "lot", "pattern": "(?i)\\b(?P<value>BIO-[0-9]{2}[A-Z][0-9]{2})\\b", "capture": "value", "values": { "BIO-26A17": { "type": "iri", "value": "urn:agent-calculus:cold-chain-release:bio-26a17" } }, "rejection_code": "unsupported_lot" },
+    { "kind": "closed_lookup", "id": "site-registry", "slot": "site", "pattern": "(?i)\\b(?P<value>OAK-DC-[0-9]+)\\b", "capture": "value", "values": { "OAK-DC-1": { "type": "iri", "value": "urn:agent-calculus:cold-chain-release:oak-dc-1" } }, "rejection_code": "unsupported_site" },
+    { "kind": "closed_lookup", "id": "logger-registry", "slot": "logger", "pattern": "(?i)\\b(?P<value>TL-[0-9]{4})\\b", "capture": "value", "values": { "TL-9904": { "type": "iri", "value": "urn:agent-calculus:cold-chain-release:tl-9904" } }, "rejection_code": "unsupported_logger" }
+  ],
+  "lexical_coverage": { "rejection_code": "unmatched_lexical_input", "allowlisted_ignores": [{ "id": "release-connectives", "pattern": "(?i)\\b(?:evaluate|pallet|from|shipment|release|lot|at|using|logger|the|please|and)\\b" }] },
+  "prompts": {
+    "initial": { "id": "cold-chain.initial", "text": "Which registered shipment and pallet should be evaluated?" },
+    "ambiguous": { "id": "cold-chain.ambiguous", "text": "Choose one registered cold-chain candidate." },
+    "out_of_domain": { "id": "cold-chain.out-of-domain", "text": "That request is outside this refrigerated-shipment release domain." },
+    "rejected": { "id": "cold-chain.rejected", "text": "The release request was rejected without changing inventory." },
+    "missing_slots": {
+      "logger": { "id": "cold-chain.logger.required", "text": "Provide the registered logger ID." },
+      "lot": { "id": "cold-chain.lot.required", "text": "Provide the registered vaccine lot ID." },
+      "pallet": { "id": "cold-chain.pallet.required", "text": "Provide the registered pallet ID." },
+      "shipment": { "id": "cold-chain.shipment.required", "text": "Provide the registered shipment ID." },
+      "site": { "id": "cold-chain.site.required", "text": "Provide the registered receiving site ID." }
+    }
+  }
+}

@@ -1,0 +1,17 @@
+@prefix : <urn:agent-calculus:jit-access:> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:AccessRequestShape
+    a sh:NodeShape ;
+    sh:targetClass :AccessRequest ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:message "jit.request.closed" ;
+    sh:property [ sh:path :service ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:in ( :checkout-api ) ; sh:message "jit.service.required" ] ;
+    sh:property [ sh:path :environment ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:in ( :production ) ; sh:message "jit.environment.required" ] ;
+    sh:property [ sh:path :region ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:in ( :eu-west-1 ) ; sh:message "jit.region.required" ] ;
+    sh:property [ sh:path :incident ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:in ( :incident-inc-4821 ) ; sh:message "jit.incident.required" ] ;
+    sh:property [ sh:path :capability ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:in ( :read-logs :query-metrics :run-read-only-diagnostic :production-shell :change-configuration ) ; sh:message "jit.capability.required" ] ;
+    sh:property [ sh:path :duration ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:in ( :duration-15m :duration-30m :duration-60m ) ; sh:message "jit.duration.required" ] .

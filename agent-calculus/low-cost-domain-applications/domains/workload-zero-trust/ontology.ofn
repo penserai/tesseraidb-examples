@@ -1,0 +1,10 @@
+Prefix(:=<urn:agent-calculus:workload-zero-trust:>)
+Ontology(
+ Declaration(Class(:AttestedWorkload)) Declaration(Class(:ProtectedService)) Declaration(Class(:ReadOnlyMethod)) Declaration(Class(:ServiceEndpoint)) Declaration(Class(:DeploymentEnvironment)) Declaration(Class(:CloudRegion)) Declaration(Class(:EphemeralGrantProposal)) Declaration(Class(:ApprovedCredentialProposalPlanner))
+ Declaration(ObjectProperty(:mayInvoke)) Declaration(ObjectProperty(:exposes)) Declaration(ObjectProperty(:permitsMethod)) Declaration(ObjectProperty(:canPlanFor)) Declaration(ObjectProperty(:deployedIn))
+ Declaration(NamedIndividual(:inventory-api)) Declaration(NamedIndividual(:stock-api)) Declaration(NamedIndividual(:production)) Declaration(NamedIndividual(:us-east-1)) Declaration(NamedIndividual(:http-get)) Declaration(NamedIndividual(:availability-endpoint)) Declaration(NamedIndividual(:credential-proposal-planner)) Declaration(NamedIndividual(:propose-ephemeral-grant))
+ ClassAssertion(:AttestedWorkload :inventory-api) ClassAssertion(:ProtectedService :stock-api) ClassAssertion(:ReadOnlyMethod :http-get) ClassAssertion(:ServiceEndpoint :availability-endpoint) ClassAssertion(:ApprovedCredentialProposalPlanner :credential-proposal-planner)
+ ClassAssertion(:DeploymentEnvironment :production) ClassAssertion(:CloudRegion :us-east-1) ClassAssertion(:EphemeralGrantProposal :propose-ephemeral-grant)
+ ObjectPropertyAssertion(:mayInvoke :inventory-api :stock-api) ObjectPropertyAssertion(:exposes :stock-api :availability-endpoint) ObjectPropertyAssertion(:permitsMethod :availability-endpoint :http-get) ObjectPropertyAssertion(:canPlanFor :credential-proposal-planner :stock-api)
+ ObjectPropertyAssertion(:deployedIn :inventory-api :production) ObjectPropertyAssertion(:deployedIn :inventory-api :us-east-1)
+)

@@ -1,0 +1,9 @@
+@prefix : <urn:agent-calculus:invoice-three-way-match:> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:match-evidence-inv-88231 a :MatchEvidence ;
+  :invoice :inv-88231 ; :purchaseOrder :po-7319 ; :goodsReceipt :gr-5512 ; :vendor :sup-0144 ; :currency :usd ;
+  :orderedQuantity 100 ; :invoicedQuantity 100 ; :receivedQuantity 100 ;
+  :orderedUnitPriceCents 2450 ; :invoicedUnitPriceCents 2450 ; :subtotalCents 245000 ; :taxCents 19600 ; :totalCents 264600 ;
+  :toleranceBasisPoints 50 ; :duplicateCount 0 ; :poStatus :approved ; :receiptStatus :accepted ; :invoiceStatus :pending-match ;
+  :vendorFingerprint "sha256:7ce73909d1e87a13c348447f2d5dbe38d14a72c6e8bf639a31993e2bc9d87b4e"^^xsd:string ; :observedAt "2026-10-17T18:28:30Z"^^xsd:dateTime ; :source :signed-erp-snapshot .

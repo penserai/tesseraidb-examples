@@ -2,6 +2,18 @@
 
 This directory contains example scripts demonstrating various capabilities of TesseraiDB.
 
+## Agent Calculus (20 customer examples)
+
+The [`agent-calculus/`](agent-calculus/) workspace contains twenty bounded-agent
+examples spanning security, infrastructure, industry, commerce, administration,
+and care. Each example includes the customer application code and its domain
+assets: manifests, ontologies, SHACL shapes, connector fixtures, rejection
+cases, and simulation-only effects.
+
+These examples use the supported Tesserai customer libraries and backends. This
+public repository does not contain the Agent Calculus runtime, model-provider
+adapters, reasoner implementation, or other Tesserai internals.
+
 ## Domain Examples (15 Use Cases)
 
 The following domain-specific examples demonstrate TesseraiDB's Digital Twin capabilities:

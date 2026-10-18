@@ -1,0 +1,21 @@
+{
+  "id":"workload-zero-trust","version":"1","intent_instructions":"Select authorize_call when a registered workload asks for access to the registered target service. A later turn may provide method, endpoint, and duration; incompleteness alone is not unknown. Otherwise select unknown.",
+  "intents":{"authorize_call":{"description":"Authorize inventory-api to call stock-api with a later bounded method and endpoint","type_iri":"urn:agent-calculus:workload-zero-trust:GrantRequest","required_slots":["duration_minutes","endpoint","environment","method","region","target"],"action":"propose_ephemeral_grant"}},
+  "slots":{
+    "duration_minutes":{"description":"bounded grant duration","predicate_iri":"urn:agent-calculus:workload-zero-trust:durationMinutes"},"endpoint":{"description":"registered service endpoint","predicate_iri":"urn:agent-calculus:workload-zero-trust:endpoint"},"environment":{"description":"deployment environment","predicate_iri":"urn:agent-calculus:workload-zero-trust:environment"},"method":{"description":"HTTP method","predicate_iri":"urn:agent-calculus:workload-zero-trust:method"},"region":{"description":"deployment region","predicate_iri":"urn:agent-calculus:workload-zero-trust:region"},"target":{"description":"protected target service","predicate_iri":"urn:agent-calculus:workload-zero-trust:target"}
+  },
+  "actions":{"propose_ephemeral_grant":{"description":"Propose a short-lived read-only grant","action_iri":"urn:agent-calculus:workload-zero-trust:propose-ephemeral-grant","capability_class_iri":"urn:agent-calculus:workload-zero-trust:EphemeralGrantProposal"}},
+  "harvest_rules":[
+    {"kind":"reject","id":"reject-excess-authority","pattern":"(?i)\\b(?:POST|PUT|PATCH|DELETE|admin|wildcard|all\\s+endpoints|one\\s+hour|long[- ]lived)\\b","code":"excessive_workload_authority"},
+    {"kind":"closed_lookup","id":"target-registry","slot":"target","pattern":"(?i)\\b(?P<value>stock-api)\\b","capture":"value","values":{"stock-api":{"type":"iri","value":"urn:agent-calculus:workload-zero-trust:stock-api"}},"rejection_code":"unsupported_target"},
+    {"kind":"alias","id":"environment-production","slot":"environment","aliases":["production"],"value":{"type":"iri","value":"urn:agent-calculus:workload-zero-trust:production"},"whole_word":true},
+    {"kind":"closed_lookup","id":"region-registry","slot":"region","pattern":"(?i)\\b(?P<value>us-east-1)\\b","capture":"value","values":{"us-east-1":{"type":"iri","value":"urn:agent-calculus:workload-zero-trust:us-east-1"}},"rejection_code":"unsupported_region"},
+    {"kind":"alias","id":"method-get","slot":"method","aliases":["GET"],"value":{"type":"iri","value":"urn:agent-calculus:workload-zero-trust:http-get"},"whole_word":true},
+    {"kind":"alias","id":"endpoint-availability","slot":"endpoint","aliases":["availability"],"value":{"type":"iri","value":"urn:agent-calculus:workload-zero-trust:availability-endpoint"},"whole_word":true},
+    {"kind":"alias","id":"duration-ten","slot":"duration_minutes","aliases":["10 minutes"],"value":{"type":"integer","value":10},"whole_word":true}
+  ],
+  "lexical_coverage":{"rejection_code":"unmatched_lexical_input","allowlisted_ignores":[{"id":"workload-connectives","pattern":"(?i)\\b(?:inventory-api|needs|access|in|allow|for)\\b"}]},
+  "prompts":{"initial":{"id":"workload.initial","text":"Which protected service is requested?"},"ambiguous":{"id":"workload.ambiguous","text":"Choose one registered candidate."},"out_of_domain":{"id":"workload.out","text":"That request is outside the installed workload policy."},"rejected":{"id":"workload.rejected","text":"The request was rejected before credential issuance."},"missing_slots":{
+    "duration_minutes":{"id":"workload.duration.required","text":"Choose the ten-minute duration."},"endpoint":{"id":"workload.endpoint.required","text":"Choose the endpoint."},"environment":{"id":"workload.environment.required","text":"Choose the environment."},"method":{"id":"workload.method.required","text":"Choose GET."},"region":{"id":"workload.region.required","text":"Choose the region."},"target":{"id":"workload.target.required","text":"Choose the target service."}
+  }}
+}

@@ -1,0 +1,25 @@
+@prefix : <urn:agent-calculus:accessibility:> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:AccommodationRegistrationEvidenceShape
+    a sh:NodeShape ;
+    sh:targetClass :AccommodationRegistrationEvidence ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:message "accessibility.registration.closed" ;
+    sh:property [ sh:path :participant ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:in ( :participant-jordan-42 ) ; sh:message "accessibility.registration.participant" ] ;
+    sh:property [ sh:path :session ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:in ( :event-session-evt-204 ) ; sh:message "accessibility.registration.session" ] ;
+    sh:property [ sh:path :room ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:in ( :room-a ) ; sh:message "accessibility.registration.room" ] ;
+    sh:property [ sh:path :requestedProfile ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:in ( :captions-high-contrast ) ; sh:message "accessibility.registration.profile" ] ;
+    sh:property [ sh:path :consentStatus ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:in ( :current-consent ) ; sh:message "accessibility.registration.consent" ] ;
+    sh:property [ sh:path :sessionStatus ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:in ( :scheduled ) ; sh:message "accessibility.registration.status" ] ;
+    sh:property [ sh:path :observedAtUnix ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 0 ; sh:message "accessibility.registration.observed-at" ] ;
+    sh:property [ sh:path :evaluatedAtUnix ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 1792278060 ; sh:maxInclusive 1792278360 ; sh:message "accessibility.registration.evaluated-at" ] ;
+    sh:property [ sh:path :durationMinutes ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 1 ; sh:maxInclusive 120 ; sh:message "accessibility.registration.duration" ] ;
+    sh:property [ sh:path :requiresDiagnosis ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:boolean ; sh:hasValue false ; sh:message "accessibility.registration.no-diagnosis" ] ;
+    sh:property [ sh:path :changesLifeSafetySystem ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:boolean ; sh:hasValue false ; sh:message "accessibility.registration.no-life-safety" ] ;
+    sh:property [ sh:path :automaticRevert ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:boolean ; sh:hasValue true ; sh:message "accessibility.registration.revert" ] ;
+    sh:property [ sh:path :registrationDigest ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:pattern "^sha256:[0-9a-f]{64}$" ; sh:message "accessibility.registration.digest" ] ;
+    sh:property [ sh:path :source ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:in ( :event-registration-system ) ; sh:message "accessibility.registration.source" ] .

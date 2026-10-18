@@ -1,0 +1,13 @@
+@prefix : <urn:agent-calculus:maintenance-work-permit:> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:PermitRequestShape a sh:NodeShape ; sh:targetClass :PermitRequest ; sh:closed true ; sh:ignoredProperties ( rdf:type ) ;
+  sh:property [ sh:path :workOrder ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :wo-88219 ] ;
+  sh:property [ sh:path :asset ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :p-17 ] ;
+  sh:property [ sh:path :location ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :unit-3 ] ;
+  sh:property [ sh:path :permit ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :ptw-4412 ] ;
+  sh:property [ sh:path :task ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :mechanical-seal-replacement ] ;
+  sh:property [ sh:path :shift ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :day-shift ] ;
+  sh:property [ sh:path :durationHours ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:hasValue 2 ] .

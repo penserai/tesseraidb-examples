@@ -1,0 +1,18 @@
+@prefix : <urn:agent-calculus:accessibility:> .
+
+:registration-observation-evt-204
+    a :AccommodationRegistrationEvidence ;
+    :participant :participant-jordan-42 ;
+    :session :event-session-evt-204 ;
+    :room :room-a ;
+    :requestedProfile :captions-high-contrast ;
+    :consentStatus :current-consent ;
+    :sessionStatus :scheduled ;
+    :observedAtUnix 1792278060 ;
+    :evaluatedAtUnix 1792278100 ;
+    :durationMinutes 90 ;
+    :requiresDiagnosis false ;
+    :changesLifeSafetySystem false ;
+    :automaticRevert true ;
+    :registrationDigest "sha256:7ef76e76cf5f8df4a610cc86265773ce28e3a7f201a64d99246e7cc53f8b6510" ;
+    :source :event-registration-system .

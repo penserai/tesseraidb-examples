@@ -1,0 +1,10 @@
+Prefix(:=<urn:agent-calculus:secops-containment:>)
+Ontology(
+ Declaration(Class(:TierTwoContainmentAnalyst)) Declaration(Class(:ActiveIncident)) Declaration(Class(:CorrelatedSecurityAlert)) Declaration(Class(:ManagedEndpoint)) Declaration(Class(:NetworkSegment)) Declaration(Class(:ReversibleNetworkIsolation)) Declaration(Class(:ContainmentApprovalTier)) Declaration(Class(:ApprovedContainmentPlanner))
+ Declaration(ObjectProperty(:assignedTo)) Declaration(ObjectProperty(:authorizedAtTier)) Declaration(ObjectProperty(:supportsIncident)) Declaration(ObjectProperty(:concernsHost)) Declaration(ObjectProperty(:memberOf)) Declaration(ObjectProperty(:supportsOperation))
+ Declaration(NamedIndividual(:secops-analyst-42)) Declaration(NamedIndividual(:inc-7741)) Declaration(NamedIndividual(:alt-9007)) Declaration(NamedIndividual(:fin-lt-204)) Declaration(NamedIndividual(:finance-user)) Declaration(NamedIndividual(:edr-network-isolation)) Declaration(NamedIndividual(:containment-proposal-planner)) Declaration(NamedIndividual(:tier-2)) Declaration(NamedIndividual(:propose-endpoint-isolation))
+ ClassAssertion(:TierTwoContainmentAnalyst :secops-analyst-42) ClassAssertion(:ActiveIncident :inc-7741) ClassAssertion(:CorrelatedSecurityAlert :alt-9007) ClassAssertion(:ManagedEndpoint :fin-lt-204) ClassAssertion(:NetworkSegment :finance-user) ClassAssertion(:ReversibleNetworkIsolation :edr-network-isolation) ClassAssertion(:ApprovedContainmentPlanner :containment-proposal-planner)
+ ClassAssertion(:ContainmentApprovalTier :tier-2) ClassAssertion(:ReversibleNetworkIsolation :propose-endpoint-isolation)
+ ObjectPropertyAssertion(:assignedTo :secops-analyst-42 :inc-7741) ObjectPropertyAssertion(:supportsIncident :alt-9007 :inc-7741) ObjectPropertyAssertion(:concernsHost :alt-9007 :fin-lt-204) ObjectPropertyAssertion(:memberOf :fin-lt-204 :finance-user) ObjectPropertyAssertion(:supportsOperation :containment-proposal-planner :edr-network-isolation)
+ ObjectPropertyAssertion(:authorizedAtTier :secops-analyst-42 :tier-2)
+)

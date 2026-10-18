@@ -1,0 +1,11 @@
+Prefix(:=<urn:agent-calculus:cloud-volume-hygiene:>)
+Ontology(
+ Declaration(Class(:EligibleFinOpsOperator)) Declaration(Class(:ProductionAccount)) Declaration(Class(:ProductionEnvironment)) Declaration(Class(:ManagedVolume)) Declaration(Class(:CloudRegion)) Declaration(Class(:VerifiedRecoverySnapshot)) Declaration(Class(:DeletionQuarantineOperation)) Declaration(Class(:DeletionQuarantineProposal)) Declaration(Class(:ApprovedCloudHygienePlanner))
+ Declaration(ObjectProperty(:authorizedFor)) Declaration(ObjectProperty(:containsVolume)) Declaration(ObjectProperty(:operatesIn)) Declaration(ObjectProperty(:locatedIn)) Declaration(ObjectProperty(:snapshotOf)) Declaration(ObjectProperty(:supportsOperation))
+ SubClassOf(:DeletionQuarantineProposal :DeletionQuarantineOperation)
+ Declaration(NamedIndividual(:finops-operator-9)) Declaration(NamedIndividual(:account-123456789012)) Declaration(NamedIndividual(:production)) Declaration(NamedIndividual(:vol-0abc1234def567890)) Declaration(NamedIndividual(:us-west-2)) Declaration(NamedIndividual(:snap-0123456789abcdef0)) Declaration(NamedIndividual(:quarantine-for-deletion)) Declaration(NamedIndividual(:cloud-hygiene-planner)) Declaration(NamedIndividual(:propose-volume-quarantine))
+ ClassAssertion(:EligibleFinOpsOperator :finops-operator-9) ClassAssertion(:ProductionAccount :account-123456789012) ClassAssertion(:ManagedVolume :vol-0abc1234def567890) ClassAssertion(:CloudRegion :us-west-2) ClassAssertion(:VerifiedRecoverySnapshot :snap-0123456789abcdef0) ClassAssertion(:DeletionQuarantineOperation :quarantine-for-deletion) ClassAssertion(:ApprovedCloudHygienePlanner :cloud-hygiene-planner)
+ ClassAssertion(:ProductionEnvironment :production) ClassAssertion(:DeletionQuarantineProposal :quarantine-for-deletion) ClassAssertion(:DeletionQuarantineProposal :propose-volume-quarantine)
+ ObjectPropertyAssertion(:authorizedFor :finops-operator-9 :account-123456789012) ObjectPropertyAssertion(:containsVolume :account-123456789012 :vol-0abc1234def567890) ObjectPropertyAssertion(:locatedIn :vol-0abc1234def567890 :us-west-2) ObjectPropertyAssertion(:snapshotOf :snap-0123456789abcdef0 :vol-0abc1234def567890) ObjectPropertyAssertion(:supportsOperation :cloud-hygiene-planner :quarantine-for-deletion)
+ ObjectPropertyAssertion(:operatesIn :account-123456789012 :production)
+)

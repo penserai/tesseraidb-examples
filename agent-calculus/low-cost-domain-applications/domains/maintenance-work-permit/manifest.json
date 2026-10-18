@@ -1,0 +1,22 @@
+{
+  "id":"maintenance-work-permit","version":"1","intent_instructions":"Select stage_permit only for the registered zero-energy permit proposal; otherwise unknown.",
+  "intents":{"stage_permit":{"description":"Stage a permit-to-work proposal","type_iri":"urn:agent-calculus:maintenance-work-permit:PermitRequest","required_slots":["asset","duration_hours","location","permit","shift","task","work_order"],"action":"stage_permit_activation"}},
+  "slots":{
+    "asset":{"description":"registered maintained asset","predicate_iri":"urn:agent-calculus:maintenance-work-permit:asset"},"duration_hours":{"description":"bounded permit duration","predicate_iri":"urn:agent-calculus:maintenance-work-permit:durationHours"},"location":{"description":"registered process unit","predicate_iri":"urn:agent-calculus:maintenance-work-permit:location"},"permit":{"description":"registered permit","predicate_iri":"urn:agent-calculus:maintenance-work-permit:permit"},"shift":{"description":"authorized shift","predicate_iri":"urn:agent-calculus:maintenance-work-permit:shift"},"task":{"description":"certified maintenance task","predicate_iri":"urn:agent-calculus:maintenance-work-permit:task"},"work_order":{"description":"active work order","predicate_iri":"urn:agent-calculus:maintenance-work-permit:workOrder"}
+  },
+  "actions":{"stage_permit_activation":{"description":"Create a simulation-only permit activation proposal","action_iri":"urn:agent-calculus:maintenance-work-permit:stage-permit-activation","capability_class_iri":"urn:agent-calculus:maintenance-work-permit:PermitActivationProposal"}},
+  "harvest_rules":[
+    {"kind":"reject","id":"reject-maintenance-bypass","pattern":"(?i)\\b(?:skip\\s+(?:LOTO|lockout|the gas test)|no\\s+gas\\s+test|energize|start\\s+(?:the\\s+)?asset)\\b","code":"maintenance_safety_bypass"},
+    {"kind":"closed_lookup","id":"work-order-registry","slot":"work_order","pattern":"(?i)\\b(?P<value>WO-[0-9]{5})\\b","capture":"value","values":{"WO-88219":{"type":"iri","value":"urn:agent-calculus:maintenance-work-permit:wo-88219"}},"rejection_code":"unsupported_work_order"},
+    {"kind":"closed_lookup","id":"asset-registry","slot":"asset","pattern":"(?i)\\b(?P<value>P-[0-9]{2})\\b","capture":"value","values":{"P-17":{"type":"iri","value":"urn:agent-calculus:maintenance-work-permit:p-17"}},"rejection_code":"unsupported_asset"},
+    {"kind":"closed_lookup","id":"location-registry","slot":"location","pattern":"(?i)\\b(?P<value>UNIT-[0-9])\\b","capture":"value","values":{"UNIT-3":{"type":"iri","value":"urn:agent-calculus:maintenance-work-permit:unit-3"}},"rejection_code":"unsupported_location"},
+    {"kind":"closed_lookup","id":"permit-registry","slot":"permit","pattern":"(?i)\\b(?P<value>PTW-[0-9]{4})\\b","capture":"value","values":{"PTW-4412":{"type":"iri","value":"urn:agent-calculus:maintenance-work-permit:ptw-4412"}},"rejection_code":"unsupported_permit"},
+    {"kind":"alias","id":"task-seal","slot":"task","aliases":["seal replacement"],"value":{"type":"iri","value":"urn:agent-calculus:maintenance-work-permit:mechanical-seal-replacement"},"whole_word":true},
+    {"kind":"alias","id":"shift-day","slot":"shift","aliases":["day shift"],"value":{"type":"iri","value":"urn:agent-calculus:maintenance-work-permit:day-shift"},"whole_word":true},
+    {"kind":"alias","id":"duration-two","slot":"duration_hours","aliases":["two hours"],"value":{"type":"integer","value":2},"whole_word":true}
+  ],
+  "lexical_coverage":{"rejection_code":"unmatched_lexical_input","allowlisted_ignores":[{"id":"maintenance-connectives","pattern":"(?i)\\b(?:prepare|for|pump|in|use|on)\\b"}]},
+  "prompts":{"initial":{"id":"maintenance.initial","text":"Which work order and asset?"},"ambiguous":{"id":"maintenance.ambiguous","text":"Choose one registered candidate."},"out_of_domain":{"id":"maintenance.out","text":"That request is outside maintenance permitting."},"rejected":{"id":"maintenance.rejected","text":"The request was rejected without permit activation."},"missing_slots":{
+    "asset":{"id":"maintenance.asset.required","text":"Provide the asset."},"duration_hours":{"id":"maintenance.duration.required","text":"Choose two hours."},"location":{"id":"maintenance.location.required","text":"Provide the location."},"permit":{"id":"maintenance.permit.required","text":"Provide the permit."},"shift":{"id":"maintenance.shift.required","text":"Choose the shift."},"task":{"id":"maintenance.task.required","text":"Choose the task."},"work_order":{"id":"maintenance.work-order.required","text":"Provide the work order."}
+  }}
+}

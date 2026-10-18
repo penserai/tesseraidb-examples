@@ -1,0 +1,22 @@
+{
+  "id":"ev-charging-dispatch","version":"1","intent_instructions":"Select schedule_charge only for a registered bounded depot-charge proposal; otherwise unknown.",
+  "intents":{"schedule_charge":{"description":"Propose a grid- and route-safe charge","type_iri":"urn:agent-calculus:ev-charging-dispatch:ChargeRequest","required_slots":["charger","depot","energy_kwh","operation","tariff","vehicle","window"],"action":"propose_scheduled_charge"}},
+  "slots":{
+    "charger":{"description":"available EVSE","predicate_iri":"urn:agent-calculus:ev-charging-dispatch:charger"},"depot":{"description":"fleet depot","predicate_iri":"urn:agent-calculus:ev-charging-dispatch:depot"},"energy_kwh":{"description":"requested energy in kWh","predicate_iri":"urn:agent-calculus:ev-charging-dispatch:energyKwh"},"operation":{"description":"scheduled-charge operation","predicate_iri":"urn:agent-calculus:ev-charging-dispatch:operation"},"tariff":{"description":"registered tariff","predicate_iri":"urn:agent-calculus:ev-charging-dispatch:tariff"},"vehicle":{"description":"managed fleet EV","predicate_iri":"urn:agent-calculus:ev-charging-dispatch:vehicle"},"window":{"description":"registered charge window","predicate_iri":"urn:agent-calculus:ev-charging-dispatch:window"}
+  },
+  "actions":{"propose_scheduled_charge":{"description":"Propose a scheduled charge without commanding hardware","action_iri":"urn:agent-calculus:ev-charging-dispatch:propose-scheduled-charge","capability_class_iri":"urn:agent-calculus:ev-charging-dispatch:ScheduledChargeProposal"}},
+  "harvest_rules":[
+    {"kind":"reject","id":"reject-charging-override","pattern":"(?i)\\b(?:override|bypass|ignore)\\s+(?:the\\s+)?(?:grid|route|interlock)|force\\s+charge\\b","code":"charging_safety_override_forbidden"},
+    {"kind":"closed_lookup","id":"vehicle-registry","slot":"vehicle","pattern":"(?i)\\b(?P<value>VAN-[0-9]{3})\\b","capture":"value","values":{"VAN-042":{"type":"iri","value":"urn:agent-calculus:ev-charging-dispatch:van-042"}},"rejection_code":"unsupported_vehicle"},
+    {"kind":"closed_lookup","id":"charger-registry","slot":"charger","pattern":"(?i)\\b(?P<value>EVSE-[0-9]{2})\\b","capture":"value","values":{"EVSE-17":{"type":"iri","value":"urn:agent-calculus:ev-charging-dispatch:evse-17"}},"rejection_code":"unsupported_charger"},
+    {"kind":"closed_lookup","id":"tariff-registry","slot":"tariff","pattern":"(?i)\\b(?P<value>T-[A-Z]+)\\b","capture":"value","values":{"T-LOW":{"type":"iri","value":"urn:agent-calculus:ev-charging-dispatch:t-low"}},"rejection_code":"unsupported_tariff"},
+    {"kind":"closed_lookup","id":"window-registry","slot":"window","pattern":"(?i)\\b(?P<value>W-[0-9]{4})\\b","capture":"value","values":{"W-0200":{"type":"iri","value":"urn:agent-calculus:ev-charging-dispatch:w-0200"}},"rejection_code":"unsupported_window"},
+    {"kind":"alias","id":"depot-west","slot":"depot","aliases":["depot west"],"value":{"type":"iri","value":"urn:agent-calculus:ev-charging-dispatch:depot-west"},"whole_word":true},
+    {"kind":"alias","id":"energy-thirty-five","slot":"energy_kwh","aliases":["35 kWh"],"value":{"type":"integer","value":35},"whole_word":true},
+    {"kind":"alias","id":"operation-scheduled","slot":"operation","aliases":["scheduled charge"],"value":{"type":"iri","value":"urn:agent-calculus:ev-charging-dispatch:scheduled-charge"},"whole_word":true}
+  ],
+  "lexical_coverage":{"rejection_code":"unmatched_lexical_input","allowlisted_ignores":[{"id":"ev-connectives","pattern":"(?i)\\b(?:schedule|at|in|under|tariff|use|window|for)\\b"}]},
+  "prompts":{"initial":{"id":"ev.initial","text":"Which vehicle and charger?"},"ambiguous":{"id":"ev.ambiguous","text":"Choose one registered candidate."},"out_of_domain":{"id":"ev.out","text":"That request is outside fleet charging."},"rejected":{"id":"ev.rejected","text":"The request was rejected without a charge command."},"missing_slots":{
+    "charger":{"id":"ev.charger.required","text":"Provide charger."},"depot":{"id":"ev.depot.required","text":"Provide depot."},"energy_kwh":{"id":"ev.energy.required","text":"Provide energy."},"operation":{"id":"ev.operation.required","text":"Choose scheduled charge."},"tariff":{"id":"ev.tariff.required","text":"Provide tariff."},"vehicle":{"id":"ev.vehicle.required","text":"Provide vehicle."},"window":{"id":"ev.window.required","text":"Provide window."}
+  }}
+}

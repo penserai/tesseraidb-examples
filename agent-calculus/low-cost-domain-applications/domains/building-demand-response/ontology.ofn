@@ -1,0 +1,9 @@
+Prefix(:=<urn:agent-calculus:building-demand-response:>)
+Ontology(
+ Declaration(Class(:AuthorizedBuildingOperator)) Declaration(Class(:ManagedBuilding)) Declaration(Class(:DemandResponseEligibleZone)) Declaration(Class(:ControllableAirHandler)) Declaration(Class(:VerifiedDemandResponseEvent)) Declaration(Class(:ApprovedBmsProposalPlanner)) Declaration(Class(:DemandResponseSetbackProposal))
+ Declaration(ObjectProperty(:manages)) Declaration(ObjectProperty(:containsZone)) Declaration(ObjectProperty(:servesZone)) Declaration(ObjectProperty(:appliesTo)) Declaration(ObjectProperty(:plansFor))
+ Declaration(NamedIndividual(:noah-kim)) Declaration(NamedIndividual(:hq-1)) Declaration(NamedIndividual(:zone-4e)) Declaration(NamedIndividual(:ahu-4e)) Declaration(NamedIndividual(:dr-778)) Declaration(NamedIndividual(:bms-proposal-planner)) Declaration(NamedIndividual(:propose-hvac-setback))
+ ClassAssertion(:AuthorizedBuildingOperator :noah-kim) ClassAssertion(:ManagedBuilding :hq-1) ClassAssertion(:DemandResponseEligibleZone :zone-4e) ClassAssertion(:ControllableAirHandler :ahu-4e) ClassAssertion(:VerifiedDemandResponseEvent :dr-778) ClassAssertion(:ApprovedBmsProposalPlanner :bms-proposal-planner)
+ ClassAssertion(:DemandResponseSetbackProposal :propose-hvac-setback)
+ ObjectPropertyAssertion(:manages :noah-kim :hq-1) ObjectPropertyAssertion(:containsZone :hq-1 :zone-4e) ObjectPropertyAssertion(:servesZone :ahu-4e :zone-4e) ObjectPropertyAssertion(:appliesTo :dr-778 :hq-1) ObjectPropertyAssertion(:plansFor :bms-proposal-planner :ahu-4e)
+)

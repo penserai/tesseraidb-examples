@@ -1,0 +1,27 @@
+@prefix : <urn:agent-calculus:supplier-master-resolution:> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:SupplierMatchEvidenceShape
+    a sh:NodeShape ; sh:targetClass :SupplierMatchEvidence ; sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ; sh:message "supplier-resolution.evidence.closed" ;
+    sh:property [ sh:path :stagingRecord ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :staging-record-stg-9012 ] ;
+    sh:property [ sh:path :stagingStatus ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :unlinked ] ;
+    sh:property [ sh:path :stagedLegalName ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:pattern "^Northwind Components$" ] ;
+    sh:property [ sh:path :stagedCountry ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :gb ] ;
+    sh:property [ sh:path :stagedVat ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:pattern "^GB[0-9]{9}$" ] ;
+    sh:property [ sh:path :stagedAddressToken ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:pattern "^manchester-m1-4ab$" ] ;
+    sh:property [ sh:path :canonicalSupplier ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :supplier-sup-00417 ] ;
+    sh:property [ sh:path :supplierStatus ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :active ] ;
+    sh:property [ sh:path :masterLegalName ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:pattern "^Northwind Components Limited$" ] ;
+    sh:property [ sh:path :masterCountry ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :gb ] ;
+    sh:property [ sh:path :masterVat ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:pattern "^GB[0-9]{9}$" ] ;
+    sh:property [ sh:path :masterAddressToken ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:pattern "^manchester-m1-4ab$" ] ;
+    sh:property [ sh:path :bankConflict ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:boolean ; sh:hasValue false ] ;
+    sh:property [ sh:path :matchScore ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:decimal ; sh:minInclusive "0.98"^^xsd:decimal ; sh:maxInclusive "1.0"^^xsd:decimal ] ;
+    sh:property [ sh:path :uniqueRegistryMatches ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 1 ; sh:maxInclusive 1 ] ;
+    sh:property [ sh:path :source ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :erp-master-registry ] ;
+    sh:property [ sh:path :snapshot ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :supplier-registry-snapshot-44 ] ;
+    sh:property [ sh:path :observedAt ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:dateTime ] ;
+    sh:property [ sh:path :evaluatedAt ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:dateTime ; sh:minInclusive "2026-10-17T21:58:00Z"^^xsd:dateTime ; sh:maxInclusive "2026-10-17T22:03:00Z"^^xsd:dateTime ] .

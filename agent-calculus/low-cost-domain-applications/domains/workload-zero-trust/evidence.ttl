@@ -1,0 +1,11 @@
+@prefix : <urn:agent-calculus:workload-zero-trust:> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:attestation-evidence-n-74b19 a :AttestationEvidence ;
+  :caller :inventory-api ; :target :stock-api ;
+  :callerSpiffeId "spiffe://example.test/ns/inventory/sa/inventory-api"^^xsd:string ; :targetSpiffeId "spiffe://example.test/ns/stock/sa/stock-api"^^xsd:string ; :namespace "inventory"^^xsd:string ;
+  :svidValid true ; :attestationDigest "sha256:adee9122b53d448197f0cb16c35bfbb0d35e0234562e211b74fcb8ad11368050"^^xsd:string ;
+  :deploymentDigest "sha256:ee8c468af77ab99178c3aeaa7508a9a3f658a1bf844848dc24b51a57b76d9239"^^xsd:string ;
+  :policyDigest "sha256:b7ae5a1613dbfe114a765204c6b28e642566840b9816f3189cf296cd28b1f758"^^xsd:string ;
+  :method :http-get ; :endpoint :availability-endpoint ; :issuerHealthy true ; :issuanceAllowed true ; :nonce "n-74b19"^^xsd:string ; :durationMinutes 10 ;
+  :observedAt "2026-10-17T18:29:36Z"^^xsd:dateTime ; :evaluatedAt "2026-10-17T18:30:00Z"^^xsd:dateTime ; :expiresAt "2026-10-17T18:40:00Z"^^xsd:dateTime ; :source :signed-attestation-service .

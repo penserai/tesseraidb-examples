@@ -1,0 +1,9 @@
+@prefix : <urn:agent-calculus:cold-chain-release:> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+:ReleaseRequestShape a sh:NodeShape ; sh:targetClass :ReleaseRequest ; sh:closed true ; sh:ignoredProperties ( rdf:type ) ; sh:message "cold-chain.request.closed" ;
+ sh:property [ sh:path :pallet ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :plt-88031 ] ;
+ sh:property [ sh:path :shipment ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :shp-24091 ] ;
+ sh:property [ sh:path :lot ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :bio-26a17 ] ;
+ sh:property [ sh:path :site ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :oak-dc-1 ] ;
+ sh:property [ sh:path :logger ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :tl-9904 ] .

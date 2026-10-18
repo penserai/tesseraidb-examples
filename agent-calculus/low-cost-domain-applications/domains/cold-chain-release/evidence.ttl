@@ -1,0 +1,14 @@
+@prefix : <urn:agent-calculus:cold-chain-release:> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+:cold-chain-evidence-plt-88031 a :ColdChainEvidence ;
+ :pallet :plt-88031 ; :shipment :shp-24091 ; :lot :bio-26a17 ; :site :oak-dc-1 ; :logger :tl-9904 ;
+ :calibrationStatus :current ; :observedMinimumTemperature "2.8"^^xsd:decimal ; :observedMaximumTemperature "7.4"^^xsd:decimal ;
+ :temperatureUnit :degree-celsius ; :sampleCount 912 ; :missingSampleCount 0 ; :maximumGapSeconds 300 ;
+ :transitStartedAt "2026-10-16T10:00:00Z"^^xsd:dateTime ;
+ :seriesStart "2026-10-16T10:00:00Z"^^xsd:dateTime ; :seriesEnd "2026-10-17T14:55:00Z"^^xsd:dateTime ;
+ :receivedAt "2026-10-17T14:55:00Z"^^xsd:dateTime ; :evaluatedAt "2026-10-17T15:00:00Z"^^xsd:dateTime ;
+ :calibrationValidFrom "2026-10-01T00:00:00Z"^^xsd:dateTime ; :calibrationValidUntil "2026-12-31T23:59:59Z"^^xsd:dateTime ;
+ :lotExpiresAt "2027-06-30T00:00:00Z"^^xsd:dateTime ;
+ :sealStatus :intact ; :recallStatus :clear ; :custodyEventCount 4 ; :verifiedCustodySignatureCount 4 ;
+ :rawSeriesDigest "sha256:ca924d18bd4481b311108f5f600ef429cbeb673daa140db41df7ab6df8670b42" ;
+ :source :signed-logger-export .

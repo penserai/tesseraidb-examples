@@ -1,0 +1,71 @@
+{
+  "id": "jit-production-access",
+  "version": "1",
+  "intent_instructions": "Select request_access only when the operator asks for scoped production access; otherwise select unknown.",
+  "intents": {
+    "request_access": {
+      "description": "Request a scoped, expiring production lease",
+      "type_iri": "urn:agent-calculus:jit-access:AccessRequest",
+      "required_slots": ["capability", "duration", "environment", "incident", "region", "service"],
+      "action": "issue_read_lease"
+    }
+  },
+  "slots": {
+    "capability": {"description": "a supported capability", "predicate_iri": "urn:agent-calculus:jit-access:capability"},
+    "duration": {"description": "an allowed lease duration", "predicate_iri": "urn:agent-calculus:jit-access:duration"},
+    "environment": {"description": "the target environment", "predicate_iri": "urn:agent-calculus:jit-access:environment"},
+    "incident": {"description": "the active incident", "predicate_iri": "urn:agent-calculus:jit-access:incident"},
+    "region": {"description": "the target region", "predicate_iri": "urn:agent-calculus:jit-access:region"},
+    "service": {"description": "the target service", "predicate_iri": "urn:agent-calculus:jit-access:service"}
+  },
+  "actions": {
+    "issue_read_lease": {
+      "description": "Issue a simulated scoped read-only lease",
+      "action_iri": "urn:agent-calculus:jit-access:issue-read-lease",
+      "capability_class_iri": "urn:agent-calculus:jit-access:ApprovedJitCapability"
+    }
+  },
+  "harvest_rules": [
+    {"kind": "reject", "id": "reject-cluster-admin", "pattern": "(?i)\\bcluster[- ]admin\\b", "code": "unsupported_capability"},
+    {
+      "kind": "closed_lookup",
+      "id": "incident-registry",
+      "slot": "incident",
+      "pattern": "(?i)\\b(?P<value>INC-[0-9]{4,8})\\b",
+      "capture": "value",
+      "values": {"INC-4821": {"type": "iri", "value": "urn:agent-calculus:jit-access:incident-inc-4821"}},
+      "rejection_code": "unsupported_incident"
+    },
+    {"kind": "alias", "id": "service-checkout", "slot": "service", "aliases": ["checkout", "checkout-api"], "value": {"type": "iri", "value": "urn:agent-calculus:jit-access:checkout-api"}, "whole_word": true},
+    {"kind": "alias", "id": "environment-production", "slot": "environment", "aliases": ["prod", "production"], "value": {"type": "iri", "value": "urn:agent-calculus:jit-access:production"}, "whole_word": true},
+    {"kind": "alias", "id": "region-eu-west", "slot": "region", "aliases": ["eu-west", "eu-west-1"], "value": {"type": "iri", "value": "urn:agent-calculus:jit-access:eu-west-1"}, "whole_word": true},
+    {"kind": "alias", "id": "capability-read-logs", "slot": "capability", "aliases": ["logs", "read logs"], "value": {"type": "iri", "value": "urn:agent-calculus:jit-access:read-logs"}, "whole_word": true},
+    {"kind": "alias", "id": "capability-query-metrics", "slot": "capability", "aliases": ["metrics", "query metrics"], "value": {"type": "iri", "value": "urn:agent-calculus:jit-access:query-metrics"}, "whole_word": true},
+    {"kind": "alias", "id": "capability-read-only-diagnostic", "slot": "capability", "aliases": ["read-only diagnostic", "read only diagnostic"], "value": {"type": "iri", "value": "urn:agent-calculus:jit-access:run-read-only-diagnostic"}, "whole_word": true},
+    {"kind": "alias", "id": "capability-production-shell", "slot": "capability", "aliases": ["production shell", "shell"], "value": {"type": "iri", "value": "urn:agent-calculus:jit-access:production-shell"}, "whole_word": true},
+    {"kind": "alias", "id": "capability-change-configuration", "slot": "capability", "aliases": ["configuration changes", "change configuration"], "value": {"type": "iri", "value": "urn:agent-calculus:jit-access:change-configuration"}, "whole_word": true},
+    {"kind": "alias", "id": "duration-15m", "slot": "duration", "aliases": ["15 minutes", "quarter of an hour"], "value": {"type": "iri", "value": "urn:agent-calculus:jit-access:duration-15m"}, "whole_word": true},
+    {"kind": "alias", "id": "duration-30m", "slot": "duration", "aliases": ["half an hour", "30 minutes"], "value": {"type": "iri", "value": "urn:agent-calculus:jit-access:duration-30m"}, "whole_word": true},
+    {"kind": "alias", "id": "duration-60m", "slot": "duration", "aliases": ["one hour", "60 minutes"], "value": {"type": "iri", "value": "urn:agent-calculus:jit-access:duration-60m"}, "whole_word": true}
+  ],
+  "lexical_coverage": {
+    "rejection_code": "unmatched_lexical_input",
+    "allowlisted_ignores": [
+      {"id": "request-connectives", "pattern": "(?i)\\b(?:i|m|covering|give|me|access|in|for|to|please|the|a|an|need|of|and)\\b"}
+    ]
+  },
+  "prompts": {
+    "initial": {"id": "jit.initial", "text": "What bounded production access do you need?"},
+    "ambiguous": {"id": "jit.ambiguous", "text": "Choose one of the supported candidates explicitly."},
+    "out_of_domain": {"id": "jit.out-of-domain", "text": "That request is outside this agent's production-access domain."},
+    "rejected": {"id": "jit.rejected", "text": "The production-access request was rejected without issuing a lease."},
+    "missing_slots": {
+      "capability": {"id": "jit.capability.required", "text": "Which capability do you need: logs, metrics, a read-only diagnostic, production shell, or configuration changes?"},
+      "duration": {"id": "jit.duration.required", "text": "Choose a lease duration: 15, 30, or 60 minutes."},
+      "environment": {"id": "jit.environment.required", "text": "Choose the production environment explicitly."},
+      "incident": {"id": "jit.incident.required", "text": "Provide the active incident ID."},
+      "region": {"id": "jit.region.required", "text": "Choose a registered region."},
+      "service": {"id": "jit.service.required", "text": "Which registered service do you need to access?"}
+    }
+  }
+}

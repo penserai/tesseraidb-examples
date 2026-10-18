@@ -1,0 +1,18 @@
+@prefix : <urn:agent-calculus:ci-cd-canary:> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:release-evidence-bld-8421
+    a :ReleaseEvidence ;
+    :artifact :build-bld-8421 ;
+    :sourceCommit "8f9e4c2a7b6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f" ;
+    :signatureVerified true ;
+    :signatureVerifier :sigstore-policy-controller ;
+    :artifactDigest "sha256:991ad89c3f3f7145fa1dc0f45cd13cffb368e69df12cbb6d27740cc57a14f4e2" ;
+    :requiredTestsPassed true ;
+    :testCoveragePercent 94 ;
+    :requiredTestCoveragePercent 90 ;
+    :blockingVulnerabilityCount 0 ;
+    :initialTrafficPercent 5 ;
+    :change :change-chg-9917 ;
+    :controller :argo-rollouts ;
+    :generatedAt "2026-10-17T16:00:00Z"^^xsd:dateTime .

@@ -1,0 +1,9 @@
+@prefix : <urn:agent-calculus:healthcare-referral-submit:> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:referral-evidence-551 a :AdministrativeReferralEvidence ;
+  :patient :pat-204 ; :encounter :enc-778 ; :referral :ref-551 ; :order :ord-912 ; :orderSigned true ; :consent :consent-88 ; :consentActive true ; :coverage :cov-2026 ; :coverageActive true ;
+  :authorization :auth-440 ; :authorizationValid true ; :facility :fac-21 ; :payer :payer-8 ; :networkStatus :in-network ;
+  :inNetwork true ; :facilityAccepting true ; :routineUrgency true ; :duplicateOpenReferral false ; :minimumNecessaryApplied true ;
+  :consentExpiresAt "2026-11-17T18:35:20Z"^^xsd:dateTime ; :coverageExpiresAt "2027-01-01T00:00:00Z"^^xsd:dateTime ; :authorizationExpiresAt "2026-10-24T18:35:20Z"^^xsd:dateTime ;
+  :observedAt "2026-10-17T18:33:20Z"^^xsd:dateTime ; :evaluatedAt "2026-10-17T18:35:20Z"^^xsd:dateTime ; :source :signed-ehr-payer-snapshot .

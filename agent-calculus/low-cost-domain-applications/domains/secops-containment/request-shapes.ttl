@@ -1,0 +1,13 @@
+@prefix : <urn:agent-calculus:secops-containment:> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:ContainmentRequestShape a sh:NodeShape ; sh:targetClass :ContainmentRequest ; sh:closed true ; sh:ignoredProperties ( rdf:type ) ;
+  sh:property [ sh:path :incident ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :inc-7741 ] ;
+  sh:property [ sh:path :alert ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :alt-9007 ] ;
+  sh:property [ sh:path :host ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :fin-lt-204 ] ;
+  sh:property [ sh:path :segment ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :finance-user ] ;
+  sh:property [ sh:path :containment ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :edr-network-isolation ] ;
+  sh:property [ sh:path :approvalTier ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :tier-2 ] ;
+  sh:property [ sh:path :durationMinutes ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:hasValue 30 ] .

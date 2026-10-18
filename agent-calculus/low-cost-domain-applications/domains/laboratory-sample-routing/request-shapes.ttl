@@ -1,0 +1,12 @@
+@prefix : <urn:agent-calculus:laboratory-sample-routing:> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+
+:RoutingRequestShape a sh:NodeShape ; sh:targetClass :RoutingRequest ; sh:closed true ; sh:ignoredProperties ( rdf:type ) ;
+  sh:property [ sh:path :accession ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :acc-2048 ] ;
+  sh:property [ sh:path :specimen ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :serum ] ;
+  sh:property [ sh:path :assay ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :potassium-assay ] ;
+  sh:property [ sh:path :laboratory ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :central-chemistry ] ;
+  sh:property [ sh:path :analyzer ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :chem-7 ] ;
+  sh:property [ sh:path :custody ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :coc-881 ] ;
+  sh:property [ sh:path :biosafety ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :biosafety-two ] .

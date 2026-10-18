@@ -1,0 +1,62 @@
+{
+  "id": "supplier-master-resolution",
+  "version": "1",
+  "intent_instructions": "Select resolve_supplier_duplicate only for linking a staged supplier record to one existing registered supplier. Select unknown for creation, merging, bank mutation, or any other intent.",
+  "intents": {
+    "resolve_supplier_duplicate": {
+      "description": "Record a reversible link from a staged supplier record to one canonical supplier",
+      "type_iri": "urn:agent-calculus:supplier-master-resolution:SupplierResolutionRequest",
+      "required_slots": ["location", "reported_name", "resolution", "staging_record", "supplier"],
+      "action": "record_supplier_link"
+    }
+  },
+  "slots": {
+    "location": { "description": "the canonical supplier registry location", "predicate_iri": "urn:agent-calculus:supplier-master-resolution:location" },
+    "reported_name": { "description": "the closed reported supplier-name token", "predicate_iri": "urn:agent-calculus:supplier-master-resolution:reportedName" },
+    "resolution": { "description": "the supported reversible resolution operation", "predicate_iri": "urn:agent-calculus:supplier-master-resolution:resolution" },
+    "staging_record": { "description": "the registered staged supplier record", "predicate_iri": "urn:agent-calculus:supplier-master-resolution:stagingRecord" },
+    "supplier": { "description": "the canonical supplier selected by registered VAT lookup", "predicate_iri": "urn:agent-calculus:supplier-master-resolution:canonicalSupplier" }
+  },
+  "actions": {
+    "record_supplier_link": {
+      "description": "Simulate a reversible link without merging or mutating master data",
+      "action_iri": "urn:agent-calculus:supplier-master-resolution:record-supplier-link",
+      "capability_class_iri": "urn:agent-calculus:supplier-master-resolution:ReversibleLinkOperation"
+    }
+  },
+  "harvest_rules": [
+    { "kind": "reject", "id": "reject-destructive-master-mutation", "pattern": "(?i)\\b(?:merge|overwrite|delete|replace\\s+(?:the\\s+)?bank\\s+account|change\\s+(?:the\\s+)?bank\\s+account)\\b", "code": "destructive_master_mutation" },
+    {
+      "kind": "closed_lookup", "id": "staging-record-registry", "slot": "staging_record",
+      "pattern": "(?i)\\b(?P<value>STG-[0-9]{4,10})\\b", "capture": "value",
+      "values": { "STG-9012": { "type": "iri", "value": "urn:agent-calculus:supplier-master-resolution:staging-record-stg-9012" } },
+      "rejection_code": "unknown_staging_record"
+    },
+    { "kind": "alias", "id": "reported-name-northwind-components", "slot": "reported_name", "aliases": ["Northwind Components"], "value": { "type": "iri", "value": "urn:agent-calculus:supplier-master-resolution:name-northwind-components" }, "whole_word": true },
+    {
+      "kind": "closed_lookup", "id": "supplier-vat-registry", "slot": "supplier",
+      "pattern": "(?i)\\b(?P<value>GB[0-9]{9})\\b", "capture": "value",
+      "values": { "GB123456789": { "type": "iri", "value": "urn:agent-calculus:supplier-master-resolution:supplier-sup-00417" } },
+      "rejection_code": "unknown_supplier_vat"
+    },
+    { "kind": "alias", "id": "location-manchester", "slot": "location", "aliases": ["Manchester"], "value": { "type": "iri", "value": "urn:agent-calculus:supplier-master-resolution:manchester" }, "whole_word": true },
+    { "kind": "alias", "id": "resolution-link-existing", "slot": "resolution", "aliases": ["Link"], "value": { "type": "iri", "value": "urn:agent-calculus:supplier-master-resolution:link-existing" }, "whole_word": true }
+  ],
+  "lexical_coverage": {
+    "rejection_code": "unmatched_supplier_resolution_input",
+    "allowlisted_ignores": [{ "id": "supplier-resolution-connectives", "pattern": "(?i)\\b(?:resolve|staging|supplier|for|VAT|to|the)\\b" }]
+  },
+  "prompts": {
+    "initial": { "id": "supplier-resolution.initial", "text": "Which registered staged supplier record should be resolved?" },
+    "ambiguous": { "id": "supplier-resolution.ambiguous", "text": "Choose one issued supplier-resolution candidate explicitly." },
+    "out_of_domain": { "id": "supplier-resolution.out-of-domain", "text": "That request is outside this reversible supplier-link domain." },
+    "rejected": { "id": "supplier-resolution.rejected", "text": "The supplier resolution was rejected without changing master data." },
+    "missing_slots": {
+      "location": { "id": "supplier-resolution.location.required", "text": "Identify the registered supplier location." },
+      "reported_name": { "id": "supplier-resolution.reported-name.required", "text": "Provide the staged supplier name." },
+      "resolution": { "id": "supplier-resolution.operation.required", "text": "Confirm the supported reversible operation: link." },
+      "staging_record": { "id": "supplier-resolution.staging-record.required", "text": "Provide the registered staging record ID." },
+      "supplier": { "id": "supplier-resolution.supplier.required", "text": "Provide the registered supplier VAT identifier." }
+    }
+  }
+}

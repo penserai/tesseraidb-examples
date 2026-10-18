@@ -1,0 +1,9 @@
+@prefix : <urn:agent-calculus:laboratory-sample-routing:> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:routing-evidence-acc-2048 a :SampleRoutingEvidence ;
+  :accession :acc-2048 ; :specimen :serum ; :assay :potassium-assay ; :laboratory :central-chemistry ;
+  :analyzer :chem-7 ; :custody :coc-881 ; :biosafety :biosafety-two ;
+  :labelVerified true ; :custodySigned true ; :qcCurrent true ; :biosafetyLevel 2 ;
+  :temperatureMillicelsius 4200 ; :queueCapacity 12 ; :volumeMicroliters 2500 ; :hemolysisIndex 12 ; :stabilityRemainingMinutes 120 ;
+  :observedAt "2026-10-17T18:35:50Z"^^xsd:dateTime ; :custodyDigest "sha256:8dd12a2be68a091fad5343df5f6efc932633a04397b40ba31770bc2cf40173e4"^^xsd:string ; :source :signed-lims-qc-snapshot .

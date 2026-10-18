@@ -1,0 +1,24 @@
+@prefix : <urn:agent-calculus:supplier-master-resolution:> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:match-observation-stg-9012
+    a :SupplierMatchEvidence ;
+    :stagingRecord :staging-record-stg-9012 ;
+    :stagingStatus :unlinked ;
+    :stagedLegalName "Northwind Components" ;
+    :stagedCountry :gb ;
+    :stagedVat "GB123456789" ;
+    :stagedAddressToken "manchester-m1-4ab" ;
+    :canonicalSupplier :supplier-sup-00417 ;
+    :supplierStatus :active ;
+    :masterLegalName "Northwind Components Limited" ;
+    :masterCountry :gb ;
+    :masterVat "GB123456789" ;
+    :masterAddressToken "manchester-m1-4ab" ;
+    :bankConflict false ;
+    :matchScore "0.99"^^xsd:decimal ;
+    :uniqueRegistryMatches 1 ;
+    :source :erp-master-registry ;
+    :snapshot :supplier-registry-snapshot-44 ;
+    :observedAt "2026-10-17T21:58:00Z"^^xsd:dateTime ;
+    :evaluatedAt "2026-10-17T22:00:00Z"^^xsd:dateTime .

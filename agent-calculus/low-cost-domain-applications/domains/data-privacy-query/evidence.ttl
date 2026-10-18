@@ -1,0 +1,18 @@
+@prefix : <urn:agent-calculus:data-privacy:> .
+
+:catalog-observation-2026q3
+    a :DatasetCatalogEvidence ;
+    :dataset :customer-retention-v3 ;
+    :classification :personal-data ;
+    :residency :eu ;
+    :allowedPurpose :quarterly-retention-planning ;
+    :availableMeasure :churned-customer-count ;
+    :allowedDimension :country ;
+    :reportingPeriod :2026-q3 ;
+    :allowedAggregation :count ;
+    :requiredProtection :small-cell-suppression-k25 ;
+    :minimumGroupSize 25 ;
+    :observedAtUnix 1792278000 ;
+    :evaluatedAtUnix 1792278045 ;
+    :snapshot :catalog-snapshot-7f91 ;
+    :source :data-catalog .

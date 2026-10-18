@@ -53,3 +53,5 @@ node_modules/
 
 # Build artifacts
 *.zip
+target/
+agent-calculus/Cargo.lock

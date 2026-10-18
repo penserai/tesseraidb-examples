@@ -1,0 +1,24 @@
+@prefix : <urn:agent-calculus:manufacturing-disposition:> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:inspection-evidence-ir-8842
+    a :InspectionEvidence ;
+    :inspection :ir-8842 ;
+    :part :hm42-00981 ;
+    :lot :lot-24018 ;
+    :device :cmm-07 ;
+    :calibration :cal-cmm07-2026q4 ;
+    :boreDiameter "10.018"^^xsd:decimal ;
+    :boreUnit :millimetre ;
+    :surfaceRoughnessRa "1.3"^^xsd:decimal ;
+    :roughnessUnit :micrometre ;
+    :measuredAt "2026-10-17T15:00:00Z"^^xsd:dateTime ;
+    :evaluatedAt "2026-10-17T15:15:00Z"^^xsd:dateTime ;
+    :calibrationValidFrom "2026-10-01T00:00:00Z"^^xsd:dateTime ;
+    :calibrationValidUntil "2026-12-31T23:59:59Z"^^xsd:dateTime ;
+    :revision "7"^^xsd:integer ;
+    :openNonconformanceCount "0"^^xsd:integer ;
+    :reportDigest "sha256:6a8dfb53e4f3b06f7d17d989d5501237988c4fc83f2eb818af417344742603df"^^xsd:string ;
+    :source :mes-qms .
+
+:cal-cmm07-2026q4 a :CurrentCalibration .

@@ -1,0 +1,17 @@
+@prefix : <urn:agent-calculus:tool-call-firewall:> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:ticket-observation-cs-884
+    a :SupportTicketEvidence ;
+    :ticket :ticket-cs-884 ;
+    :tenant :tenant-acme-retail ;
+    :ticketStatus :active ;
+    :referencedOrder :order-ord-1042 ;
+    :allowedOperation :read-shipment-status ;
+    :allowedMethod "GET" ;
+    :allowedPath "/orders/ORD-1042/shipment-status" ;
+    :ttlSeconds 60 ;
+    :maxUses 1 ;
+    :purpose :resolve-delivery-status ;
+    :source :support-registry ;
+    :observedAt "2026-10-17T22:00:00Z"^^xsd:dateTime .

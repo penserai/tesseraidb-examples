@@ -1,0 +1,8 @@
+@prefix : <urn:agent-calculus:building-demand-response:> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:dr-evidence-778 a :DemandResponseEvidence ;
+  :event :dr-778 ; :building :hq-1 ; :zone :zone-4e ; :equipment :ahu-4e ; :gridSignalVerified true ; :occupied false ;
+  :temperatureCelsius "22.0"^^xsd:decimal ; :proposedSetpointCelsius "23.0"^^xsd:decimal ; :comfortMinCelsius "20.0"^^xsd:decimal ; :comfortMaxCelsius "24.5"^^xsd:decimal ;
+  :humidityPercent "46"^^xsd:decimal ; :co2Ppm 720 ; :criticalLoadCount 0 ; :lifeSafetyInterlockClear true ; :baselineKw "100"^^xsd:decimal ; :projectedKw "82"^^xsd:decimal ; :eventCapKw "85"^^xsd:decimal ;
+  :observedAt "2026-10-17T18:30:30Z"^^xsd:dateTime ; :source :signed-bms-grid-snapshot .

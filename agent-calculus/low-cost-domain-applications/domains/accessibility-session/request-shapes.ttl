@@ -1,0 +1,15 @@
+@prefix : <urn:agent-calculus:accessibility:> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+
+:AccessibilitySessionRequestShape
+    a sh:NodeShape ;
+    sh:targetClass :AccessibilitySessionRequest ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:message "accessibility.request.closed" ;
+    sh:property [ sh:path :participant ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:in ( :participant-jordan-42 ) ; sh:message "accessibility.participant.required" ] ;
+    sh:property [ sh:path :session ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:in ( :event-session-evt-204 ) ; sh:message "accessibility.session.required" ] ;
+    sh:property [ sh:path :room ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:in ( :room-a ) ; sh:message "accessibility.room.required" ] ;
+    sh:property [ sh:path :accommodation ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:in ( :captions-high-contrast ) ; sh:message "accessibility.profile.required" ] ;
+    sh:property [ sh:path :duration ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:in ( :duration-90m ) ; sh:message "accessibility.duration.required" ] .

@@ -1,0 +1,23 @@
+@prefix : <urn:agent-calculus:ev-charging-dispatch:> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:ChargeEvidenceShape a sh:NodeShape ; sh:targetClass :ChargeEvidence ; sh:closed true ; sh:ignoredProperties ( rdf:type ) ;
+  sh:property [ sh:path :vehicle ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :van-042 ] ;
+  sh:property [ sh:path :charger ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :evse-17 ] ;
+  sh:property [ sh:path :window ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :w-0200 ] ;
+  sh:property [ sh:path :socPercent ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 0 ; sh:maxInclusive 100 ] ;
+  sh:property [ sh:path :targetSocPercent ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 0 ; sh:maxInclusive 100 ] ;
+  sh:property [ sh:path :batteryKwh ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 1 ] ;
+  sh:property [ sh:path :requestedKwh ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 1 ; sh:maxInclusive 35 ] ;
+  sh:property [ sh:path :chargerKw ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 1 ; sh:maxInclusive 22 ] ;
+  sh:property [ sh:path :gridHeadroomKw ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 22 ] ;
+  sh:property [ sh:path :tariffCentsPerKwh ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:maxInclusive 12 ] ;
+  sh:property [ sh:path :windowMinutes ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 120 ] ;
+  sh:property [ sh:path :routeMarginKwh ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 8 ] ;
+  sh:property [ sh:path :connector ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :ccs2 ] ;
+  sh:property [ sh:path :chargerAvailable ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:boolean ; sh:hasValue true ] ;
+  sh:property [ sh:path :interlockHealthy ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:boolean ; sh:hasValue true ] ;
+  sh:property [ sh:path :observedAt ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:dateTime ] ;
+  sh:property [ sh:path :source ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue :signed-fleet-grid-snapshot ] .

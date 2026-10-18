@@ -1,0 +1,22 @@
+{
+  "id":"secops-containment","version":"1","intent_instructions":"Select contain_endpoint only for a bounded registered host-isolation proposal; otherwise unknown.",
+  "intents":{"contain_endpoint":{"description":"Propose reversible EDR network isolation","type_iri":"urn:agent-calculus:secops-containment:ContainmentRequest","required_slots":["alert","approval_tier","containment","duration_minutes","host","incident","segment"],"action":"propose_endpoint_isolation"}},
+  "slots":{
+    "alert":{"description":"correlated security alert","predicate_iri":"urn:agent-calculus:secops-containment:alert"},"approval_tier":{"description":"analyst authority tier","predicate_iri":"urn:agent-calculus:secops-containment:approvalTier"},"containment":{"description":"reversible containment operation","predicate_iri":"urn:agent-calculus:secops-containment:containment"},"duration_minutes":{"description":"bounded isolation duration","predicate_iri":"urn:agent-calculus:secops-containment:durationMinutes"},"host":{"description":"managed endpoint","predicate_iri":"urn:agent-calculus:secops-containment:host"},"incident":{"description":"active security incident","predicate_iri":"urn:agent-calculus:secops-containment:incident"},"segment":{"description":"endpoint network segment","predicate_iri":"urn:agent-calculus:secops-containment:segment"}
+  },
+  "actions":{"propose_endpoint_isolation":{"description":"Propose a reversible single-host isolation","action_iri":"urn:agent-calculus:secops-containment:propose-endpoint-isolation","capability_class_iri":"urn:agent-calculus:secops-containment:ReversibleNetworkIsolation"}},
+  "harvest_rules":[
+    {"kind":"reject","id":"reject-destructive-containment","pattern":"(?i)\\b(?:wipe|reimage|disable\\s+(?:the\\s+)?account|block\\s+(?:the\\s+)?whole\\s+network|permanent\\s+isolation)\\b","code":"destructive_containment_forbidden"},
+    {"kind":"closed_lookup","id":"incident-registry","slot":"incident","pattern":"(?i)\\b(?P<value>INC-[0-9]{4})\\b","capture":"value","values":{"INC-7741":{"type":"iri","value":"urn:agent-calculus:secops-containment:inc-7741"}},"rejection_code":"unsupported_incident"},
+    {"kind":"closed_lookup","id":"alert-registry","slot":"alert","pattern":"(?i)\\b(?P<value>ALT-[0-9]{4})\\b","capture":"value","values":{"ALT-9007":{"type":"iri","value":"urn:agent-calculus:secops-containment:alt-9007"}},"rejection_code":"unsupported_alert"},
+    {"kind":"closed_lookup","id":"host-registry","slot":"host","pattern":"(?i)\\b(?P<value>FIN-LT-[0-9]{3})\\b","capture":"value","values":{"FIN-LT-204":{"type":"iri","value":"urn:agent-calculus:secops-containment:fin-lt-204"}},"rejection_code":"unsupported_host"},
+    {"kind":"alias","id":"segment-finance","slot":"segment","aliases":["finance-user"],"value":{"type":"iri","value":"urn:agent-calculus:secops-containment:finance-user"},"whole_word":true},
+    {"kind":"alias","id":"edr-isolation","slot":"containment","aliases":["EDR network isolation"],"value":{"type":"iri","value":"urn:agent-calculus:secops-containment:edr-network-isolation"},"whole_word":true},
+    {"kind":"alias","id":"tier-two","slot":"approval_tier","aliases":["Tier-2"],"value":{"type":"iri","value":"urn:agent-calculus:secops-containment:tier-2"},"whole_word":true},
+    {"kind":"alias","id":"duration-thirty","slot":"duration_minutes","aliases":["30 minutes"],"value":{"type":"integer","value":30},"whole_word":true}
+  ],
+  "lexical_coverage":{"rejection_code":"unmatched_lexical_input","allowlisted_ignores":[{"id":"secops-connectives","pattern":"(?i)\\b(?:contain|host|for|incident|and|alert|use|in|at)\\b"}]},
+  "prompts":{"initial":{"id":"secops.initial","text":"Which managed host and incident?"},"ambiguous":{"id":"secops.ambiguous","text":"Choose one registered candidate."},"out_of_domain":{"id":"secops.out","text":"That request is outside endpoint containment."},"rejected":{"id":"secops.rejected","text":"The request was rejected before any EDR command."},"missing_slots":{
+    "alert":{"id":"secops.alert.required","text":"Provide the alert."},"approval_tier":{"id":"secops.tier.required","text":"Provide the authority tier."},"containment":{"id":"secops.containment.required","text":"Choose EDR isolation."},"duration_minutes":{"id":"secops.duration.required","text":"Choose the duration."},"host":{"id":"secops.host.required","text":"Provide the host."},"incident":{"id":"secops.incident.required","text":"Provide the incident."},"segment":{"id":"secops.segment.required","text":"Provide the segment."}
+  }}
+}
