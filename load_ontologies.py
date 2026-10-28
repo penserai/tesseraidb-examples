@@ -63,8 +63,7 @@ def list_loaded_ontologies(base_url: str, token: str) -> list:
             response = http.get(
                 f"{base_url}/api/v1/ontologies",
                 headers={
-                    "Authorization": f"Bearer {token}",
-                    "X-Tenant-ID": "default"
+                    "Authorization": f"Bearer {token}"
                 }
             )
             if response.status_code == 200:
@@ -157,8 +156,7 @@ def main():
                         content=ontology_data,
                         headers={
                             "Content-Type": "text/turtle",
-                            "Authorization": f"Bearer {token}",
-                            "X-Tenant-ID": "default"
+                            "Authorization": f"Bearer {token}"
                         }
                     )
 

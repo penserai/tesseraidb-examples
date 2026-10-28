@@ -98,7 +98,7 @@ python simulation.py
 from dtaas import DTaaSClient
 from dtaas.models_memory import MemoryCreate, MemoryType, SourceType, MemorySource
 
-client = DTaaSClient(base_url, token=token, tenant_id=tenant_id)
+client = DTaaSClient(base_url, token=token)
 
 # Store dietary preference
 client.memory.create(

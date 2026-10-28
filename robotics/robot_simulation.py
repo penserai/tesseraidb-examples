@@ -93,7 +93,7 @@ TWIN_ID = "robot-simulation"
 # PERFORMANCE OPTIMIZATION
 # =============================================================================
 #
-# This simulation uses optimized batch updates via the /api/v1/sparql/batch-update
+# This simulation uses a twin-scoped SPARQL update per tick.
 # endpoint for efficient ontology operations:
 #
 # - Single combined SPARQL UPDATE per tick for all robots
@@ -2666,9 +2666,9 @@ def update_sensor_data(client: DTaaSClient, world: SimulationWorld, robot: Robot
 PREFIX robo: <{ROBO}>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
-INSERT DATA {{
+INSERT {{
 {"".join(insert_parts)}
-}}
+}} WHERE {{}}
 """
             try:
                 client.twins.sparql_update(TWIN_ID, insert_query)
@@ -2802,13 +2802,13 @@ def record_position_in_ontology(client: DTaaSClient, world: SimulationWorld):
 PREFIX robo: <{ROBO}>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
-INSERT DATA {{
+INSERT {{
     <urn:position:tick_{tick}> a robo:PositionRecord ;
         robo:cellX "{cell_x}"^^xsd:integer ;
         robo:cellY "{cell_y}"^^xsd:integer ;
         robo:atTick "{tick}"^^xsd:integer .
     <urn:robot:{robot.id}> robo:hasPositionRecord <urn:position:tick_{tick}> .
-}}
+}} WHERE {{}}
 """
     try:
         client.twins.sparql_update(TWIN_ID, insert_position)
@@ -2856,14 +2856,14 @@ WHERE {{
 PREFIX robo: <{ROBO}>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
-INSERT DATA {{
+INSERT {{
     <urn:cell:{cell_id}> a robo:ExploredCell ;
         robo:cellX "{cell_x}"^^xsd:integer ;
         robo:cellY "{cell_y}"^^xsd:integer ;
         robo:visitCount "1"^^xsd:integer ;
         robo:lastVisitTick "{tick}"^^xsd:integer .
     <urn:robot:{robot.id}> robo:hasExploredCell <urn:cell:{cell_id}> .
-}}
+}} WHERE {{}}
 """
             client.twins.sparql_update(TWIN_ID, create_cell)
     except DTaaSError as e:
@@ -4986,7 +4986,7 @@ def run_simulation(max_ticks: int = 50, visualize: bool = True, animate: bool = 
                 collected = total - uncollected
                 completion_reason = f"Time limit reached! {collected}/{total} objects collected"
 
-            # === BATCH UPDATE (using /api/v1/sparql/batch-update) ===
+            # === BATCHED STATE UPDATE (one twin-scoped request) ===
             # Create batch builder for this tick
             batch = BatchUpdateBuilder()
 

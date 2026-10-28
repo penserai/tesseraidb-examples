@@ -269,7 +269,6 @@ def upload_ontology_safe(
         headers = {
             "Content-Type": content_type,
             "Authorization": f"Bearer {client._token}" if hasattr(client, '_token') and client._token else None,
-            "X-Tenant-ID": "default",
         }
         # Remove None headers
         headers = {k: v for k, v in headers.items() if v is not None}
@@ -756,7 +755,6 @@ def bulk_upload_ontologies(
     base_url: str,
     token: str,
     ontologies: list[tuple[str, str, str]],
-    tenant_id: str = "default"
 ) -> tuple[int, int]:
     """
     Upload multiple ontologies in parallel.
@@ -765,7 +763,6 @@ def bulk_upload_ontologies(
         base_url: The DTaaS server URL
         token: Authentication token
         ontologies: List of (ontology_id, file_path, description) tuples
-        tenant_id: Tenant ID (default: "default")
 
     Returns:
         tuple: (successful_count, failed_count)
@@ -794,8 +791,7 @@ def bulk_upload_ontologies(
                     content=ontology_data,
                     headers={
                         "Content-Type": "text/turtle",
-                        "Authorization": f"Bearer {token}",
-                        "X-Tenant-ID": tenant_id
+                        "Authorization": f"Bearer {token}"
                     }
                 )
 

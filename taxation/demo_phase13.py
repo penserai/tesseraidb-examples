@@ -138,7 +138,6 @@ def demo_governance():
 
     # Set up TP-specific governance
     tp_governance = {
-        "tenant_id": TOKEN,
         "impact_mode": "blocking",  # Strict mode for tax compliance
         "auto_apply_safe": False,   # All changes need review
         "approval_required_for": ["additive", "breaking", "destructive"],

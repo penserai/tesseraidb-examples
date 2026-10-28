@@ -98,7 +98,7 @@ python simulation.py
 from dtaas import DTaaSClient
 from dtaas.models_memory import MemoryCreate, MemoryType, RecordType
 
-client = DTaaSClient(base_url, token=token, tenant_id=tenant_id)
+client = DTaaSClient(base_url, token=token)
 
 # Create process definition
 client.memory.create(
