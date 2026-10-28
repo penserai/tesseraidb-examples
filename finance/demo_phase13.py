@@ -145,7 +145,6 @@ def demo_governance():
 
     # Update config for finance domain
     finance_governance = {
-        "tenant_id": TOKEN,
         "impact_mode": "advisory",  # Warn but allow (for demo purposes)
         "auto_apply_safe": True,    # Auto-apply non-breaking changes
         "approval_required_for": ["breaking", "destructive"],

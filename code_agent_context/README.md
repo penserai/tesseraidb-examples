@@ -92,7 +92,7 @@ python simulation.py
 from dtaas import DTaaSClient
 from dtaas.models_memory import MemoryCreate, MemoryType
 
-client = DTaaSClient(base_url, token=token, tenant_id=tenant_id)
+client = DTaaSClient(base_url, token=token)
 
 # Initialize session context
 client.memory.create(
